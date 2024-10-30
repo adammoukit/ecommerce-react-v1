@@ -1,6 +1,10 @@
 import axios from "axios";
 
-export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5454";
+const isProduction = import.meta.env.MODE === "production";
+
+const BASE_URL = isProduction
+  ? import.meta.env.VITE_API_URL // Utilisez l'URL de production
+  : "http://localhost:5454"; // Utilisez localhost en développement
 
 const jwt = localStorage.getItem("jwt");
 
