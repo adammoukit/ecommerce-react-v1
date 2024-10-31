@@ -212,8 +212,6 @@ export default function Navigation() {
 
   const handleCategoryClick = (category, section, item) => {
     navigate(`/${category.id}/${section.id}/${item.name}`);
-    const { close } = usePopoverContext(); // Importer la fonction close
-    close(); // Ferme le popover
   };
 
   return (
