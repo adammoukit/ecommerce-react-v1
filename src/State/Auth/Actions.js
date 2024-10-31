@@ -21,7 +21,7 @@ export const register = (userData) => async (dispatch) => {
   dispatch(registerRequest());
 
   try {
-    const response = await axios.post(`/${BASE_URL}/auth/signup`, userData, {
+    const response = await axios.post(`${BASE_URL}/auth/signup`, userData, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -47,7 +47,7 @@ export const login = (userData) => async (dispatch) => {
   try {
     console.log("Sending request to:", api.defaults.baseURL + "/auth/signup");
 
-    const response = await axios.post(`/${BASE_URL}/auth/signin`, userData, {
+    const response = await axios.post(`${BASE_URL}/auth/signin`, userData, {
       headers: {
         "Content-Type": "application/json",
       },
