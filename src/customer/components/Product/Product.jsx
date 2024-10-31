@@ -121,16 +121,20 @@ export default function Product() {
     const [minPrice, maxPrice] =
       priceValue === null ? [0, 10000] : priceValue.split("-").map(Number);
 
+    const colorArray = colorValue ? colorValue.split(",") : [];
+    const sizeArray = sizeValue ? sizeValue.split(",") : [];
+    const discountValue = discount ? Number(discount) : 0;
+
     const data = {
       category: param.lavelThre,
-      colors: colorValue || [],
-      sizes: sizeValue || [],
+      colors: colorArray,
+      sizes: sizeArray,
       minPrice,
       maxPrice,
-      minDiscount: discount || 0,
+      minDiscount: discountValue,
       sort: sortValue || "price_low",
       stock: stock,
-      pageNumber: pageNumber - 1,
+      pageNumber: Number(pageNumber) - 1,
       pageSize: 10,
     };
 
@@ -180,13 +184,12 @@ export default function Product() {
     navigate({ search: `?${query}` });
   };
 
-
   const handlePaginationChange = (event, value) => {
     const searchParams = new URLSearchParams(location.search);
     searchParams.set("page", value);
     const query = searchParams.toString();
-    navigate({search:`?${query}`});
-  }
+    navigate({ search: `?${query}` });
+  };
 
   return (
     <div className="bg-white">
