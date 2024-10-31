@@ -21,7 +21,7 @@ export const register = (userData) => async (dispatch) => {
   dispatch(registerRequest());
 
   try {
-    const response = await api.post(`${BASE_URL}/auth/signup`, userData);
+    const response = await api.post(`/auth/signup`, userData);
     const user = response.data;
     if (user.jwt) {
       localStorage.setItem("jwt", user.jwt);
@@ -43,7 +43,7 @@ export const login = (userData) => async (dispatch) => {
   try {
     console.log("Sending request to:", api.defaults.baseURL + "/auth/signup");
 
-    const response = await api.post(`${BASE_URL}/auth/signin`, userData);
+    const response = await api.post(`/auth/signin`, userData);
     const user = response.data;
     if (user.jwt) {
       localStorage.setItem("jwt", user.jwt);
@@ -63,7 +63,7 @@ export const getUser = (jwt) => async (dispatch) => {
   dispatch(getUserRequest());
 
   try {
-    const response = await axios.get(`${BASE_URL}/api/users/profile`, {
+    const response = await axios.get(`/api/users/profile`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
