@@ -9,7 +9,9 @@
     { "src": "/checkout", "dest": "/" },
     { "src": "/account/order", "dest": "/" },
     { "src": "/account/order/:orderId", "dest": "/" },
-    { "src": "/success/:orderId", "dest": "/" },
-    { "src": "/(.*)", "dest": "/" }
-  ]
+    { "src": "/success/:orderId", "dest": "/" }
+  ],
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "outputDirectory": "dist"
 }
