@@ -1,16 +1,5 @@
 {
-  "routes": [
-    { "src": "/login", "dest": "/" },
-    { "src": "/register", "dest": "/" },
-    { "src": "/", "dest": "/" },
-    { "src": "/cart", "dest": "/" },
-    { "src": "/:lavelOne/:lavelTwo/:lavelThre", "dest": "/" },
-    { "src": "/product/:productId", "dest": "/" },
-    { "src": "/checkout", "dest": "/" },
-    { "src": "/account/order", "dest": "/" },
-    { "src": "/account/order/:orderId", "dest": "/" },
-    { "src": "/success/:orderId", "dest": "/" }
-  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "outputDirectory": "dist"
