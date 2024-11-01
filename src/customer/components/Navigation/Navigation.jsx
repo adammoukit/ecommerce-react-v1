@@ -344,26 +344,78 @@ export default function Navigation() {
               ))}
             </div>
 
-            <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-              <div className="flow-root">
-                <a
-                  href="#"
-                  className="-m-2 block p-2 font-medium text-gray-900"
-                >
-                  Sign in
-                </a>
-              </div>
-              <div className="flow-root">
-                <a
-                  href="#"
-                  className="-m-2 block p-2 font-medium text-gray-900"
-                >
-                  Create account
-                </a>
-              </div>
-            </div>
+            {/* profile */}
+            <Box>
+              <Popper
+                // Note: The following zIndex style is specifically for documentation purposes and may not be necessary in your application.
+                sx={{ zIndex: 1200 }}
+                open={zopen}
+                anchorEl={anchorEl}
+                placement={placement}
+                transition
+              >
+                {({ TransitionProps }) => (
+                  <Fade {...TransitionProps} timeout={350}>
+                    <Paper>
+                      <div className="p-2">
+                        {/* Vérifiez si l'utilisateur est connecté */}
+                        {user ? (
+                          <>
+                            <div className="flex flex-col justify-center mb-2">
+                              <div className="p-2 bg-blue-300 text-white">
+                                <div className="flex items-center justify-center ">
+                                  <p>{user.firstName} - </p>
+                                  <p> {user.lastName}</p>
+                                </div>
+                                <div>
+                                  <p className="text-xs">{user.email}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <hr />
+                            <p
+                              className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                              onClick={() => {
+                                navigate("/account/profile");
+                                setZOpen(false);
+                              }}
+                            >
+                              Profile
+                            </p>
+                            <p
+                              className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                              onClick={() => {
+                                navigate("/account/order");
+                                setZOpen(false);
+                              }}
+                            >
+                              My Orders
+                            </p>
+                            <p
+                              className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                              onClick={handleLogout}
+                            >
+                              Logout
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p
+                              className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                              onClick={handleOpen}
+                            >
+                              Login
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    </Paper>
+                  </Fade>
+                )}
+              </Popper>
+            </Box>
 
-            <div className="border-t border-gray-200 px-4 py-6">
+            {/* <div className="border-t border-gray-200 px-4 py-6">
               <a href="#" className="-m-2 flex items-center p-2">
                 <img
                   alt=""
@@ -375,7 +427,7 @@ export default function Navigation() {
                 </span>
                 <span className="sr-only">, change currency</span>
               </a>
-            </div>
+            </div> */}
           </DialogPanel>
         </div>
       </Dialog>
@@ -526,10 +578,10 @@ export default function Navigation() {
                     <BackgroundLetterAvatars />
                   ) : (
                     <div>
-                      <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                      <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                         <a
                           href="#"
-                          className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                          className="text-sm font-medium mr-5 text-gray-700 hover:text-gray-800"
                         >
                           Sign in
                         </a>
@@ -635,7 +687,7 @@ export default function Navigation() {
                   </Popper>
                 </Box>
 
-                {/* Search */}
+                {/* Search
                 <div className="flex lg:ml-6">
                   <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
                     <span className="sr-only">Search</span>
@@ -644,7 +696,9 @@ export default function Navigation() {
                       className="h-6 w-6"
                     />
                   </a>
-                </div>
+                </div> */}
+
+               
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
