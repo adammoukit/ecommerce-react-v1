@@ -211,7 +211,7 @@ export default function Product() {
               className="relative ml-auto flex h-full w-full max-w-xs transform flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl transition duration-300 ease-in-out data-[closed]:translate-x-full"
             >
               <div className="flex items-center justify-between px-4">
-                <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                <h2 className="text-lg font-medium text-gray-900">Filtres</h2>
                 <button
                   type="button"
                   onClick={() => setMobileFiltersOpen(false)}
@@ -225,7 +225,7 @@ export default function Product() {
               {/* Filters */}
               <form className="mt-4 border-t border-gray-200">
                 <h3 className="sr-only">Categories</h3>
-                <ul role="list" className="px-2 py-3 font-medium text-gray-900">
+                {/* <ul role="list" className="px-2 py-3 font-medium text-gray-900">
                   {subCategories.map((category) => (
                     <li key={category.name}>
                       <a href={category.href} className="block px-2 py-3">
@@ -233,7 +233,7 @@ export default function Product() {
                       </a>
                     </li>
                   ))}
-                </ul>
+                </ul> */}
 
                 {filters.map((section) => (
                   <Disclosure
@@ -267,6 +267,9 @@ export default function Product() {
                               defaultChecked={option.checked}
                               id={`filter-mobile-${section.id}-${optionIdx}`}
                               name={`${section.id}[]`}
+                              onChange={(e) =>
+                                handleFilter(option.value, section.id)
+                              }
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             />
@@ -425,7 +428,7 @@ export default function Product() {
 
               {/* Product grid */}
               <div className="lg:col-span-5 w-full">
-                <div className="flex flex-wrap justify-start gap-2 bg-white py-3">
+                <div className="flex flex-wrap w-full  justify-center sm:justify-start gap-1 bg-white py-1">
                   {products.products &&
                     products.products?.content?.map((item) => (
                       <ProductCard product={item} />
