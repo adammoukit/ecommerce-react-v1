@@ -352,7 +352,7 @@ export default function Product() {
               Products
             </h2>
 
-            <div className="grid grid-cols-1 gap-x-5 gap-y-10 lg:grid-cols-5">
+            <div className="grid grid-cols-1 gap-x-5 gap-y-10 lg:grid-cols-6">
               {/* Filters */}
               <form className="hidden lg:block">
                 <h3 className="sr-only">Categories</h3>
@@ -424,7 +424,7 @@ export default function Product() {
               </form>
 
               {/* Product grid */}
-              <div className="lg:col-span-4 w-full">
+              <div className="lg:col-span-5 w-full">
                 <div className="flex flex-wrap justify-start gap-2 bg-white py-3">
                   {products.products &&
                     products.products?.content?.map((item) => (

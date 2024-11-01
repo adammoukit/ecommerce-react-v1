@@ -27,6 +27,7 @@ import AuthModal from "../Auth/AuthModal";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, logout } from "../../../State/Auth/Actions";
 import BackgroundLetterAvatars from "../Avatar/BackgroundLetterAvatars";
+import logo from "../../../assets/MOUKIT_LOGO1.png";
 
 const navigation = {
   categories: [
@@ -406,11 +407,7 @@ export default function Navigation() {
               <div className="ml-4 flex lg:ml-0">
                 <a href="/">
                   <span className="sr-only">Your Company</span>
-                  <img
-                    alt=""
-                    src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-                    className="h-8 w-auto"
-                  />
+                  <img alt="Logo du site" src={logo} className="h-14 w-auto" />
                 </a>
               </div>
 

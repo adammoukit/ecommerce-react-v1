@@ -5,15 +5,15 @@ import { useNavigate } from "react-router-dom";
 const ProductCard = ({ product }) => {
   const navigate = useNavigate()
   return (
-    <div onClick={() => navigate(`/product/${product.id}`)} className="productCard w-[13rem] m-3 transition-all cursor-pointer">
-      <div className="h-[12rem]">
+    <div onClick={() => navigate(`/product/${product.id}`)} className="productCard w-[13rem] m-2 transition-all cursor-pointer  border-2 rounded-lg">
+      <div className="h-[12rem] p-2">
         <img
           className="h-full w-full object-cover "
           src={product.imageUrl}
           alt=""
         />
       </div>
-      <div className="textPart bg-white p-3">
+      <div className="textPart border-t-2 w-full bg-white p-3">
         <div>
           <h3 className="font-bold opacity-80 text-black">{product.brand}</h3>
           <p>{product.title} </p>
