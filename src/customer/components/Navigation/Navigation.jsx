@@ -224,11 +224,7 @@ export default function Navigation() {
         />
       )}
       {/* Mobile menu */}
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        className="relative z-40 lg:hidden"
-      >
+      <Dialog open={open} onClose={setOpen} className="relative z-40 lg:hidden">
         <DialogBackdrop
           transition
           className="fixed inset-0 bg-black bg-opacity-25 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"
@@ -399,7 +395,7 @@ export default function Navigation() {
             <div className="flex h-16 items-center">
               <button
                 type="button"
-                // onClick={() => setOpen(true)}
+                onClick={() => setOpen(true)}
                 className="relative rounded-md bg-white p-2 text-gray-400 lg:hidden"
               >
                 <span className="absolute -inset-0.5" />
