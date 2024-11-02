@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import CartItem from "./CartItem";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../../../State/Cart/Action";
@@ -9,22 +9,32 @@ const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cart } = useSelector((store) => store);
+  const loading = useSelector((state) => state.cart.loading);
+
   const handleCheckout = () => {
     navigate("/checkout/?step=2");
   };
+
   useEffect(() => {
     dispatch(getCart());
   }, [cart.updateCartItems, cart.deleteCartItems]);
 
   return (
-    <div>
-      <div className="lg:grid grid-cols-3 lg:px-6 relative gap-3 mt-5 ">
+    <div className={`relative ${loading ? "opacity-50" : ""}`}>
+      {/* Indicateur de chargement */}
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50">
+          <CircularProgress />
+        </div>
+      )}
+
+      <div className="lg:grid grid-cols-3 lg:px-6 gap-3 mt-5">
         <div className="col-span-2 space-y-2 pb-4">
           {cart.cart?.cartItems?.map((item) => (
             <CartItem key={item.id} prod={item} />
           ))}
         </div>
-        <div className=" rounded-sm p-2 h-[100vh] border">
+        <div className="rounded-sm p-2 h-[100vh] border">
           <div className="border p-2 space-y-1">
             <div className="flex items-center justify-between">
               <p className="text-lg font-bold opacity-60">Cart Title</p>

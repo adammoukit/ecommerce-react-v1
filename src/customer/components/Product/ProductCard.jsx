@@ -25,7 +25,7 @@ const ProductCard = ({ product }) => {
           <h2 className="font-semibold">{product.discountedPrice} CFA</h2>
           <h3 className="line-through opacity-50">{product.price}</h3>
           <h3 className="text-green-600 font-semibold">
-            {product.discountPersent}% off
+            {product.discountPercent}% off
           </h3>
         </div>
       </div>

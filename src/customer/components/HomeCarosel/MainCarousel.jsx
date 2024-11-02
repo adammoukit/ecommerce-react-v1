@@ -33,8 +33,8 @@ const MainCarousel = () => {
           src={item.image}
         />
         <div className="absolute top-0 left-0 h-full w-full bg-black opacity-50"></div>
-        <div className="absolute top-24 left-20 text-white text-start">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+        <div className="absolute top-16 sm:top-20 md:top-24 left-4 sm:left-8 md:left-20 text-white text-start">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-orange-600">
             BIENVENUE
           </h1>
           <h2

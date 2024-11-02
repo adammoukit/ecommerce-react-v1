@@ -42,7 +42,7 @@ export const updateCartItem = (reqData) => async (dispatch) => {
       `/api/cart_item/${reqData.cartItemId}`,
       reqData.data
     );
-    dispatch({ type: UPDATE_CART_ITEM_SUCCESS, payload: data }); 
+    dispatch({ type: UPDATE_CART_ITEM_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: UPDATE_CART_ITEM_FAILURE, payload: error.message });
   }
@@ -53,7 +53,6 @@ export const getCart = () => async (dispatch) => {
   try {
     const { data } = await api.get("/api/cart/my-cart");
     dispatch({ type: GET_CART_SUCCESS, payload: data });
-    
   } catch (error) {
     dispatch({ type: GET_CART_FAILURE, payload: error.message });
   }

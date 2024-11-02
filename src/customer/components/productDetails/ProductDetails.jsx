@@ -89,7 +89,7 @@ export default function ProductDetails() {
   }, [params.productId]);
 
   return (
-    <div className="bg-white container mx-auto">
+    <div className="bg-white container  mx-auto">
       <div className="pt-6">
         <nav aria-label="Breadcrumb">
           <ol
@@ -167,7 +167,7 @@ export default function ProductDetails() {
             {/* Options */}
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
-              <div className="flex space-x-7 text-lg lg:text-xl mt-6 text-gray-900">
+              <div className="flex space-x-7 text-xs  mt-6 text-gray-900">
                 <p className="font-bold ">
                   {products.product?.discountedPrice} CFA
                 </p>
@@ -192,7 +192,9 @@ export default function ProductDetails() {
               <form className="mt-10">
                 {/* Colors */}
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900">Color</h3>
+                  <h3 className="text-sm font-medium text-gray-900">
+                    Couleurs
+                  </h3>
 
                   <fieldset aria-label="Choose a color" className="mt-4">
                     {/* <RadioGroup
@@ -227,12 +229,6 @@ export default function ProductDetails() {
                 <div className="mt-10 space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                    <a
-                      href="#"
-                      className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Size guide
-                    </a>
                   </div>
 
                   <fieldset aria-label="Choose a size" className="mt-4">
@@ -250,7 +246,7 @@ export default function ProductDetails() {
                             size.inStock
                               ? "cursor-pointer bg-white text-gray-900 shadow-sm"
                               : "cursor-not-allowed bg-gray-50 text-gray-200",
-                            "group relative flex items-center justify-center rounded-md border  text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:ring-indigo-500 sm:flex-1 sm:py-3 sm:px-2 "
+                            "group relative flex items-center justify-center rounded-md border  text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:ring-indigo-500 sm:flex-1 py-3 px-3 sm:py-4 sm:px-4"
                           )}
                         >
                           <span>{size.name}</span>
@@ -296,7 +292,7 @@ export default function ProductDetails() {
             </div>
 
             <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
-              {/* Description and details */}
+              {/* Description and details
               <div>
                 <h3 className="sr-only">Description</h3>
 
@@ -329,7 +325,7 @@ export default function ProductDetails() {
                 <div className="mt-4 space-y-6">
                   <p className="text-sm text-gray-600">{product.details}</p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
@@ -370,8 +366,8 @@ export default function ProductDetails() {
         </section>
 
         {/* Produits similaires */}
-        <section className="pt-4">
-          <h1 className="text-lg font-semibold">Similaires</h1>
+        <section className="pt-4 px-2 flex flex-col justify-center">
+          <h1 className="text-lg font-semibold">Les Produits Similaires</h1>
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5 justify-center">
             {mens_kurta.map((item) => (
