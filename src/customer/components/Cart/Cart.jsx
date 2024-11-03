@@ -4,6 +4,7 @@ import { Button, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../../../State/Cart/Action";
+import "./Cart.css";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -18,6 +19,10 @@ const Cart = () => {
   useEffect(() => {
     dispatch(getCart());
   }, [cart.updateCartItems, cart.deleteCartItems]);
+
+  useEffect(() => {
+    dispatch(getCart());
+  }, []);
 
   return (
     <div className={`relative ${loading ? "opacity-50" : ""}`}>
@@ -34,7 +39,7 @@ const Cart = () => {
             <CartItem key={item.id} prod={item} />
           ))}
         </div>
-        <div className="rounded-sm p-2 h-[100vh] border">
+        <div className="Cart-infos rounded-sm p-2 h-[100vh] border">
           <div className="border p-2 space-y-1">
             <div className="flex items-center justify-between">
               <p className="text-lg font-bold opacity-60">Cart Title</p>
@@ -63,9 +68,10 @@ const Cart = () => {
             <Button
               onClick={handleCheckout}
               variant="contained"
-              className="mt-4 w-full"
+              className="mt-4 w-full font-bold"
+              sx={{ bgcolor: "yellow", color: "black", fontWeight: 700 }}
             >
-              Checkout
+              Proceder
             </Button>
           </div>
         </div>

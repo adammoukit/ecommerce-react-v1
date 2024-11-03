@@ -13,9 +13,9 @@ import SuccessPage from "../../Pages/HomePage/SuccessPage";
 
 const steps = [
   "Login",
-  "Delevery Adress",
-  "Order Summary & Payement",
-  "Confirmation",
+  "Adress",
+  "Payement",
+  // "Confirmation",
 ];
 
 export default function CheckOut() {
@@ -34,7 +34,7 @@ export default function CheckOut() {
   };
 
   return (
-    <div className="px-10 lg:px-20 mt-5">
+    <div className="px-2 lg:px-5 mt-5">
       <Box sx={{ width: "100%" }}>
         <Stepper activeStep={step}>
           {steps.map((label, index) => {

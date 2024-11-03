@@ -26,15 +26,15 @@ const DeliveryAdressForm = () => {
     console.log("adress", orderData);
   };
   return (
-    <div className="w-full mb-10">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div className="w-full mb-10 px-4 lg:px-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Section Address Card */}
-        <div className="border rounded-md shadow-md h-[30.5rem] overflow-y-scroll p-5">
+        <div className="border rounded-md shadow-md h-auto lg:h-[30.5rem] overflow-y-scroll p-5">
           <AddressCard />
-          <div>
+          <div className="mt-4">
             <Button
               variant="contained"
-              className="mt-4   text-white py-2 rounded-md hover:bg-indigo-500"
+              className="w-full text-white py-2 rounded-md hover:bg-indigo-500"
             >
               Deliver Here
             </Button>
@@ -42,11 +42,11 @@ const DeliveryAdressForm = () => {
         </div>
 
         {/* Section Form */}
-        {/* Section Form */}
-        <div className="border col-span-2 rounded-md shadow-md p-5">
+        <div className="border md:col-span-2 lg:col-span-2 rounded-md shadow-md p-5">
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+            {/* Changez la disposition de la grille */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2">
+              <div className="col-span-2 sm:col-span-1">
                 <TextField
                   type="text"
                   id="firstName"
@@ -57,7 +57,7 @@ const DeliveryAdressForm = () => {
                   autoComplete="given-name"
                 />
               </div>
-              <div>
+              <div className="col-span-2 sm:col-span-1 ">
                 <TextField
                   type="text"
                   id="lastName"
@@ -68,11 +68,11 @@ const DeliveryAdressForm = () => {
                   autoComplete="family-name"
                 />
               </div>
-              {/* Ajoute d'autres champs ici si nécessaire */}
+              {/* Ajoutez d'autres champs ici si nécessaire */}
               <div className="col-span-2">
                 <TextField
                   id="outlined-multiline-static"
-                  label="address"
+                  label="Address"
                   name="streetAdress"
                   multiline
                   required
@@ -80,40 +80,40 @@ const DeliveryAdressForm = () => {
                   className="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
-              <div>
+              <div className="col-span-2 sm:col-span-1">
                 <TextField
                   type="text"
                   id="city"
                   name="city"
                   required
-                  label="city"
+                  label="City"
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   autoComplete="address-level2"
                 />
               </div>
-              <div>
+              <div className="col-span-2 sm:col-span-1">
                 <TextField
                   type="text"
                   id="state"
                   name="state"
                   required
-                  label="state"
+                  label="State"
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   autoComplete="address-level1"
                 />
               </div>
-              <div>
+              <div className="col-span-2 sm:col-span-1">
                 <TextField
                   type="text"
                   id="postalCode"
                   name="postalCode"
                   required
-                  label="zip / postal code"
+                  label="ZIP / Postal Code"
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   autoComplete="postal-code"
                 />
               </div>
-              <div>
+              <div className="col-span-2 sm:col-span-1">
                 <TextField
                   type="text"
                   id="phoneNumber"
@@ -124,12 +124,13 @@ const DeliveryAdressForm = () => {
                   autoComplete="tel"
                 />
               </div>
-              <div>
+              <div className="col-span-2">
                 <Button
                   variant="contained"
                   size="large"
                   sx={{ mt: 2, bgcolor: "RGB(145 85 253)" }}
                   type="submit"
+                  className="w-full"
                 >
                   Deliver Here
                 </Button>
