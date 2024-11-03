@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, TextField } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createOrder, createPayGatePayment } from "../../../State/Order/Action";
 import { useNavigate } from "react-router-dom";
 import AddressCard from "../AddressCard/AddressCard";
+import { getUser } from "../../../State/Auth/Actions";
 
 const DeliveryAdressForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const jwt = localStorage.getItem("jwt");
+
+  // Sélecteur pour récupérer l'utilisateur de l'état global
+  const user = useSelector((state) => state.auth.user);
+
+  console.log("userDeliveryAdress, ", user);
+
+  // Utilisez `useEffect` pour déclencher `getUser` lorsqu'on charge le composant
+  useEffect(() => {
+    if (jwt) {
+      dispatch(getUser(jwt));
+    }
+  }, [jwt, dispatch]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -30,7 +46,7 @@ const DeliveryAdressForm = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Section Address Card */}
         <div className="border rounded-md shadow-md h-auto lg:h-[30.5rem] overflow-y-scroll p-5">
-          <AddressCard />
+          <AddressCard addresses={user} />
           <div className="mt-4">
             <Button
               variant="contained"

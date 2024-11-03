@@ -355,7 +355,7 @@ export default function Product() {
               Products
             </h2>
 
-            <div className="grid grid-cols-1 gap-x-5 gap-y-10 lg:grid-cols-6">
+            <div className="grid grid-cols-1 gap-x-2 gap-y-10 lg:grid-cols-6">
               {/* Filters */}
               <form className="hidden lg:block">
                 <h3 className="sr-only">Categories</h3>

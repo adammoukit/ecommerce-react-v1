@@ -25,6 +25,8 @@ export default function CheckOut() {
   const querySearch = new URLSearchParams(location.search);
   const step = querySearch.get("step");
 
+  
+
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };

@@ -28,6 +28,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUser, logout } from "../../../State/Auth/Actions";
 import BackgroundLetterAvatars from "../Avatar/BackgroundLetterAvatars";
 import logo from "../../../assets/MOUKIT_LOGO1.png";
+import { getCart } from "../../../State/Cart/Action";
 
 const navigation = {
   categories: [
@@ -178,6 +179,14 @@ export default function Navigation() {
   const [placement, setPlacement] = useState();
   const [openAuthModal, setOpenAuthModal] = useState(false);
 
+  const cartTotal = useSelector((state) => state.cart?.cart?.totalItem);
+  const { cart } = useSelector((store) => store);
+
+  useEffect(() => {
+    dispatch(getCart());
+  }, [cart.updateCartItems, cart.deleteCartItems]);
+
+  console.log("cart :", cart);
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
@@ -435,7 +444,7 @@ export default function Navigation() {
       {/* large screen navBar */}
 
       <header className="relative  bg-white">
-        <p className="flex h-10  items-center justify-center bg-indigo-600 px-4 text-sm font-medium text-white sm:px-6 lg:px-8">
+        <p className="flex h-10  items-center justify-center bg-yellow-500 px-4 text-sm font-medium text-black sm:px-6 lg:px-8">
           Site développé par MOUKIT ADAM
         </p>
 
@@ -698,8 +707,6 @@ export default function Navigation() {
                   </a>
                 </div> */}
 
-               
-
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
                   <a href="#" className="group -m-2 flex items-center p-2">
@@ -708,7 +715,7 @@ export default function Navigation() {
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                     />
                     <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                      0
+                      {cartTotal}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </a>
