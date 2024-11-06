@@ -9,6 +9,12 @@
   border-right: 0.15em solid white;
   animation: blink-caret 0.7s step-end infinite;
 }
+.home-infos {
+  font-family: "Jura", sans-serif;
+ font-optical-sizing: auto;
+ font-weight: 300;
+ font-style: normal;
+}
 
 @keyframes blink-caret {
   from,

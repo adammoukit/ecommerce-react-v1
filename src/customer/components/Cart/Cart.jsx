@@ -39,11 +39,11 @@ const Cart = () => {
             <CartItem key={item.id} prod={item} />
           ))}
         </div>
-        <div className="Cart-infos rounded-sm p-2 h-[100vh] border">
+        <div className="Cart-infos  rounded-sm p-2 h-[100vh] border">
           <div className="border p-2 space-y-1">
-            <div className="flex items-center justify-between">
-              <p className="text-lg font-bold opacity-60">Cart Title</p>
-              <p>Items: {cart.cart?.totalItem}</p>
+            <div className="flex items-center justify-between bg-sky-300 px-2 py-1">
+              <p className="text-lg font-bold  ">informations</p>
+              <p>articles: {cart.cart?.totalItem}</p>
             </div>
             <hr />
             <div className="flex justify-between font-bold pt-2 text-black">

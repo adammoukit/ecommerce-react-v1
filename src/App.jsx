@@ -19,10 +19,11 @@ function App() {
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh", // Pour que le footer soit en bas
+        
       }}
     >
       <Navigation />
-      <Box sx={{ flex: "1" }}>
+      <Box  sx={{ flex: "1" }}>
         <Routes>
           <Route path="/*" element={<CustomerRouters />} />
         </Routes>{" "}

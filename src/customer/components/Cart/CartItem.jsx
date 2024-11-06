@@ -31,14 +31,14 @@ const CartItem = ({ prod }) => {
 
   return (
     <div
-      className={`p-3 CiContainer rounded-lg flex flex-col sm:flex-row justify-between items-center lg:items-center space-y-4 lg:space-y-0 ${
+      className={`p-3 CiContainer rounded-lg flex flex-col sm:flex-row bg-slate-50 justify-between items-center lg:items-center space-y-4 lg:space-y-0 ${
         isLoading ? "opacity-50" : ""
       }`}
     >
       {isLoading && <CircularProgress className="absolute z-10" />}
 
       {/* Product Image and Details */}
-      <div className="flex flex-col sm:flex-row items-center lg:items-start">
+      <div className="flex flex-col sm:flex-row items-center lg:items-start ">
         <div className="w-[5rem] h-[5rem] sm:w-[7rem] sm:h-[7rem] lg:w-[9rem] lg:h-[9rem]">
           <img
             className="w-full h-full object-cover object-top"
@@ -46,7 +46,7 @@ const CartItem = ({ prod }) => {
             alt="product image"
           />
         </div>
-        <div className="ml-4 space-y-2 text-center lg:text-left">
+        <div className="ml-4 space-y-2 text-center lg:text-left CartItemTypographie">
           <p className="font-semibold text-blue-700 text-lg">
             {prod.product.title}
           </p>

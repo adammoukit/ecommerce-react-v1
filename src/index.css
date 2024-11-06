@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 .body {
-  font-family: "Rubik Wet Paint", system-ui;
-  font-weight: 400;
+   font-family: "Jura", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
   font-style: normal;
 }

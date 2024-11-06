@@ -22,13 +22,19 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Box, Fade, Paper, Popper, Typography } from "@mui/material";
+import { Avatar, Box, Fade, Paper, Popper, Tooltip, Typography } from "@mui/material";
 import AuthModal from "../Auth/AuthModal";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, logout } from "../../../State/Auth/Actions";
 import BackgroundLetterAvatars from "../Avatar/BackgroundLetterAvatars";
 import logo from "../../../assets/MOUKIT_LOGO1.png";
 import { getCart } from "../../../State/Cart/Action";
+import "./Navigation.css";
+
+import Badge from "@mui/material/Badge";
+import { styled } from "@mui/material/styles";
+import IconButton from "@mui/material/IconButton";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const navigation = {
   categories: [
@@ -161,6 +167,15 @@ const navigation = {
   ],
 };
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}));
+
 export default function Navigation() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -225,7 +240,7 @@ export default function Navigation() {
   };
 
   return (
-    <div className="bg-white relative z-40">
+    <div className="bg-white relative z-40 Navigation-typography">
       {zopen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-1000"
@@ -642,7 +657,7 @@ export default function Navigation() {
                             {/* Vérifiez si l'utilisateur est connecté */}
                             {user ? (
                               <>
-                                <div className="flex flex-col justify-center mb-2">
+                                <div className="flex flex-col justify-center Navigation-typography mb-2">
                                   <div className="p-2 bg-blue-300 text-white">
                                     <div className="flex items-center justify-center ">
                                       <p>{user.firstName} - </p>
@@ -654,30 +669,32 @@ export default function Navigation() {
                                   </div>
                                 </div>
                                 <hr />
-                                <p
-                                  className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
-                                  onClick={() => {
-                                    navigate("/account/profile");
-                                    setZOpen(false);
-                                  }}
-                                >
-                                  Profile
-                                </p>
-                                <p
-                                  className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
-                                  onClick={() => {
-                                    navigate("/account/order");
-                                    setZOpen(false);
-                                  }}
-                                >
-                                  My Orders
-                                </p>
-                                <p
-                                  className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
-                                  onClick={handleLogout}
-                                >
-                                  Logout
-                                </p>
+                                <div className="Navigation-typography text-black">
+                                  <p
+                                    className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                    onClick={() => {
+                                      navigate("/account/profile");
+                                      setZOpen(false);
+                                    }}
+                                  >
+                                    Profile
+                                  </p>
+                                  <p
+                                    className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                    onClick={() => {
+                                      navigate("/account/order");
+                                      setZOpen(false);
+                                    }}
+                                  >
+                                    My Orders
+                                  </p>
+                                  <p
+                                    className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                    onClick={handleLogout}
+                                  >
+                                    Logout
+                                  </p>
+                                </div>
                               </>
                             ) : (
                               <>
@@ -713,15 +730,22 @@ export default function Navigation() {
                     onClick={() => navigate("/cart")}
                     className="group -m-2 flex items-center p-2 cursor-pointer"
                   >
-                    <ShoppingBagIcon
+                    {/* <ShoppingBagIcon
                       aria-hidden="true"
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                     />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+                    <span className="ml-2 text-sm font-medium text-black group-hover:text-gray-800 px-2 py-1 bg-red-400 rounded-full">
                       {cartTotal}
                     </span>
 
-                    <span className="sr-only">items in cart, view bag</span>
+                    <span className="sr-only">items in cart, view bag</span> */}
+                    <Tooltip title="Voir le panier" arrow>
+                      <IconButton aria-label="cart">
+                        <StyledBadge badgeContent={cartTotal} color="secondary">
+                          <ShoppingCartIcon />
+                        </StyledBadge>
+                      </IconButton>
+                    </Tooltip>
                   </div>
                 </div>
               </div>

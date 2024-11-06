@@ -82,6 +82,8 @@ export default function ProductDetails() {
     dispatch(addItemToCart(data));
     console.log("data :", data);
     navigate("/cart");
+    // Forcer l'actualisation de la page après la navigation
+    window.location.reload();
   };
   useEffect(() => {
     const data = { productId: params.productId };
