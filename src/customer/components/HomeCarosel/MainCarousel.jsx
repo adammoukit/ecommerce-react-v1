@@ -6,6 +6,7 @@ import "./MainCarousel.css";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
+import { Navigation } from "swiper/modules";
 
 const MainCarousel = () => {
   const carouselRef = useRef(null);
@@ -253,12 +254,29 @@ const MainCarousel = () => {
 
       <div className="absolute bottom-[-15rem] left-0 w-full bg-opacity-90 p-4 mb-20">
         <Swiper
-          spaceBetween={16}
-          slidesPerView={1}
+          navigation={true}
+          modules={[Navigation]}
+          spaceBetween={50} // Espace entre les slides
+          slidesPerView={1} // Nombre de slides visibles à la fois
+          pagination={{ clickable: true }} // Permet de cliquer sur les dots pour naviguer
+          loop // Permet le défilement infini
           breakpoints={{
-            640: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 4 },
+            1024: {
+              slidesPerView: 4, // 4 slides pour les grands écrans
+              spaceBetween: 30,
+            },
+            768: {
+              slidesPerView: 3, // 3 slides pour les écrans moyens
+              spaceBetween: 30,
+            },
+            640: {
+              slidesPerView: 2, // 2 slides pour les petits écrans
+              spaceBetween: 20,
+            },
+            0: {
+              slidesPerView: 1, // 1 slide pour les très petits écrans
+              spaceBetween: 10,
+            },
           }}
         >
           <SwiperSlide>
