@@ -11,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { findProductById } from "../../../State/Product/Action";
 import { addItemToCart } from "../../../State/Cart/Action";
+import "./ProductDetails.css";
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -91,7 +92,7 @@ export default function ProductDetails() {
   }, [params.productId]);
 
   return (
-    <div className="bg-white container  mx-auto">
+    <div className="bg-white container  mx-auto productTypographie">
       <div className="pt-6">
         <nav aria-label="Breadcrumb">
           <ol

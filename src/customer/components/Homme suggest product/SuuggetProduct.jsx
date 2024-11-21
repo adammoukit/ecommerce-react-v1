@@ -15,29 +15,29 @@ const Item = styled(Paper)(({ theme }) => ({
 const SuggestedProduct = () => {
   const settings = {
     dots: true,
-    infinite: true,
+    // infinite: true,
     speed: 500,
-    slidesToShow: 4, 
+    slidesToShow: 4,
     slidesToScroll: 1,
     responsive: [
-        {
-            breakpoint: 768, // Mobiles
-            settings: {
-              slidesToShow: 1, // Affiche 1 carte sur les petits écrans
-            },
-          },
-          {
-            breakpoint: 1024, // Tablettes
-            settings: {
-              slidesToShow: 2, // Affiche 2 cartes sur les tablettes
-            },
-          },
-          {
-            breakpoint: 1280, // Écrans larges
-            settings: {
-              slidesToShow: 3, // Affiche 3 cartes sur les écrans larges
-            },
-          },
+      {
+        breakpoint: 768, // Mobiles
+        settings: {
+          slidesToShow: 1, // Affiche 1 carte sur les petits écrans
+        },
+      },
+      {
+        breakpoint: 1024, // Tablettes
+        settings: {
+          slidesToShow: 2, // Affiche 2 cartes sur les tablettes
+        },
+      },
+      {
+        breakpoint: 1280, // Écrans larges
+        settings: {
+          slidesToShow: 3, // Affiche 3 cartes sur les écrans larges
+        },
+      },
     ],
   };
 

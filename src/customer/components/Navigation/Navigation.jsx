@@ -22,7 +22,15 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Box, Fade, Paper, Popper, Tooltip, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Fade,
+  Paper,
+  Popper,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import AuthModal from "../Auth/AuthModal";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, logout } from "../../../State/Auth/Actions";
@@ -40,7 +48,7 @@ const navigation = {
   categories: [
     {
       id: "women",
-      name: "Women",
+      name: "Femme",
       featured: [
         {
           name: "New Arrivals",
@@ -102,7 +110,7 @@ const navigation = {
     },
     {
       id: "men",
-      name: "Men",
+      name: "Homme",
       featured: [
         {
           name: "New Arrivals",
@@ -243,7 +251,7 @@ export default function Navigation() {
     <div className="bg-white relative z-40 Navigation-typography">
       {zopen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-1000"
+          className="fixed cursor-pointer inset-0 bg-black bg-opacity-50 z-1000"
           onClick={() => setZOpen(false)}
         />
       )}
@@ -278,7 +286,7 @@ export default function Navigation() {
                   {navigation.categories.map((category) => (
                     <Tab
                       key={category.name}
-                      className="flex-1 whitespace-nowrap border-b-2 border-transparent px-1 py-4 text-base font-medium text-gray-900 data-[selected]:border-indigo-600 data-[selected]:text-indigo-600"
+                      className="flex-1 whitespace-nowrap border-b-2 border-transparent px-1 py-4 text-base font-medium text-black data-[selected]:border-indigo-600 data-[selected]:text-indigo-600"
                     >
                       {category.name}
                     </Tab>
@@ -298,7 +306,7 @@ export default function Navigation() {
                             <img
                               alt={item.imageAlt}
                               src={item.imageSrc}
-                              className="object-cover object-center"
+                              className="object-cover object-center h-40"
                             />
                           </div>
                           <a
@@ -459,7 +467,7 @@ export default function Navigation() {
       {/* large screen navBar */}
 
       <header className="relative  bg-white">
-        <p className="flex h-10  items-center justify-center bg-yellow-500 px-4 text-sm font-medium text-black sm:px-6 lg:px-8">
+        <p className="flex h-10  items-center justify-center bg-yellow-500 px-4 text-sm font-bol text-black sm:px-6 lg:px-8">
           Site développé par MOUKIT ADAM
         </p>
 
@@ -492,8 +500,8 @@ export default function Navigation() {
                 <div className="flex h-full space-x-8">
                   {navigation.categories.map((category) => (
                     <Popover key={category.name} className="flex">
-                      <div className="relative flex">
-                        <PopoverButton className="relative z-10 -mb-px flex items-center border-b-2 border-transparent pt-px text-sm font-medium text-gray-700 transition-colors duration-200 ease-out hover:text-gray-800  data-[open]:text-indigo-600">
+                      <div className="relative font-bold text-black flex">
+                        <PopoverButton className="relative z-10 -mb-px flex items-center border-b-2 border-transparent pt-px text-sm font-medium text-black transition-colors duration-200 ease-out hover:text-gray-800  data-[open]:text-indigo-600">
                           {category.name}
                         </PopoverButton>
                       </div>
@@ -521,7 +529,7 @@ export default function Navigation() {
                                       <img
                                         alt={item.imageAlt}
                                         src={item.imageSrc}
-                                        className="object-cover object-center"
+                                        className="object-cover object-center h-52"
                                       />
                                     </div>
                                     <a
