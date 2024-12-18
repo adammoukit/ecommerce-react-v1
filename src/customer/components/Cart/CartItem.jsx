@@ -39,7 +39,7 @@ const CartItem = ({ prod }) => {
 
       {/* Product Image and Details */}
       <div className="flex flex-col sm:flex-row items-center lg:items-start ">
-        <div className="w-[5rem] h-[5rem] sm:w-[7rem] sm:h-[7rem] lg:w-[9rem] lg:h-[9rem]">
+        <div className="w-[3rem] h-[3rem] sm:w-[5rem] sm:h-[5rem] lg:w-[5rem] lg:h-[5rem]">
           <img
             className="w-full h-full object-cover object-top"
             src={prod.product.imageUrl}
@@ -55,7 +55,7 @@ const CartItem = ({ prod }) => {
           </p>
           <p className="opacity-70">Vendeur : Moukit Fashion Store</p>
           <div className="flex justify-center lg:justify-start text-xs space-x-3 mt-2 text-gray-900">
-            <p className="font-bold text-green-500">
+            <p className="font-bold text-lg text-green-500">
               {prod.product.discountedPrice} CFA
             </p>
             <p className="opacity-50 line-through">{prod.product.price} CFA</p>
@@ -75,7 +75,12 @@ const CartItem = ({ prod }) => {
           >
             <RemoveCircleOutlineIcon />
           </IconButton>
-          <span className="py-1 px-7 border rounded-sm">{prod.quantity}</span>
+          <div className="flex flex-col space-y-2 items-center justify-center">
+            
+            <span className="font-bold opacity-60">Qte</span>
+            <span className="py-1 px-7 border font-bold rounded-sm">{prod.quantity}</span>
+          </div>
+
           <IconButton
             onClick={() => handleUpdateCartItem(1)}
             disabled={isLoading}

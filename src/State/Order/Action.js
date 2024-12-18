@@ -6,6 +6,9 @@ import {
   GET_ORDER_BY_ID_FAILURE,
   GET_ORDER_BY_ID_REQUEST,
   GET_ORDER_BY_ID_SUCCESS,
+  GET_USER_ORDER_COUNT_FAILURE,
+  GET_USER_ORDER_COUNT_REQUEST,
+  GET_USER_ORDER_COUNT_SUCCESS,
 } from "./ActionType";
 
 export const createOrder = (reqData) => async (dispatch) => {
@@ -51,5 +54,16 @@ export const createPayGatePayment = (reqData) => async (dispatch) => {
     dispatch({ type: CREATE_ORDER_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: CREATE_ORDER_FAILURE, payload: error.message });
+  }
+};
+
+export const getUserOrderCount = () => async (dispatch) => {
+  dispatch({ type: GET_USER_ORDER_COUNT_REQUEST });
+  try {
+    const response = await api.get("api/orders/count");
+    dispatch({ type: GET_USER_ORDER_COUNT_SUCCESS, payload: response.data });
+    console.log("orderCount: ", response.data);
+  } catch (error) {
+    dispatch({ type: GET_USER_ORDER_COUNT_FAILURE, payload: error.message });
   }
 };

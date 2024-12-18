@@ -4,24 +4,28 @@ import CustomButton from "../Mui/Mui Button/CustomButton";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../State/Auth/Actions";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Accès à l'état auth
-  const { jwt, isLoading, error } = useSelector((state) => state.auth);
+  const { loginResponse, isLoading, error } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
     // Si jwt est présent, cela signifie que la connexion a réussi
-    if (jwt) {
+    if (loginResponse) {
       // Rafraîchir la page
       navigate("/");
+      console.log("jwt :", loginResponse);
+      toast.success(loginResponse.message);
       // Vous pouvez aussi utiliser navigate pour rediriger vers une autre page :
       // navigate("/dashboard");
     }
-  }, [jwt, navigate]);
-
+  }, [loginResponse, navigate]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -33,8 +37,6 @@ const LoginForm = () => {
     };
 
     dispatch(login(userData));
-
-    console.log("userData :", userData);
   };
 
   return (

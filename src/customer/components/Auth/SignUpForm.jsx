@@ -32,6 +32,7 @@ const SignUpForm = () => {
     dispatch(register(userData));
 
     console.log("userData :", userData);
+    navigate("/store")
   };
 
   return (

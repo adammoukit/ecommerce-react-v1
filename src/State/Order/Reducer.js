@@ -8,6 +8,9 @@ import {
   GET_ORDER_HISTORY_FAILURE,
   GET_ORDER_HISTORY_REQUEST,
   GET_ORDER_HISTORY_SUCCESS,
+  GET_USER_ORDER_COUNT_FAILURE,
+  GET_USER_ORDER_COUNT_REQUEST,
+  GET_USER_ORDER_COUNT_SUCCESS,
 } from "./ActionType";
 
 const initialState = {
@@ -15,6 +18,7 @@ const initialState = {
   order: null,
   loading: false,
   error: null,
+  orderCount: null,
 };
 
 export const orderReducer = (state = initialState, action) => {
@@ -32,7 +36,12 @@ export const orderReducer = (state = initialState, action) => {
       };
     case CREATE_ORDER_FAILURE:
       return { ...state, loading: false, error: action.payload };
-
+    case GET_USER_ORDER_COUNT_REQUEST:
+      return { ...state, loading: true };
+    case GET_USER_ORDER_COUNT_SUCCESS:
+      return { ...state, orderCount: action.payload, loading: false };
+    case GET_USER_ORDER_COUNT_FAILURE:
+      return { ...state, loading: false, error: action.payload };
     case GET_ORDER_BY_ID_REQUEST:
       return { ...state, loading: true, error: null };
     case GET_ORDER_BY_ID_SUCCESS:

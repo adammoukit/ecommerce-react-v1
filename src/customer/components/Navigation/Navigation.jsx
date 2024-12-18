@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -43,6 +43,11 @@ import Badge from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { getUserOrderCount } from "../../../State/Order/Action";
+import { toast } from "react-toastify";
+import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const navigation = {
   categories: [
@@ -71,40 +76,17 @@ const navigation = {
         {
           id: "clothing",
           name: "Clothing",
-          items: [
-            { name: "Tops", href: "#" },
-            { name: "Dresses", href: "#" },
-            { name: "Pants", href: "#" },
-            { name: "Denim", href: "#" },
-            { name: "Sweaters", href: "#" },
-            { name: "T-Shirts", href: "#" },
-            { name: "Jackets", href: "#" },
-            { name: "Activewear", href: "#" },
-            { name: "Browse All", href: "#" },
-          ],
+          items: [{ name: "Tops", href: "#" }],
         },
         {
           id: "accessories",
           name: "Accessories",
-          items: [
-            { name: "Watches", href: "#" },
-            { name: "Wallets", href: "#" },
-            { name: "Bags", href: "#" },
-            { name: "Sunglasses", href: "#" },
-            { name: "Hats", href: "#" },
-            { name: "Belts", href: "#" },
-          ],
+          items: [{ name: "Watches", href: "#" }],
         },
         {
           id: "brands",
           name: "Brands",
-          items: [
-            { name: "Full Nelson", href: "#" },
-            { name: "My Way", href: "#" },
-            { name: "Re-Arranged", href: "#" },
-            { name: "Counterfeit", href: "#" },
-            { name: "Significant Other", href: "#" },
-          ],
+          items: [{ name: "Full Nelson", href: "#" }],
         },
       ],
     },
@@ -116,15 +98,14 @@ const navigation = {
           name: "New Arrivals",
           href: "#",
           imageSrc:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5WHIndeP9HK4GT_otRtTYWVSNsluXQ-RJgA&s",
+            "https://assets.goal.com/images/v3/blt742b715dc380da3b/France_home_kit_.jpg?auto=webp&format=pjpg&width=3840&quality=60",
           imageAlt:
             "Drawstring top with elastic loop closure and textured interior padding.",
         },
         {
           name: "Artwork Tees",
           href: "#",
-          imageSrc:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7U1KLPqZ8RRe1-rQDKreWwAFt_t9YaDe48Q&s",
+          imageSrc: "https://www.dailymotion.com/thumbnail/video/x8zoh5w",
           imageAlt:
             "Three shirts in gray, white, and blue arranged on table with same line drawing of hands and shapes overlapping on front of shirt.",
         },
@@ -134,45 +115,26 @@ const navigation = {
           id: "clothing",
           name: "Clothing",
           items: [
-            { name: "Tops", href: "#" },
-            { name: "Pants", href: "#" },
-            { name: "Sweaters", href: "#" },
-            { name: "T-Shirts", href: "#" },
             { name: "Real Madrid", href: "#" },
-            { name: "Activewear", href: "#" },
-            { name: "Browse All", href: "#" },
+
             { name: "PSG", href: "#" },
+            { name: "man_city", href: "#" },
           ],
         },
         {
           id: "accessories",
           name: "Accessories",
-          items: [
-            { name: "Watches", href: "#" },
-            { name: "Wallets", href: "#" },
-            { name: "Bags", href: "#" },
-            { name: "Sunglasses", href: "#" },
-            { name: "Hats", href: "#" },
-            { name: "Belts", href: "#" },
-          ],
+          items: [{ name: "Watches", href: "#" }],
         },
         {
           id: "brands",
           name: "Brands",
-          items: [
-            { name: "Re-Arranged", href: "#" },
-            { name: "Counterfeit", href: "#" },
-            { name: "Full Nelson", href: "#" },
-            { name: "My Way", href: "#" },
-          ],
+          items: [{ name: "Re-Arranged", href: "#" }],
         },
       ],
     },
   ],
-  pages: [
-    { name: "Company", href: "#" },
-    { name: "Stores", href: "#" },
-  ],
+  pages: [{ name: "Boutique" }, { name: "A propos" }],
 };
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -184,36 +146,98 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
+const searchCategoryList = [
+  { id: 1, name: "Electronique" },
+  { id: 2, name: "Sport" },
+  { id: 3, name: "Auto & MOto" },
+  { id: 4, name: "Meuble" },
+  { id: 5, name: "Cuisine" },
+  { id: 6, name: "Sante" },
+  { id: 7, name: "Mode" },
+  { id: 1, name: "Electronique" },
+  { id: 2, name: "Sport" },
+  { id: 3, name: "Auto & MOto" },
+  { id: 4, name: "Meuble" },
+  { id: 5, name: "Cuisine" },
+  { id: 6, name: "Sante" },
+  { id: 7, name: "Mode" },
+];
+
 export default function Navigation() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   // Récupérer l'état de l'utilisateur connecté depuis le store
   const user = useSelector((state) => state.auth.user);
+  const { order } = useSelector((store) => store);
 
-  const store_jwt = useSelector((state) => state.auth.jwt);
+  const store_jwt = useSelector((state) => state.auth.loginResponse);
+
+  const [searchInput, setSearchInput] = useState("");
+
+  const handleSearchCategory = (name) => {
+    setSearchInput(name);
+    setVisible(false);
+  };
 
   const dispatch = useDispatch();
   const location = useLocation();
-
-  const jwt = localStorage.getItem("jwt");
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [zopen, setZOpen] = useState(false);
   const [placement, setPlacement] = useState();
   const [openAuthModal, setOpenAuthModal] = useState(false);
 
-  const cartTotal = useSelector((state) => state.cart?.cart?.totalItem);
+  // Récupérez le total des articles depuis l'état du store Redux
+  const cartTotal = useSelector((state) => state.cart.totalItem);
   const { cart } = useSelector((store) => store);
 
-  useEffect(() => {
-    dispatch(getCart());
-  }, [cart.updateCartItems, cart.deleteCartItems]);
+  const [visible, setVisible] = useState(false);
+  const dropdownRef = useRef(null);
 
-  console.log("cart :", cart);
+  // Fonction pour détecter les clics en dehors
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setVisible(false); // Fermer la liste
+    }
+  };
+
+  useEffect(() => {
+    // Ajouter l'écouteur lors du montage
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Supprimer l'écouteur lors du démontage
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Récupérer les informations utilisateur dès que le JWT est disponible
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      dispatch(getCart());
+      dispatch(getUser(jwt));
+      console.log("jwt :", jwt);
+      console.log("store_jwt :", store_jwt);
+    }
+  }, [store_jwt]);
+
+  // Récupérer le panier et les commandes une fois l'utilisateur chargé
+  useEffect(() => {
+    if (user) {
+      dispatch(getCart());
+      dispatch(getUserOrderCount());
+    }
+  }, [user, dispatch, store_jwt]);
+
   const handleLogout = () => {
     dispatch(logout());
+
     navigate("/");
   };
+
+  useEffect(() => {
+    dispatch(getUserOrderCount());
+  }, [store_jwt, order.orders, order.orderCount]);
 
   const handleOpen = () => {
     setOpenAuthModal(true);
@@ -229,12 +253,6 @@ export default function Navigation() {
   };
 
   useEffect(() => {
-    if (jwt) {
-      dispatch(getUser(jwt));
-    }
-  }, [jwt, store_jwt]);
-
-  useEffect(() => {
     if (user) {
       handleClose();
     }
@@ -245,6 +263,9 @@ export default function Navigation() {
 
   const handleCategoryClick = (category, section, item) => {
     navigate(`/${category.id}/${section.id}/${item.name}`);
+  };
+  const handlePageClick = () => {
+    navigate(`/store`);
   };
 
   return (
@@ -467,7 +488,7 @@ export default function Navigation() {
       {/* large screen navBar */}
 
       <header className="relative  bg-white">
-        <p className="flex h-10  items-center justify-center bg-yellow-500 px-4 text-sm font-bol text-black sm:px-6 lg:px-8">
+        <p className="flex h-10  items-center justify-center bg-blue-400 px-4 text-sm font-bol text-black sm:px-6 lg:px-8">
           Site développé par MOUKIT ADAM
         </p>
 
@@ -501,7 +522,7 @@ export default function Navigation() {
                   {navigation.categories.map((category) => (
                     <Popover key={category.name} className="flex">
                       <div className="relative font-bold text-black flex">
-                        <PopoverButton className="relative z-10 -mb-px flex items-center border-b-2 border-transparent pt-px text-sm font-medium text-black transition-colors duration-200 ease-out hover:text-gray-800  data-[open]:text-indigo-600">
+                        <PopoverButton className="relative z-10 -mb-px flex items-center border-b-2 border-transparent pt-px text-[15px] font-bold text-black transition-colors duration-200 ease-out hover:text-gray-800  data-[open]:text-indigo-600">
                           {category.name}
                         </PopoverButton>
                       </div>
@@ -589,35 +610,88 @@ export default function Navigation() {
                     </Popover>
                   ))}
 
+                  {/* les sections de navigations ici */}
                   {navigation.pages.map((page) => (
-                    <a
+                    <span
                       key={page.name}
-                      href={page.href}
-                      className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
+                      className="flex items-center text-[15px] cursor-pointer font-medium text-black hover:text-gray-800"
+                      onClick={handlePageClick}
                     >
                       {page.name}
-                    </a>
+                    </span>
                   ))}
                 </div>
               </PopoverGroup>
 
-              <div className="ml-auto flex items-center">
+              {/* La barre recherche Searching Bar */}
+              <div className="flex items-center flex-grow relative h-[60%] mx-5 rounded-md ">
+                {/* 1ère section dans le conteneur de la barre de recherche */}
+                <div
+                  onClick={() => setVisible(!visible)}
+                  className="flex rounded-tl-md rounded-bl-md items-center font-bold text-lg justify-center cursor-pointer text-black px-2 bg-slate-200 h-full"
+                >
+                  <p>All </p>
+                  <span>
+                    <ArrowDropDownIcon />
+                  </span>
+                </div>
+
+                {/* Liste des catégories, juste en dessous */}
+                {visible && (
+                  <ul
+                    ref={dropdownRef}
+                    className="absolute bg-slate-300  left-0 z-50 p-2 w-56 h-80 overflow-y-scroll flex flex-col top-10 shadow-lg rounded-md"
+                  >
+                    {searchCategoryList.map((item) => (
+                      <li
+                        key={item.id}
+                        className="py-1 px-2 hover:bg-slate-400 rounded-md cursor-pointer"
+                        onClick={() => handleSearchCategory(item.name)}
+                      >
+                        {item.name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* 2ème section dans le conteneur de la barre de recherche */}
+                <input
+                  type="text"
+                  placeholder="Rechercher votre produit ici"
+                  className="px-2 h-full flex-grow outline-none"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                />
+
+                {/* 3ème section dans le conteneur de la barre de recherche */}
+                <div className="h-full bg-yellow-600 hover:bg-yellow-400 rounded-tr-md rounded-br-md">
+                  <button className="h-full px-4 text-white font-bold">
+                    Go
+                  </button>
+                </div>
+              </div>
+
+              {/* Login Avatar and shopping cart Icon */}
+              <div className="ml-auto flex items-center ">
                 <div
                   onClick={handleClick("bottom-end")}
-                  className="ml-4 cursor-pointer"
+                  className="ml-4 cursor-pointer relative"
                 >
+                  {order?.orderCount > 0 && (
+                    <span className="absolute rounded-full bg-red-700 px-1 py-1 top-0 border-2 z-50 right-0"></span>
+                  )}
                   {user ? (
-                    <BackgroundLetterAvatars />
+                    <BackgroundLetterAvatars  />
                   ) : (
                     <div>
                       <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                        <a
-                          href="#"
-                          className="text-sm font-medium mr-5 text-gray-700 hover:text-gray-800"
+                        <span
+                          className=" font-bold mr-5 text-black hover:text-gray-800 underline"
+                          style={{ fontSize: "18px" }}
                         >
                           Sign in
-                        </a>
-                        <span
+                        </span>
+                        {/* <span
                           aria-hidden="true"
                           className="h-6 w-px bg-gray-200"
                         />
@@ -626,26 +700,10 @@ export default function Navigation() {
                           className="text-sm font-medium text-gray-700 hover:text-gray-800"
                         >
                           Create account
-                        </a>
+                        </a> */}
                       </div>
                     </div>
                   )}
-                </div>
-
-                {/* Devise */}
-                <div className="hidden lg:ml-8 lg:flex">
-                  <a
-                    href="#"
-                    className="flex items-center text-gray-700 hover:text-gray-800"
-                  >
-                    <img
-                      alt=""
-                      src="https://tailwindui.com/plus/img/flags/flag-canada.svg"
-                      className="block h-auto w-5 flex-shrink-0"
-                    />
-                    <span className="ml-3 block text-sm font-medium">XOF</span>
-                    <span className="sr-only">, change currency</span>
-                  </a>
                 </div>
 
                 {/* profile */}
@@ -666,41 +724,49 @@ export default function Navigation() {
                             {user ? (
                               <>
                                 <div className="flex flex-col justify-center Navigation-typography mb-2">
-                                  <div className="p-2 bg-blue-300 text-white">
+                                  <div className="p-2 bg-gray-300 text-white">
                                     <div className="flex items-center justify-center ">
                                       <p>{user.firstName} - </p>
                                       <p> {user.lastName}</p>
                                     </div>
                                     <div>
-                                      <p className="text-xs">{user.email}</p>
+                                      <p className="text-sm text-green-600 font-bold">
+                                        {user.email}
+                                      </p>
                                     </div>
                                   </div>
                                 </div>
                                 <hr />
                                 <div className="Navigation-typography text-black">
                                   <p
-                                    className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                    className="text-sm font-semibold flex items-center justify-start opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
                                     onClick={() => {
                                       navigate("/account/profile");
                                       setZOpen(false);
                                     }}
                                   >
-                                    Profile
+                                    <PersonIcon />
+                                    <span className="ml-2">Mon Profile</span>
                                   </p>
                                   <p
-                                    className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                    className="text-sm relative flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
                                     onClick={() => {
                                       navigate("/account/order");
                                       setZOpen(false);
                                     }}
                                   >
-                                    My Orders
+                                    <ShoppingCartIcon />
+                                    <span className="ml-2">Mes Commandes</span>
+                                    <span className="px-1 text-sm rounded-full bg-red-800 text-white absolute border-2 border-white -top-2 right-0">
+                                      {order?.orderCount}
+                                    </span>
                                   </p>
                                   <p
-                                    className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                    className="text-sm flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
                                     onClick={handleLogout}
                                   >
-                                    Logout
+                                    <LogoutIcon sx={{ color: "red" }} />
+                                    <span className="ml-2">Déconnexion</span>
                                   </p>
                                 </div>
                               </>
@@ -738,15 +804,6 @@ export default function Navigation() {
                     onClick={() => navigate("/cart")}
                     className="group -m-2 flex items-center p-2 cursor-pointer"
                   >
-                    {/* <ShoppingBagIcon
-                      aria-hidden="true"
-                      className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                    />
-                    <span className="ml-2 text-sm font-medium text-black group-hover:text-gray-800 px-2 py-1 bg-red-400 rounded-full">
-                      {cartTotal}
-                    </span>
-
-                    <span className="sr-only">items in cart, view bag</span> */}
                     <Tooltip title="Voir le panier" arrow>
                       <IconButton aria-label="cart">
                         <StyledBadge badgeContent={cartTotal} color="secondary">

@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import CartItem from "./CartItem";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../../../State/Cart/Action";
@@ -11,6 +11,7 @@ const Cart = () => {
   const dispatch = useDispatch();
   const { cart } = useSelector((store) => store);
   const loading = useSelector((state) => state.cart.loading);
+  const jwt = useSelector((store) => store.auth.jwt)
 
   const handleCheckout = () => {
     navigate("/checkout/?step=2");
@@ -22,8 +23,12 @@ const Cart = () => {
 
   useEffect(() => {
     dispatch(getCart());
-  }, []);
+  }, [jwt]);
 
+  // Trier uniquement lorsque cart.cart.cartItems change
+const sortedCartItems = useMemo(() => {
+  return [...(cart.cart?.cartItems || [])].sort((a, b) => a.id - b.id);
+}, [cart.cart?.cartItems]);
   return (
     <div className={`relative ${loading ? "opacity-50" : ""}`}>
       {/* Indicateur de chargement */}
@@ -35,7 +40,7 @@ const Cart = () => {
 
       <div className="lg:grid grid-cols-3 lg:px-6 gap-3 mt-5">
         <div className="col-span-2 space-y-2 pb-4">
-          {cart.cart?.cartItems?.map((item) => (
+          {sortedCartItems.map((item) => (
             <CartItem key={item.id} prod={item} />
           ))}
         </div>
@@ -54,10 +59,11 @@ const Cart = () => {
               <span className="text-lg opacity-70">Discount</span>
               <span className="text-green-600">{cart.cart?.discount} CFA</span>
             </div>
-            <div className="flex justify-between font-bold pt-2 text-black">
+            <div className="flex justify-between font-bold pt-2  text-black">
               <span className="text-lg opacity-70">Delivery Charge</span>
               <span className="text-green-700">Free</span>
             </div>
+            <Divider sx={{backgroundColor:"black", borderWidth:"1px"}}/>
             <div className="flex justify-between font-bold pt-2 text-black">
               <span className="text-lg opacity-70">Total Amount</span>
               <span className="text-green-600">

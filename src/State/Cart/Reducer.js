@@ -33,6 +33,7 @@ export const cartReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         cartItems: [...state.cartItems, action.payload],
+        totalItem: state.cartItems.length + 1, // Met à jour le total d'articles
         error: null,
       };
 
@@ -42,6 +43,7 @@ export const cartReducer = (state = initialState, action) => {
         loading: false,
         cart: action.payload,
         cartItems: action.payload.cartItems,
+        totalItem: action.payload.cartItems.length, // Met à jour le total d'articles en récupérant les données du serveur
       };
 
     case REMOVE_CART_ITEM_SUCCESS:
@@ -49,6 +51,7 @@ export const cartReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         deleteCartItems: action.payload,
+        totalItem: state.cartItems.length - 1, // Met à jour le total d'articles lors de la suppression d'un élément
       };
 
     case UPDATE_CART_ITEM_SUCCESS:

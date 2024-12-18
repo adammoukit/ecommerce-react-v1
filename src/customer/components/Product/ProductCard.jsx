@@ -1,19 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./ProductCard.css";
 import { useNavigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
+import { addItemToCart, getCart } from "../../../State/Cart/Action";
+import { useDispatch, useSelector } from "react-redux";
+import { IconButton } from "@mui/material";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const [value, setValue] = React.useState(3);
+  const dispatch = useDispatch();
+  const { cartItems } = useSelector((state) => state.cart);
+
+  const handleAddToCart = (id) => {
+    const data = { productId: id, size: "S" };
+    dispatch(addItemToCart(data));
+    console.log("data :", data);
+
+    // Forcer l'actualisation de la page après la navigation
+    // window.location.reload();
+  };
+
+  const [liked, setLiked] = useState(false);
+  const handleLike = () => {
+    setLiked(!liked);
+    // Ajouter ici une logique pour envoyer l'info au backend
+    console.log(liked ? "Disliked" : "Liked");
+  };
+
+  // useEffect(() => {
+
+  // }, [dispatch, cartItems]);
 
   return (
-    <div
-      onClick={() => navigate(`/product/${product.id}`)}
-      className="productCard  w-[15rem] sm:w-[12rem]  transition-all cursor-pointer rounded-lg"
-    >
+    <div className="productCard  w-[15rem] sm:w-[12rem]  transition-all cursor-pointer rounded-lg">
       <div className="h-[12rem] p-2">
         <img
+          onClick={() => navigate(`/product/${product.id}`)}
           className="h-full w-full object-cover "
           src={product.imageUrl}
           alt=""
@@ -24,15 +49,21 @@ const ProductCard = ({ product }) => {
           <h3 className="text-white font-bold text-xs px-2 py-1 rounded-sm bg-red-600">
             -{product.discountPercent}
           </h3>
-          <span className="text-xs text-red-500">Offre à durrée limitée</span>
+          <span className="text-xs text-red-800">Offre à durrée limitée</span>
         </div>
         <div>
-          <h3 className="font-bold opacity-80 text-black">{product.brand}</h3>
-          <p>{product.title} </p>
+          <h3 className="font-bold opacity-80 opacity-80  text-black">
+            {product.brand}
+          </h3>
+          <p className="text-sm opacity-70 font-bold ">{product.title} </p>
         </div>
         <div className="flex space-x-2 justify-between items-center text-xs ">
-          <h2 className="font-semibold">{product.discountedPrice} CFA</h2>
-          <h3 className="line-through opacity-50">{product.price} CFA</h3>
+          <h2 className="font-bold text-red-500 text-lg">
+            {product.discountedPrice} CFA
+          </h2>
+          <h3 className="line-through font-bold text-sm opacity-80">
+            {product.price} CFA
+          </h3>
         </div>
       </div>
       <div className="flex items-center justify-center">
@@ -45,10 +76,19 @@ const ProductCard = ({ product }) => {
         />
         <span>89</span>
       </div>
-      <div className="p-1">
-        <button className="w-full bg-yellow-300 p-1 rounded-2xl hover:bg-yellow-500">
+      <div className="p-1 flex justify-center items-center">
+        <button
+          onClick={() => handleAddToCart(product.id)}
+          className="w-full bg-yellow-300 p-1 rounded-2xl hover:bg-yellow-500"
+        >
           Ajouter au panier
         </button>
+        <IconButton
+          color={liked ? "error" : "default"} // Couleur rouge si aimé
+          onClick={handleLike}
+        >
+          {liked ? <FavoriteIcon /> : <FavoriteBorderIcon/>}
+        </IconButton>
       </div>
     </div>
   );

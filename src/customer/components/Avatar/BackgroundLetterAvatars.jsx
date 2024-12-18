@@ -35,9 +35,7 @@ export default function BackgroundLetterAvatars() {
   // Utilisez useSelector pour récupérer l'utilisateur connecté depuis votre état global (Redux, etc.)
   const user = useSelector((state) => state.auth.user); // Assurez-vous que 'user' contient 'firstName' et 'lastName'
 
-  const userFullName = user
-    ? `${user.firstName} ${user.lastName}`
-    : "Anonymous User";
+  const userFullName = user ? `${user.firstName} ${user.lastName}` : "inconnu";
 
   return (
     <Stack direction="row" spacing={2}>

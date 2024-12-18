@@ -138,7 +138,7 @@ export default function ProductDetails() {
           <div className="flex flex-col items-center gap-y-2">
             <div className="overflow-hidden rounded-lg max-w-[300rem] max-h-[35rem]">
               <img
-                alt={products.product?.imageUrl}
+                alt={products?.content?.product?.imageUrl}
                 src={products.product?.imageUrl}
                 className="h-full w-full object-cover object-top"
               />

@@ -33,7 +33,7 @@ const HomeSectionCarousel = ({ data, sectionName }) => {
 
   const syncActiveIndex = ({ item }) => setActiveIndex(item);
 
-  const items = data.slice(0, 10).map((item, index) => (
+  const items = data.map((item, index) => (
     <div key={index} className="flex justify-center items-center h-full w-full">
       <HomeSectionCard product={item} />
     </div>
