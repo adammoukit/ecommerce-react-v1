@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllGlobalProducts } from "../../../State/Product/Action";
 import ProductCard from "./ProductCard";
-import { Grid, Pagination } from "@mui/material";
+import { Grid, Pagination, Skeleton } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
+import FilterSectionComponent from "./FilterSectionComponent/FilterSectionComponent";
+import ProductCardSkeleton from "./ProductCardSkeleton";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 
 const Store = () => {
   const dispatch = useDispatch();
@@ -28,7 +32,6 @@ const Store = () => {
     dispatch(getAllGlobalProducts(currentPageFromUrl - 1)); // Page backend commence à 0
   }, [dispatch, currentPageFromUrl]);
 
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   //   const handlePaginationChange = (event, value) => {
@@ -43,29 +46,47 @@ const Store = () => {
     navigate(`?page=${value}`);
   };
 
+  // État pour les filtres actifs
+  const [activeFilters, setActiveFilters] = useState([]);
+
+  // Fonction pour ajouter un filtre
+  const addFilter = (filter) => {
+    if (!activeFilters.includes(filter)) {
+      setActiveFilters([...activeFilters, filter]);
+    }
+  };
+
+  // Fonction pour supprimer un filtre
+  const removeFilter = (filter) => {
+    setActiveFilters(activeFilters.filter((f) => f !== filter));
+  };
+
   return (
     <Grid container spacing={2} sx={{ padding: 2 }}>
       {/* Section des filtres/paramètres (4 colonnes) */}
       <Grid item xs={12} md={2}>
-        <div
-          style={{
-            padding: "1rem",
-            backgroundColor: "#f9f9f9",
-            borderRadius: "8px",
-          }}
-        >
-          <h2 style={{ marginBottom: "1rem" }}>Filtres</h2>
-          {/* Ajouter ici les filtres ou autres fonctionnalités */}
-          <p>Ajoutez vos filtres ou options ici.</p>
-        </div>
+        <FilterSectionComponent addFilter={addFilter} />
       </Grid>
 
       {/* Section des produits (8 colonnes) */}
       <Grid item xs={12} md={10}>
-        <div className="flex flex-wrap w-full justify-center sm:justify-start gap-3 bg-white py-2">
-          {globalProducts.content?.map((item) => (
-            <ProductCard key={item.id} product={item} />
+        <Stack direction="row" spacing={1} sx={{ paddingY: "5px" }}>
+          {activeFilters.map((filter, index) => (
+            <Chip
+              key={index}
+              label={filter}
+              onDelete={() => removeFilter(filter)}
+            />
           ))}
+        </Stack>
+        <div className="flex flex-wrap w-full justify-center sm:justify-start gap-3 bg-white py-2">
+          {loading
+            ? Array.from({ length: 10 }).map((_, index) => (
+                <ProductCardSkeleton key={index} />
+              ))
+            : globalProducts.content?.map((item) => (
+                <ProductCard key={item.id} product={item} />
+              ))}
         </div>
         {/* Pagination pour les produits */}
         <section className="w-full px-4 py-3">

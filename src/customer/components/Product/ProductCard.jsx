@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { addItemToCart, getCart } from "../../../State/Cart/Action";
 import { useDispatch, useSelector } from "react-redux";
-import { IconButton } from "@mui/material";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { IconButton, Tooltip } from "@mui/material";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import InfoTwoToneIcon from "@mui/icons-material/InfoTwoTone";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -30,9 +31,7 @@ const ProductCard = ({ product }) => {
     console.log(liked ? "Disliked" : "Liked");
   };
 
-  // useEffect(() => {
-
-  // }, [dispatch, cartItems]);
+  const productSellToolTipValue = "228 ventes pour ce produit !";
 
   return (
     <div className="productCard  w-[15rem] sm:w-[12rem]  transition-all cursor-pointer rounded-lg">
@@ -66,7 +65,7 @@ const ProductCard = ({ product }) => {
           </h3>
         </div>
       </div>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-between">
         <Rating
           name="simple-controlled"
           value={value}
@@ -75,7 +74,16 @@ const ProductCard = ({ product }) => {
           }}
         />
         <span>89</span>
+        <Tooltip
+          title={productSellToolTipValue}
+          arrow
+          className="text-xs font-bold text-black"
+          sx={{fontSize:"16px"}}
+        >
+          <InfoTwoToneIcon />
+        </Tooltip>
       </div>
+      <div className="flex items-center justify-end"></div>
       <div className="p-1 flex justify-center items-center">
         <button
           onClick={() => handleAddToCart(product.id)}
@@ -87,7 +95,7 @@ const ProductCard = ({ product }) => {
           color={liked ? "error" : "default"} // Couleur rouge si aimé
           onClick={handleLike}
         >
-          {liked ? <FavoriteIcon /> : <FavoriteBorderIcon/>}
+          {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
       </div>
     </div>

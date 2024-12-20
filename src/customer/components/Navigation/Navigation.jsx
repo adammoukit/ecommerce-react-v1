@@ -25,6 +25,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
   Avatar,
   Box,
+  Divider,
   Fade,
   Paper,
   Popper,
@@ -681,7 +682,7 @@ export default function Navigation() {
                     <span className="absolute rounded-full bg-red-700 px-1 py-1 top-0 border-2 z-50 right-0"></span>
                   )}
                   {user ? (
-                    <BackgroundLetterAvatars  />
+                    <BackgroundLetterAvatars />
                   ) : (
                     <div>
                       <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
@@ -737,37 +738,45 @@ export default function Navigation() {
                                   </div>
                                 </div>
                                 <hr />
-                                <div className="Navigation-typography text-black">
-                                  <p
-                                    className="text-sm font-semibold flex items-center justify-start opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
-                                    onClick={() => {
-                                      navigate("/account/profile");
-                                      setZOpen(false);
-                                    }}
-                                  >
-                                    <PersonIcon />
-                                    <span className="ml-2">Mon Profile</span>
-                                  </p>
-                                  <p
-                                    className="text-sm relative flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
-                                    onClick={() => {
-                                      navigate("/account/order");
-                                      setZOpen(false);
-                                    }}
-                                  >
-                                    <ShoppingCartIcon />
-                                    <span className="ml-2">Mes Commandes</span>
-                                    <span className="px-1 text-sm rounded-full bg-red-800 text-white absolute border-2 border-white -top-2 right-0">
-                                      {order?.orderCount}
-                                    </span>
-                                  </p>
-                                  <p
-                                    className="text-sm flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
-                                    onClick={handleLogout}
-                                  >
-                                    <LogoutIcon sx={{ color: "red" }} />
-                                    <span className="ml-2">Déconnexion</span>
-                                  </p>
+                                <div className="Navigation-typography flex flex-col justify-center  text-black">
+                                  <div>
+                                    <p
+                                      className="text-sm font-semibold flex items-center justify-start opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                      onClick={() => {
+                                        navigate("/account/profile");
+                                        setZOpen(false);
+                                      }}
+                                    >
+                                      <PersonIcon />
+                                      <span className="ml-2">Mon Profile</span>
+                                    </p>
+                                    <p
+                                      className="text-sm relative flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                      onClick={() => {
+                                        navigate("/account/order");
+                                        setZOpen(false);
+                                      }}
+                                    >
+                                      <ShoppingCartIcon />
+                                      <span className="ml-2">
+                                        Mes Commandes
+                                      </span>
+                                      <span className="px-1 text-sm rounded-full bg-red-800 text-white absolute border-2 border-white -top-2 right-0">
+                                        {order?.orderCount}
+                                      </span>
+                                    </p>
+                                  </div>
+                                  <div className="mt-20 flex flex-col gap-2">
+                                    <Divider className="bg-black text-lg" />
+
+                                    <p
+                                      className="text-sm flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                      onClick={handleLogout}
+                                    >
+                                      <LogoutIcon sx={{ color: "red" }} />
+                                      <span className="ml-2">Déconnexion</span>
+                                    </p>
+                                  </div>
                                 </div>
                               </>
                             ) : (
