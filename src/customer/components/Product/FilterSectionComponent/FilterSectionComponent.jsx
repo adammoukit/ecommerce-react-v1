@@ -15,8 +15,8 @@ function valuetext(value) {
   return `${value}°C`;
 }
 
-const FilterSectionComponent = ({ addFilter }) => {
-  const [value, setValue] = React.useState([0, 37]);
+const FilterSectionComponent = ({ handleFilter }) => {
+  const [value, setValue] = React.useState([null, null]);
 
   const [expandedPrix, setExpandedPrix] = useState(true);
 
@@ -44,17 +44,21 @@ const FilterSectionComponent = ({ addFilter }) => {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    // N'envoie le filtre que si la valeur est définie
+    if (newValue) {
+      handleFilter("priceRange", newValue);
+    }
   };
-
   const handleCategoryClick = (category) => {
-    addFilter(category);
+    handleFilter("category", category); // Envoie la catégorie sélectionnée
   };
 
   const handleBrandClick = (brand) => {
-    addFilter(brand);
+    handleFilter("brand", brand); // Envoie la marque sélectionnée
   };
-  const handleTypeClick = (brand) => {
-    addFilter(brand);
+
+  const handleTypeClick = (type) => {
+    handleFilter("productType", type); // Envoie le type de produit sélectionné
   };
 
   return (
@@ -144,15 +148,15 @@ const FilterSectionComponent = ({ addFilter }) => {
           </AccordionSummary>
           <AccordionDetails>
             <ul>
-              <li onClick={() => handleCategoryClick("Electronique")} className="py-1 px-2 hover:bg-slate-400 text-black font-bold text-sm cursor-pointer rounded-md">
-                <Typography></Typography>Electronique
-              </li>
-              <li onClick={() => handleCategoryClick("Sante")} className="py-1 px-2 hover:bg-slate-400 text-black font-bold text-sm cursor-pointer rounded-md">
-                <Typography></Typography>Sante
-              </li>
-              <li onClick={() => handleCategoryClick("Mode")} className="py-1 px-2 hover:bg-slate-400 text-black font-bold text-sm cursor-pointer rounded-md">
-                <Typography></Typography>Mode
-              </li>
+              {["Electronique", "Santé", "Mode"].map((category) => (
+                <li
+                  key={category}
+                  onClick={() => handleCategoryClick(category)}
+                  className="py-1 px-2 hover:bg-slate-400 text-black font-bold text-sm cursor-pointer rounded-md"
+                >
+                  {category}
+                </li>
+              ))}
             </ul>
           </AccordionDetails>
         </Accordion>
@@ -190,27 +194,23 @@ const FilterSectionComponent = ({ addFilter }) => {
           </AccordionSummary>
           <AccordionDetails>
             <ul>
-              <li onClick={() => handleBrandClick("SONY")} className="py-1 px-2 hover:bg-slate-400 text-black font-bold text-sm cursor-pointer rounded-md">
-                <Typography></Typography>SONY
-              </li>
-              <li  onClick={() => handleBrandClick("NIKE")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
-                <Typography></Typography>NIKE
-              </li>
-              <li onClick={() => handleBrandClick("ZARA")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
-                <Typography></Typography>ZARA
-              </li>
-              <li onClick={() => handleBrandClick("AKLAAA")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
-                <Typography></Typography>AKLAAA
-              </li>
-              <li onClick={() => handleBrandClick("BUGATTY")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
-                <Typography></Typography>BUGATTY
-              </li>
-              <li onClick={() => handleBrandClick("VERIZON")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
-                <Typography></Typography>VERIZON
-              </li>
-              <li onClick={() => handleBrandClick("CALVIN KLEIN")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
-                <Typography></Typography>CALVIN KLEIN
-              </li>
+              {[
+                "SONY",
+                "NIKE",
+                "ZARA",
+                "AKLAAA",
+                "BUGATTY",
+                "VERIZON",
+                "CALVIN KLEIN",
+              ].map((brand) => (
+                <li
+                  key={brand}
+                  onClick={() => handleBrandClick(brand)}
+                  className="py-1 px-2 hover:bg-slate-400 text-black font-bold text-sm cursor-pointer rounded-md"
+                >
+                  {brand}
+                </li>
+              ))}
             </ul>
           </AccordionDetails>
         </Accordion>
@@ -250,25 +250,46 @@ const FilterSectionComponent = ({ addFilter }) => {
           </AccordionSummary>
           <AccordionDetails>
             <ul>
-              <li onClick={() => handleTypeClick("SmartPhone")} className="py-1 px-2 hover:bg-slate-400 text-black font-bold text-sm cursor-pointer rounded-md">
+              <li
+                onClick={() => handleTypeClick("SmartPhone")}
+                className="py-1 px-2 hover:bg-slate-400 text-black font-bold text-sm cursor-pointer rounded-md"
+              >
                 <Typography></Typography>SmartPhone
               </li>
-              <li  onClick={() => handleTypeClick("Télévision")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
+              <li
+                onClick={() => handleTypeClick("Télévision")}
+                className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md"
+              >
                 <Typography></Typography>Télévision
               </li>
-              <li onClick={() => handleTypeClick("Ordinateur Portable")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
+              <li
+                onClick={() => handleTypeClick("Ordinateur Portable")}
+                className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md"
+              >
                 <Typography></Typography>Ordinateur Portable
               </li>
-              <li onClick={() => handleTypeClick("Imprimante")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
+              <li
+                onClick={() => handleTypeClick("Imprimante")}
+                className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md"
+              >
                 <Typography></Typography>Imprimante
               </li>
-              <li onClick={() => handleTypeClick("Casque Audio")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
+              <li
+                onClick={() => handleTypeClick("Casque Audio")}
+                className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md"
+              >
                 <Typography></Typography>Casque Audio
               </li>
-              <li onClick={() => handleTypeClick("Machine à Laver")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
+              <li
+                onClick={() => handleTypeClick("Machine à Laver")}
+                className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md"
+              >
                 <Typography></Typography>Machine à Laver
               </li>
-              <li onClick={() => handleTypeClick("Jeux Vidéo")} className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md">
+              <li
+                onClick={() => handleTypeClick("Jeux Vidéo")}
+                className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md"
+              >
                 <Typography></Typography>Jeux Vidéo
               </li>
             </ul>

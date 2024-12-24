@@ -5,6 +5,9 @@ import {
   DELETE_PRODUCT_FAILURE,
   DELETE_PRODUCT_REQUEST,
   DELETE_PRODUCT_SUCCESS,
+  FILTER_PRODUCTS_FAILURE,
+  FILTER_PRODUCTS_REQUEST,
+  FILTER_PRODUCTS_SUCCESS,
   FIND_PRODUCT_BY_ID_FAILURE,
   FIND_PRODUCT_BY_ID_REQUEST,
   FIND_PRODUCT_BY_ID_SUCCESS,
@@ -23,6 +26,7 @@ const initialState = {
   deleteSuccess: false, // Indicateur de succès
   error: null,
   globalProducts: [], // Nouveau champ pour stocker les produits globaux
+  filteredProducts: [], // Champ pour stocker les produits filtrés
 };
 
 export const customerProductReducer = (state = initialState, action) => {
@@ -35,6 +39,7 @@ export const customerProductReducer = (state = initialState, action) => {
     case CREATE_PRODUCT_REQUEST:
       return { ...state, loading: true, error: false };
     case GET_ALL_GLOBAL_PRODUCT_REQUEST:
+    case FILTER_PRODUCTS_REQUEST: // Ajout
       return { ...state, loading: true, error: false };
     case FIND_PRODUCT_SUCCESS:
       return {
@@ -86,11 +91,21 @@ export const customerProductReducer = (state = initialState, action) => {
         },
       };
 
+    case FILTER_PRODUCTS_SUCCESS: // Gestion du succès de filtre
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        filteredProducts: action.payload,
+      };
     case FIND_PRODUCT_FAILURE:
     case FIND_PRODUCT_BY_ID_FAILURE:
     case CREATE_PRODUCT_FAILURE:
     case DELETE_PRODUCT_FAILURE:
       return { ...state, loading: false, error: action.payload };
+    case FILTER_PRODUCTS_FAILURE: // Gestion des erreurs de filtre
+      return { ...state, loading: false, error: action.payload };
+
     default:
       return state;
   }

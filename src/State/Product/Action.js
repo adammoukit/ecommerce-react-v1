@@ -7,6 +7,9 @@ import {
   DELETE_PRODUCT_FAILURE,
   DELETE_PRODUCT_REQUEST,
   DELETE_PRODUCT_SUCCESS,
+  FILTER_PRODUCTS_FAILURE,
+  FILTER_PRODUCTS_REQUEST,
+  FILTER_PRODUCTS_SUCCESS,
   FIND_PRODUCT_BY_ID_FAILURE,
   FIND_PRODUCT_BY_ID_REQUEST,
   FIND_PRODUCT_BY_ID_SUCCESS,
@@ -81,14 +84,37 @@ export const deleteProduct = (productId) => async (dispatch) => {
   }
 };
 
-export const getAllGlobalProducts = (page = 0) => async (dispatch) => {
-  dispatch({ type: GET_ALL_GLOBAL_PRODUCT_REQUEST });
+export const getAllGlobalProducts =
+  (page = 0) =>
+  async (dispatch) => {
+    dispatch({ type: GET_ALL_GLOBAL_PRODUCT_REQUEST });
 
-  try {
-    const { data } = await api.get(`/api/products/globals?page=${page}`); // Modifier l'URL selon votre backend
-    dispatch({ type: GET_ALL_GLOBAL_PRODUCT_SUCCESS, payload: data });
-    console.log("Global products: ", data);
-  } catch (error) {
-    dispatch({ type: GET_ALL_GLOBAL_PRODUCT_FAILURE, payload: error.message });
-  }
-};
+    try {
+      const { data } = await api.get(`/api/products/globals?page=${page}`); // Modifier l'URL selon votre backend
+      dispatch({ type: GET_ALL_GLOBAL_PRODUCT_SUCCESS, payload: data });
+      console.log("Global products: ", data);
+    } catch (error) {
+      dispatch({
+        type: GET_ALL_GLOBAL_PRODUCT_FAILURE,
+        payload: error.message,
+      });
+    }
+  };
+
+export const filterProducts =
+  (filterCriteria, offset = 0, limit = 10) =>
+  async (dispatch) => {
+    dispatch({ type: FILTER_PRODUCTS_REQUEST });
+
+    try {
+      const { data } = await api.post(
+        `/api/products/filter?offset=${offset}&limit=${limit}`,
+        filterCriteria
+      );
+
+      dispatch({ type: FILTER_PRODUCTS_SUCCESS, payload: data });
+      console.log("Filtered products: ", data);
+    } catch (error) {
+      dispatch({ type: FILTER_PRODUCTS_FAILURE, payload: error.message });
+    }
+  };
