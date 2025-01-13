@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearFilteredProducts,
   filterProducts,
   getAllGlobalProducts,
 } from "../../../State/Product/Action";
@@ -26,13 +27,11 @@ const Store = () => {
   // État pour les filtres actifs
   const [activeFilters, setActiveFilters] = useState([]);
 
-  const [filters, setFilters] = useState(null); // Initialiser filters à null
+  const [filters, setFilters] = useState({}); // Initialiser filters à un objet vide
 
   const { globalProducts, loading, error, filteredProducts } = useSelector(
     (state) => state.products
   );
-
-  console.log("globalProducts:", globalProducts.content);
 
   // useEffect(() => {
   //   // Appliquer les filtres chaque fois qu'ils changent
@@ -41,22 +40,24 @@ const Store = () => {
 
   if (error) return <p>Error: {error}</p>;
 
+  useEffect(() => {
+    console.log("Filters state changed:", filters);
+  }, [filters]);
+
   const handleFilter = (filterType, value) => {
-    // Si la valeur est déjà présente dans le filtre actif, ne rien faire
     if (filters && filters[filterType] === value) {
       return;
     }
 
-    // Mettre à jour les filtres actifs
     setFilters((prevFilters) => {
-      // Ajouter le nouveau filtre sans supprimer les anciens
-      return {
+      const updatedFilters = {
         ...prevFilters,
         [filterType]: value,
       };
+      console.log("Updated Filters:", updatedFilters); // Log ici
+      return updatedFilters;
     });
 
-    // Ajouter un filtre actif visuellement
     if (!activeFilters.some((filter) => filter.value === value)) {
       setActiveFilters((prevFilters) => [
         ...prevFilters,
@@ -64,34 +65,26 @@ const Store = () => {
       ]);
     }
 
-    console.log("produitsFiltres :", filters);
+    console.log("Active Filters:", activeFilters); // Log actif
   };
 
   const resetFilters = () => {
-    setFilters(null); // Réinitialiser filters à null
+    setFilters({}); // Réinitialiser filters à un objet vide
     setActiveFilters([]);
+    dispatch(clearFilteredProducts());
   };
-
+  // Dans le composant parent (Store.js)
   const removeFilter = (filterType, value) => {
-    // Retirer un filtre actif visuellement
     setActiveFilters((prevFilters) =>
       prevFilters.filter(
         (filter) => filter.type !== filterType || filter.value !== value
       )
     );
 
-    // Mettre à jour les filtres dans l'état global en remplaçant la valeur du filtre par null
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [filterType]: null,
-    }));
-  };
-
-  const handlePageChange = (event, page) => {
-    setCurrentPage(page); // Met à jour la page actuelle dans l'état
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set("page", page); // Ajoute ou met à jour le paramètre `page` dans l'URL
-    navigate({ search: `?${searchParams.toString()}` }); // Navigue vers l'URL mise à jour
+    setFilters((prevFilters) => {
+      const { [filterType]: removed, ...restFilters } = prevFilters;
+      return restFilters;
+    });
   };
 
   useEffect(() => {
@@ -100,19 +93,55 @@ const Store = () => {
     setCurrentPage(updatedPage);
   }, [location.search]);
 
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
   useEffect(() => {
-    if (filters !== null) {
-      // Vérifier que filters n'est pas null
-      dispatch(filterProducts(filters)); // Charger les produits filtrés si des filtres sont définis
+    const hasFilters =
+      Object.keys(filters).length > 0 &&
+      Object.values(filters).some(
+        (value) => value !== null && value !== undefined && value !== ""
+      );
+
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set("page", currentPage);
+
+    if (hasFilters) {
+      // Recharge les produits filtrés
+      Object.keys(filters).forEach((key) => {
+        if (
+          filters[key] !== null &&
+          filters[key] !== undefined &&
+          filters[key] !== ""
+        ) {
+          searchParams.append(key, filters[key]);
+        }
+      });
+      navigate({ search: searchParams.toString() });
+      dispatch(filterProducts({ ...filters, page: currentPage - 1 }));
+    } else {
+      dispatch(clearFilteredProducts());
+      // Recharge les produits globaux
+      navigate({ search: `?page=${currentPage}` });
+      dispatch(getAllGlobalProducts(currentPage - 1));
     }
-    dispatch(getAllGlobalProducts(currentPageFromUrl - 1));
-  }, [filters, dispatch, currentPage]);
+  }, [currentPage, filters, dispatch, navigate]);
+
+  const hasActiveFilters = Object.keys(filters).length > 0;
+  const hasFilteredProducts =
+    hasActiveFilters && filteredProducts?.content?.length > 0;
+  const hasGlobalProducts = globalProducts?.content?.length > 0;
 
   return (
     <Grid container spacing={2} sx={{ padding: 2 }}>
       {/* Section des filtres/paramètres (4 colonnes) */}
       <Grid item xs={12} md={2}>
-        <FilterSectionComponent handleFilter={handleFilter} />
+        <FilterSectionComponent
+          handleFilter={handleFilter}
+          removeFilter={removeFilter}
+          activeFilters={activeFilters}
+        />
         <button onClick={resetFilters} className="reset-filters-button">
           Réinitialiser les filtres
         </button>
@@ -132,19 +161,35 @@ const Store = () => {
           ))}
         </Stack>
         <div className="flex flex-wrap w-full justify-center sm:justify-start gap-3 bg-white py-2">
-          {loading
-            ? Array.from({ length: 5 }).map((_, index) => (
-                <ProductCardSkeleton key={index} />
-              ))
-            : filteredProducts?.content?.length > 0
-            ? filteredProducts.content.map((item) => (
+          {loading ? (
+            // Affichage du skeleton si les données sont en cours de chargement
+            Array.from({ length: 5 }).map((_, index) => (
+              <ProductCardSkeleton key={index} />
+            ))
+          ) : Object.keys(filters).length > 0 ? (
+            // Si des filtres sont actifs
+            filteredProducts?.content?.length > 0 ? (
+              // Affichage des produits filtrés s'ils existent
+              filteredProducts.content.map((item) => (
                 <ProductCard key={item.id} product={item} />
               ))
-            : globalProducts?.content?.length > 0
-            ? globalProducts.content.map((item) => (
-                <ProductCard key={item.id} product={item} />
-              ))
-            : "Aucun produit disponible"}
+            ) : (
+              // Message lorsqu'aucun produit ne correspond aux filtres
+              <p className="text-center w-[100%] text-4xl mt-[10%] font-bold  text-red-400">
+                Aucun produit disponible pour le fitre !!!
+              </p>
+            )
+          ) : globalProducts?.content?.length > 0 ? (
+            // Affichage des produits globaux si aucun filtre n'est actif
+            globalProducts.content.map((item) => (
+              <ProductCard key={item.id} product={item} />
+            ))
+          ) : (
+            // Message lorsqu'il n'y a aucun produit global
+            <p className="text-center text-gray-500">
+              Aucun produit disponible.
+            </p>
+          )}
         </div>
         {/* Pagination pour les produits */}
         <section className="w-full px-4 py-3">

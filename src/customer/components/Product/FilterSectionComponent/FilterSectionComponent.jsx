@@ -15,7 +15,10 @@ function valuetext(value) {
   return `${value}°C`;
 }
 
-const FilterSectionComponent = ({ handleFilter }) => {
+const FilterSectionComponent = ({
+  handleFilter,
+  activeFilters,
+}) => {
   const [value, setValue] = React.useState([null, null]);
 
   const [expandedPrix, setExpandedPrix] = useState(true);
@@ -50,7 +53,7 @@ const FilterSectionComponent = ({ handleFilter }) => {
     }
   };
   const handleCategoryClick = (category) => {
-    handleFilter("category", category); // Envoie la catégorie sélectionnée
+    handleFilter("categoryName", category); // Envoie la catégorie sélectionnée
   };
 
   const handleBrandClick = (brand) => {
@@ -58,7 +61,7 @@ const FilterSectionComponent = ({ handleFilter }) => {
   };
 
   const handleTypeClick = (type) => {
-    handleFilter("productType", type); // Envoie le type de produit sélectionné
+    handleFilter("productTypeId", type); // Envoie le type de produit sélectionné
   };
 
   return (
@@ -291,6 +294,12 @@ const FilterSectionComponent = ({ handleFilter }) => {
                 className="py-1 px-2 hover:bg-slate-400 cursor-pointer font-bold text-sm rounded-md"
               >
                 <Typography></Typography>Jeux Vidéo
+              </li>
+              <li
+                onClick={() => handleTypeClick(1)}
+                className="py-1 px-2 hover:bg-slate-400 text-black font-bold text-sm cursor-pointer rounded-md"
+              >
+                <Typography>SmartPhone</Typography>
               </li>
             </ul>
           </AccordionDetails>

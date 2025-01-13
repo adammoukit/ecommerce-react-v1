@@ -53,7 +53,7 @@ export const findProductById = (reqData) => async (dispatch) => {
   const { productId } = reqData;
 
   try {
-    const { data } = await api.get(`/api/products/id/${productId}`);
+    const { data } = await api.get(`/api/products/${productId}`);
     console.log("data ", data);
 
     dispatch({ type: FIND_PRODUCT_BY_ID_SUCCESS, payload: data });
@@ -118,3 +118,7 @@ export const filterProducts =
       dispatch({ type: FILTER_PRODUCTS_FAILURE, payload: error.message });
     }
   };
+
+export const clearFilteredProducts = () => (dispatch) => {
+  dispatch({ type: "CLEAR_FILTER_PRODUCTS" });
+};

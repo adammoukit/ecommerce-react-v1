@@ -5,12 +5,14 @@ import { customerProductReducer } from "./Product/Reducer";
 import { cartReducer } from "./Cart/Reducer";
 import { orderReducer } from "./Order/Reducer";
 import adminOrderReducer from "./Admin/Orders/reducer";
+import categoryReducer from "./Admin/Category/reducer";
 
 const rootReducers = combineReducers({
   auth: authReducer,
   products: customerProductReducer,
   cart: cartReducer,
   order: orderReducer,
+  category: categoryReducer,
   adminOrder: adminOrderReducer,
 });
 

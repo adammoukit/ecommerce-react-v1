@@ -98,6 +98,12 @@ export const customerProductReducer = (state = initialState, action) => {
         error: null,
         filteredProducts: action.payload,
       };
+    case "CLEAR_FILTER_PRODUCTS":
+      return {
+        ...state,
+        filteredProducts: [], // Réinitialisation des produits filtrés
+        loading: false,
+      };
     case FIND_PRODUCT_FAILURE:
     case FIND_PRODUCT_BY_ID_FAILURE:
     case CREATE_PRODUCT_FAILURE:

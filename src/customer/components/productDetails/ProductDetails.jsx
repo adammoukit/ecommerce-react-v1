@@ -2,16 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { Radio, RadioGroup } from "@headlessui/react";
-import { Box, Button, Grid2, Rating } from "@mui/material";
+import { Box, Button, Divider, Grid2, Rating, Typography } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import ProductReviewsCard from "./ProductReviewsCard";
 import { mens_kurta } from "../../../Data/mens/men_kurta";
 import HomeSectionCard from "../HomeSectionCard/HomeSectionCard";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { findProductById } from "../../../State/Product/Action";
 import { addItemToCart } from "../../../State/Cart/Action";
 import "./ProductDetails.css";
+import {
+  getCategoryHierarchy,
+  getCategoryIdByProductId,
+} from "../../../State/Admin/Category/Action";
+import BasicSelect from "../Mui/BasicSelect";
+import ProductColors from "../Utils_Components/ProductColors";
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -72,114 +78,233 @@ function classNames(...classes) {
 
 export default function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState();
+  const [isCategoryIdFetched, setIsCategoryIdFetched] = useState(false);
   const params = useParams();
   const dispatch = useDispatch();
   const { products } = useSelector((store) => store);
+  // Récupération des données du store
+  const { hierarchy, categoryId, loading, error } = useSelector(
+    (state) => state.category
+  );
+
+  const [activeVariant, setActiveVariant] = useState(null);
+  const [mainImage, setMainImage] = useState(null);
+
+  // const [activeVariant, setActiveVariant] = useState(
+  //   products.product?.hasVariants ? products.product.variants[0] : null
+  // ); // Par défaut, première variante
+  // const [mainImage, setMainImage] = useState(
+  //   products.product?.hasVariants
+  //     ? products.product.variants[0]?.mediaUrls?.[0]
+  //     : products.product?.mediaUrls?.[0] || "https://via.placeholder.com/150"
+  // );
+
+  // Quand les données des produits sont disponibles, définissez la première variante par défaut
+  useEffect(() => {
+    if (products.product && products.product.hasVariants) {
+      const firstVariant = products.product.variants[0]; // Première variante
+      setActiveVariant(firstVariant);
+      setMainImage(
+        firstVariant?.mediaUrls?.[0] || "https://via.placeholder.com/150"
+      );
+      setSelectedSize(firstVariant?.sizes?.[0]?.size || null); // Par défaut, la première taille
+    } else if (products.product) {
+      setMainImage(
+        products.product.mediaUrls?.[0] || "https://via.placeholder.com/150"
+      );
+    }
+  }, [products]);
+
+  const handleVariantChange = (variant) => {
+    setActiveVariant(variant); // Met à jour la variante active
+    setMainImage(variant.mediaUrls?.[0]); // Définit la première image de la variante comme l'image principale
+  };
+
+  const handleThumbnailClick = (url) => {
+    setMainImage(url); // Permet de changer l'image principale via les vignettes
+  };
 
   const navigate = useNavigate();
 
   const handleAddToCart = () => {
-    const data = { productId: params.productId, size: selectedSize.name };
+    if (!selectedSize) {
+      alert("Veuillez sélectionner une taille.");
+      return;
+    }
+
+    if (!activeVariant) {
+      alert("Veuillez sélectionner une variante (par exemple, une couleur).");
+      return;
+    }
+
+    const data = {
+      productId: params.productId,
+      variantAttribute: activeVariant.attributeName, // Exemple : "Couleur"
+      variantValue: activeVariant.attributeValue, // Exemple : "Blanc"
+      size: selectedSize, // Exemple : "M"
+      quantity: 1, // Ajouter un sélecteur de quantité si besoin
+      sku: activeVariant.sku,
+    };
+
+    console.log("Données envoyées au panier :", data);
+
+    // Appel Redux pour ajouter au panier
     dispatch(addItemToCart(data));
-    console.log("data :", data);
-    navigate("/cart");
-    // Forcer l'actualisation de la page après la navigation
-    window.location.reload();
+
+    alert("Produit ajouté au panier !");
   };
+
   useEffect(() => {
-    const data = { productId: params.productId };
-    dispatch(findProductById(data));
-  }, [params.productId]);
+    const fetchData = async () => {
+      const data = { productId: params.productId };
+
+      dispatch(findProductById(data));
+
+      // D'abord, on récupère l'ID de la catégorie
+      dispatch(getCategoryIdByProductId(params.productId));
+      setIsCategoryIdFetched(true);
+    };
+
+    // Lancer la récupération de l'ID de la catégorie
+    fetchData();
+  }, [params.productId, dispatch]);
+
+  useEffect(() => {
+    if (isCategoryIdFetched && categoryId) {
+      // Une fois que l'ID de la catégorie est récupéré, on récupère la hiérarchie
+      dispatch(getCategoryHierarchy(categoryId));
+    }
+  }, [isCategoryIdFetched, categoryId, dispatch]);
+
+  // Conversion de la réponse serveur en tableau
+  const categories = hierarchy ? hierarchy.split("›") : [];
+
+  // Générer les chemins cumulés pour les liens
+  const generatePath = (index) =>
+    categories
+      .slice(0, index + 1)
+      .join("/")
+      .toLowerCase();
 
   return (
     <div className="bg-white container  mx-auto productTypographie">
       <div className="pt-6">
         <nav aria-label="Breadcrumb">
-          <ol
-            role="list"
-            className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
-          >
-            {product.breadcrumbs.map((breadcrumb) => (
-              <li key={breadcrumb.id}>
-                <div className="flex items-center">
-                  <a
-                    href={breadcrumb.href}
-                    className="mr-2 text-sm font-medium text-gray-900"
+          {loading && <p>Chargement...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {!loading && !error && (
+            <ul className="breadcrumb">
+              {categories.map((category, index) => (
+                <li key={index}>
+                  <Link
+                    to={`/categories/${generatePath(index)}`}
+                    className="font-bold text-lime-950 opacity-70"
                   >
-                    {breadcrumb.name}
-                  </a>
-                  <svg
-                    fill="currentColor"
-                    width={16}
-                    height={20}
-                    viewBox="0 0 16 20"
-                    aria-hidden="true"
-                    className="h-5 w-4 text-gray-300"
-                  >
-                    <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                  </svg>
-                </div>
-              </li>
-            ))}
-            <li className="text-sm">
-              <a
-                href={product.href}
-                aria-current="page"
-                className="font-medium text-gray-500 hover:text-gray-600"
-              >
-                {product.name}
-              </a>
-            </li>
-          </ol>
+                    {category}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </nav>
 
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-10 px-4 pt-10">
+        <section className="grid grid-cols-1 lg:grid-cols-6 gap-x-8 gap-y-10 px-4 pt-10">
           {/* Image gallery */}
-          <div className="flex flex-col items-center gap-y-2">
-            <div className="overflow-hidden rounded-lg max-w-[300rem] max-h-[35rem]">
+          <div className="flex flex-col items-center gap-y-2 lg:col-span-2">
+            <div className="overflow-hidden  rounded-lg w-[14rem] p-2 border-2">
               <img
-                alt={products?.content?.product?.imageUrl}
-                src={products.product?.imageUrl}
-                className="h-full w-full object-cover object-top"
+                alt={products.product?.name}
+                src={mainImage}
+                className="h-full w-full object-cover "
               />
             </div>
-            <div className="flex items-center  p-3 flex-wrap space-x-5   justify-start">
-              {product.images.map((item) => {
-                return (
-                  <div className=" overflow-hidden rounded-lg max-w-[5rem] max-h-[5rem]">
-                    <img
-                      alt={item.alt}
-                      src={products.product?.imageUrl}
-                      className="h-full cursor-pointer w-full object-cover object-top"
-                    />
-                  </div>
-                );
-              })}
+            {/* Autres images en vignettes */}
+            <div className="flex items-center p-3 flex-wrap space-x-5 justify-start">
+              {activeVariant?.mediaUrls?.map((url, index) => (
+                <div
+                  key={index}
+                  className={`overflow-hidden p-1 rounded-lg max-w-[4rem] max-h-[4rem] border-2 cursor-pointer
+                    ${mainImage === url ? "border-lime-500" : "border-gray-200"}`}
+                  onClick={() => handleThumbnailClick(url)}
+                >
+                  <img
+                    alt={`${product.name} thumbnail ${index + 1}`}
+                    src={url || "https://via.placeholder.com/150"}
+                    className="h-full w-full object-cover object-top"
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
           {/* Product info */}
-          <div className="lg:col-span-1 mx-auto max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
-            <div className="lg:col-span-2 lg:pr-8">
-              <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-                {products.product?.brand}
+          <div className="lg:col-span-3 mx-auto max-w-2xl px-4 pb-16 sm:px-6  lg:px-10 lg:pb-6">
+            <div className=" lg:pr-8">
+              <h1 className="text-lg font-bold tracking-tight text-gray-900 sm:text-3xl mb-2">
+                <div className="flex flex-row items-center justify-between py-2 px-3">
+                  <h2 className="text-lg font-bold sm:text-3xl">
+                    {products.product?.name}
+                  </h2>
+                  <p
+                    style={{ fontSize: "25px" }}
+                    className="font-bold  text-lime-700"
+                  >
+                    {products.product?.price} CFA
+                  </p>
+                </div>
               </h1>
-              <p className="text-lg opacity-65">{products.product?.title}</p>
+              <Divider />
+              <div className="flex flex-col items-start p-2 w-[400px] ">
+                <p className="text-md opacity-90">
+                  Category : {products.product?.categoryName}
+                </p>
+                <div
+                  style={{ fontSize: "11px" }}
+                  className="flex flex-row items-center"
+                >
+                  <p className="font-bold  opacity-80 text-lg mr-3">SKU :</p>
+                  <p className="font-bold">{products.product?.sku}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-row gap-1 w-full  rounded-md p-2">
+              <h2 className="font-bold text-lg  w-28">Taille :</h2>
+              <BasicSelect
+                name="Taille"
+                options={activeVariant?.sizes || []} // Récupère les tailles de la variante active
+                onSelect={(size) => setSelectedSize(size)} // Met à jour la taille sélectionnée
+              />
+            </div>
+
+            <div className="flex flex-row gap-3 w-full   rounded-md p-2 ">
+              <ProductColors
+                product={products.product}
+                activeVariant={activeVariant}
+                onVariantChange={handleVariantChange}
+              />
             </div>
 
             {/* Options */}
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
-              <div className="flex space-x-7 text-xs  mt-6 text-gray-900">
-                <p className="font-bold ">
-                  {products.product?.discountedPrice} CFA
-                </p>
-                <p className="opacity-50 line-through">
-                  {products.product?.price} CFA
-                </p>
-                <p className="text-green-900 font-semibold">
-                  {products.product?.discountPercent}% off
-                </p>
+
+              {/* Section des détails du produit */}
+              <div className="mt-6">
+                <h2 className="text-xl font-bold mb-3">Détails du produit</h2>
+                <ul className="list-disc pl-5 space-y-2">
+                  {products.product?.details &&
+                    Object.entries(products.product.details).map(
+                      ([key, value]) => (
+                        <li key={key} className="text-slate-950 text-sm">
+                          <span className="font-bold capitalize mr-3">
+                            {key}:
+                          </span>{" "}
+                          {value}
+                        </li>
+                      )
+                    )}
+                </ul>
               </div>
               {/* Reviews */}
               <div className="mt-6">
@@ -192,15 +317,19 @@ export default function ProductDetails() {
                 </div>
               </div>
 
-              <form className="mt-10">
-                {/* Colors */}
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900">
-                    Couleurs
-                  </h3>
+              {/* 
+                  
+             */}
+            </div>
+          </div>
 
-                  <fieldset aria-label="Choose a color" className="mt-4">
-                    {/* <RadioGroup
+          {/* Cart fonctionalities */}
+          <div className="lg:col-span-1  max-w-2xl px-4  sm:px-6 lg:px-8 lg:pb-6 ">
+            <form className="mt-10">
+              {/* Colors */}
+              <div>
+                <fieldset aria-label="Choose a color" className="mt-4">
+                  {/* <RadioGroup
                       value={selectedColor}
                       onChange={setSelectedColor}
                       className="flex items-center space-x-3"
@@ -225,111 +354,74 @@ export default function ProductDetails() {
                         </Radio>
                       ))}
                     </RadioGroup> */}
-                  </fieldset>
+                </fieldset>
+              </div>
+
+              {/* Sizes */}
+              <div className="mt-10 space-y-3">
+                {/* <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-gray-900">Size</h3>
                 </div>
 
-                {/* Sizes */}
-                <div className="mt-10 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                  </div>
-
-                  <fieldset aria-label="Choose a size" className="mt-4">
-                    <RadioGroup
-                      value={selectedSize}
-                      onChange={setSelectedSize}
-                      className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
-                    >
-                      {product.sizes.map((size) => (
-                        <Radio
-                          key={size.name}
-                          value={size}
-                          disabled={!size.inStock}
-                          className={classNames(
-                            size.inStock
-                              ? "cursor-pointer bg-white text-gray-900 shadow-sm"
-                              : "cursor-not-allowed bg-gray-50 text-gray-200",
-                            "group relative flex items-center justify-center rounded-md border  text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:ring-indigo-500 sm:flex-1 py-3 px-3 sm:py-4 sm:px-4"
-                          )}
-                        >
-                          <span>{size.name}</span>
-                          {size.inStock ? (
-                            <span
-                              aria-hidden="true"
-                              className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-indigo-500"
-                            />
-                          ) : (
-                            <span
-                              aria-hidden="true"
-                              className="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-200"
-                            >
-                              <svg
-                                stroke="currentColor"
-                                viewBox="0 0 100 100"
-                                preserveAspectRatio="none"
-                                className="absolute inset-0 h-full w-full stroke-2 text-gray-200"
-                              >
-                                <line
-                                  x1={0}
-                                  x2={100}
-                                  y1={100}
-                                  y2={0}
-                                  vectorEffect="non-scaling-stroke"
-                                />
-                              </svg>
-                            </span>
-                          )}
-                        </Radio>
-                      ))}
-                    </RadioGroup>
-                  </fieldset>
-                  <Button
-                    onClick={handleAddToCart}
-                    variant="contained"
-                    className="mt-4"
+                <fieldset aria-label="Choose a size" className="mt-4">
+                  <RadioGroup
+                    value={selectedSize}
+                    onChange={setSelectedSize}
+                    className="grid grid-cols-3 gap-1 sm:grid-cols-3 lg:grid-cols-3"
                   >
-                    Ajouter
-                  </Button>
-                </div>
-              </form>
-            </div>
-
-            <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
-              {/* Description and details
-              <div>
-                <h3 className="sr-only">Description</h3>
-
-                <div className="space-y-6">
-                  <p className="text-base text-gray-900">
-                    {product.description}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-10">
-                <h3 className="text-sm font-medium text-gray-900">
-                  Highlights
-                </h3>
-
-                <div className="mt-4">
-                  <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                    {product.highlights.map((highlight) => (
-                      <li key={highlight} className="text-gray-400">
-                        <span className="text-gray-600">{highlight}</span>
-                      </li>
+                    {product.sizes.map((size) => (
+                      <Radio
+                        key={size.name}
+                        value={size}
+                        disabled={!size.inStock}
+                        className={classNames(
+                          size.inStock
+                            ? "cursor-pointer bg-white text-gray-900 shadow-sm"
+                            : "cursor-not-allowed bg-gray-50 text-gray-200",
+                          "group relative flex items-center justify-center rounded-md border  text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:ring-indigo-500 sm:flex-1 py-3 px-3 sm:py-4 sm:px-4"
+                        )}
+                      >
+                        <span className="">{size.name}</span>
+                        {size.inStock ? (
+                          <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-indigo-500"
+                          />
+                        ) : (
+                          <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-200"
+                          >
+                            <svg
+                              stroke="currentColor"
+                              viewBox="0 0 100 100"
+                              preserveAspectRatio="none"
+                              className="absolute inset-0 h-full w-full stroke-2 text-gray-200"
+                            >
+                              <line
+                                x1={0}
+                                x2={100}
+                                y1={100}
+                                y2={0}
+                                vectorEffect="non-scaling-stroke"
+                              />
+                            </svg>
+                          </span>
+                        )}
+                      </Radio>
                     ))}
-                  </ul>
-                </div>
+                  </RadioGroup>
+                </fieldset> */}
+                <Button
+                  onClick={handleAddToCart}
+                  variant="contained"
+                  className="mt-4 bg-amber-700"
+                  sx={{ "bg-color": "orange" }}
+                >
+                  Ajouter
+                </Button>
               </div>
-
-              <div className="mt-10">
-                <h2 className="text-sm font-medium text-gray-900">Details</h2>
-
-                <div className="mt-4 space-y-6">
-                  <p className="text-sm text-gray-600">{product.details}</p>
-                </div>
-              </div> */}
-            </div>
+            </form>
           </div>
         </section>
         {/* Commentaires et notations */}

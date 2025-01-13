@@ -8,7 +8,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct, findProduct, getAllGlobalProducts } from "../../State/Product/Action";
+import {
+  deleteProduct,
+  findProduct,
+  getAllGlobalProducts,
+} from "../../State/Product/Action";
 import { Avatar, Button } from "@mui/material";
 import { toast } from "react-toastify";
 
@@ -104,14 +108,17 @@ export default function ProductsTable() {
           {localProducts?.map((item) => (
             <StyledTableRow key={item.id}>
               <StyledTableCell>
-                <Avatar alt="Image Produit" src={item.imageUrl} />
+                <Avatar
+                  alt="Image Produit"
+                  src={item.mediaUrls[0] || "https://via.placeholder.com/150"}
+                />
               </StyledTableCell>
               <StyledTableCell align="right" scope="row">
-                {item.brand}
+                {item.productTypeName}
               </StyledTableCell>
 
               <StyledTableCell align="right">
-                {item.category.name}
+                {item.categoryName}
               </StyledTableCell>
               <StyledTableCell align="right">
                 {item.price} F CFA

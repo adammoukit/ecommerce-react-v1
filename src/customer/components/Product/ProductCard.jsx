@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { addItemToCart, getCart } from "../../../State/Cart/Action";
 import { useDispatch, useSelector } from "react-redux";
-import { IconButton, Tooltip } from "@mui/material";
+import { IconButton, Tooltip, Typography } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import InfoTwoToneIcon from "@mui/icons-material/InfoTwoTone";
@@ -15,15 +15,7 @@ const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
 
-  const handleAddToCart = (id) => {
-    const data = { productId: id, size: "S" };
-    dispatch(addItemToCart(data));
-    console.log("data :", data);
-
-    // Forcer l'actualisation de la page après la navigation
-    // window.location.reload();
-  };
-
+  
   const [liked, setLiked] = useState(false);
   const handleLike = () => {
     setLiked(!liked);
@@ -38,31 +30,27 @@ const ProductCard = ({ product }) => {
       <div className="h-[12rem] p-2">
         <img
           onClick={() => navigate(`/product/${product.id}`)}
-          className="h-full w-full object-cover "
-          src={product.imageUrl}
+          className="h-full w-full object-cover rounded-lg"
+          src={product.mediaUrls?.[0] || "https://via.placeholder.com/150"} // Utilise la première URL ou une image par défaut
           alt=""
         />
       </div>
       <div className="textPart flex flex-col gap-2 border-t-2 w-full  p-1 ">
         <div className="flex items-center w-full justify-between">
           <h3 className="text-white font-bold text-xs px-2 py-1 rounded-sm bg-red-600">
-            -{product.discountPercent}
+            -10%
           </h3>
           <span className="text-xs text-red-800">Offre à durrée limitée</span>
         </div>
         <div>
-          <h3 className="font-bold opacity-80 opacity-80  text-black">
-            {product.brand}
-          </h3>
-          <p className="text-sm opacity-70 font-bold ">{product.title} </p>
+        
+          <p className="text-sm  font-bold ">{product.name} </p>
         </div>
         <div className="flex space-x-2 justify-between items-center text-xs ">
-          <h2 className="font-bold text-red-500 text-lg">
-            {product.discountedPrice} CFA
-          </h2>
-          <h3 className="line-through font-bold text-sm opacity-80">
+          <h2 className="font-bold  text-lg"> {product.price} {" F CFA"}</h2>
+          {/* <h3 className="line-through font-bold text-sm opacity-80">
             {product.price} CFA
-          </h3>
+          </h3> */}
         </div>
       </div>
       <div className="flex items-center justify-between">
@@ -78,7 +66,7 @@ const ProductCard = ({ product }) => {
           title={productSellToolTipValue}
           arrow
           className="text-xs font-bold text-black"
-          sx={{fontSize:"16px"}}
+          sx={{ fontSize: "16px" }}
         >
           <InfoTwoToneIcon />
         </Tooltip>
@@ -86,10 +74,11 @@ const ProductCard = ({ product }) => {
       <div className="flex items-center justify-end"></div>
       <div className="p-1 flex justify-center items-center">
         <button
-          onClick={() => handleAddToCart(product.id)}
+         
           className="w-full bg-yellow-300 p-1 rounded-2xl hover:bg-yellow-500"
         >
-          Ajouter au panier
+           <Typography>Voir le produit</Typography>
+          
         </button>
         <IconButton
           color={liked ? "error" : "default"} // Couleur rouge si aimé

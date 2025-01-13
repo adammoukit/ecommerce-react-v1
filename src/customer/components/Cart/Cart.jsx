@@ -11,7 +11,7 @@ const Cart = () => {
   const dispatch = useDispatch();
   const { cart } = useSelector((store) => store);
   const loading = useSelector((state) => state.cart.loading);
-  const jwt = useSelector((store) => store.auth.jwt)
+  const jwt = useSelector((store) => store.auth.jwt);
 
   const handleCheckout = () => {
     navigate("/checkout/?step=2");
@@ -19,18 +19,18 @@ const Cart = () => {
 
   useEffect(() => {
     dispatch(getCart());
-  }, [cart.updateCartItems, cart.deleteCartItems]);
+  }, [cart.updateCartItems, cart.totalItem]);
 
   useEffect(() => {
     dispatch(getCart());
   }, [jwt]);
 
   // Trier uniquement lorsque cart.cart.cartItems change
-const sortedCartItems = useMemo(() => {
-  return [...(cart.cart?.cartItems || [])].sort((a, b) => a.id - b.id);
-}, [cart.cart?.cartItems]);
+  const sortedCartItems = useMemo(() => {
+    return [...(cart.cart?.cartItems || [])].sort((a, b) => a.cartItemId - b.cartItemId);
+  }, [cart.cart?.cartItems]);
   return (
-    <div className={`relative ${loading ? "opacity-50" : ""}`}>
+    <div className={`relative ${loading ? "" : ""}`}>
       {/* Indicateur de chargement */}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50">
@@ -41,10 +41,10 @@ const sortedCartItems = useMemo(() => {
       <div className="lg:grid grid-cols-3 lg:px-6 gap-3 mt-5">
         <div className="col-span-2 space-y-2 pb-4">
           {sortedCartItems.map((item) => (
-            <CartItem key={item.id} prod={item} />
+            <CartItem key={item.id} prod={item} loading={loading}/>
           ))}
         </div>
-        <div className="Cart-infos  rounded-sm p-2 h-[100vh] border">
+        <div className="Cart-infos  rounded-lg CiContainer p-2 h-[100vh] border">
           <div className="border p-2 space-y-1">
             <div className="flex items-center justify-between bg-sky-300 px-2 py-1">
               <p className="text-lg font-bold  ">informations</p>
@@ -57,17 +57,17 @@ const sortedCartItems = useMemo(() => {
             </div>
             <div className="flex justify-between font-bold pt-2 text-black">
               <span className="text-lg opacity-70">Discount</span>
-              <span className="text-green-600">{cart.cart?.discount} CFA</span>
+              {/* <span className="text-green-600">{cart.cart?.discount} CFA</span> */}
             </div>
             <div className="flex justify-between font-bold pt-2  text-black">
               <span className="text-lg opacity-70">Delivery Charge</span>
               <span className="text-green-700">Free</span>
             </div>
-            <Divider sx={{backgroundColor:"black", borderWidth:"1px"}}/>
+            <Divider sx={{ backgroundColor: "black", borderWidth: "1px" }} />
             <div className="flex justify-between font-bold pt-2 text-black">
               <span className="text-lg opacity-70">Total Amount</span>
               <span className="text-green-600">
-                {cart.cart?.totalDiscountedPrice} CFA
+                {cart.cart?.totalPrice} CFA
               </span>
             </div>
             <hr />

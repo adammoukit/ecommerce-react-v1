@@ -270,7 +270,7 @@ export default function Navigation() {
   };
 
   return (
-    <div className="bg-white relative z-40 Navigation-typography">
+    <div className="bg-blue-950 relative z-40 Navigation-typography">
       {zopen && (
         <div
           className="fixed cursor-pointer inset-0 bg-black bg-opacity-50 z-1000"
@@ -659,7 +659,7 @@ export default function Navigation() {
                 <input
                   type="text"
                   placeholder="Rechercher votre produit ici"
-                  className="px-2 h-full flex-grow outline-none"
+                  className="px-2 h-full flex-grow outline-none bg-slate-200 border border-transparent focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                 />
@@ -726,6 +726,15 @@ export default function Navigation() {
                               <>
                                 <div className="flex flex-col justify-center Navigation-typography mb-2">
                                   <div className="p-2 bg-gray-300 text-white">
+                                    {user.roles.some(
+                                      (role) => role.name === "ROLE_ADMIN"
+                                    ) && (
+                                      <div>
+                                        <p className="text-lg font-bold text-orange-400">
+                                          ADMIN
+                                        </p>
+                                      </div>
+                                    )}
                                     <div className="flex items-center justify-center ">
                                       <p>{user.firstName} - </p>
                                       <p> {user.lastName}</p>
