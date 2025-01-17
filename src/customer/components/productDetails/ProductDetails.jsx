@@ -107,7 +107,7 @@ export default function ProductDetails() {
       setMainImage(
         firstVariant?.mediaUrls?.[0] || "https://via.placeholder.com/150"
       );
-      setSelectedSize(firstVariant?.sizes?.[0]?.size || null); // Par défaut, la première taille
+      // setSelectedSize(firstVariant?.sizes?.[0]?.size || null); // Par défaut, la première taille
     } else if (products.product) {
       setMainImage(
         products.product.mediaUrls?.[0] || "https://via.placeholder.com/150"
@@ -127,31 +127,49 @@ export default function ProductDetails() {
   const navigate = useNavigate();
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
-      alert("Veuillez sélectionner une taille.");
-      return;
-    }
-
     if (!activeVariant) {
       alert("Veuillez sélectionner une variante (par exemple, une couleur).");
       return;
     }
 
-    const data = {
-      productId: params.productId,
-      variantAttribute: activeVariant.attributeName, // Exemple : "Couleur"
-      variantValue: activeVariant.attributeValue, // Exemple : "Blanc"
-      size: selectedSize, // Exemple : "M"
-      quantity: 1, // Ajouter un sélecteur de quantité si besoin
-      sku: activeVariant.sku,
-    };
+    if (activeVariant.sizes && activeVariant.sizes.length > 0) {
+      if (!selectedSize) {
+        alert("Veuillez sélectionner une taille.");
+        return;
+      }
 
-    console.log("Données envoyées au panier :", data);
+      const data = {
+        productId: params.productId,
+        variantAttribute: activeVariant.attributeName, // Exemple : "Couleur"
+        variantValue: activeVariant.attributeValue, // Exemple : "Blanc"
+        size: selectedSize, // Exemple : "M"
+        quantity: 1, // Ajouter un sélecteur de quantité si besoin
+        sku: activeVariant.sku,
+      };
 
-    // Appel Redux pour ajouter au panier
-    dispatch(addItemToCart(data));
+      console.log("Données envoyées au panier :", data);
 
-    alert("Produit ajouté au panier !");
+      // Appel Redux pour ajouter au panier
+      dispatch(addItemToCart(data));
+
+      alert("Produit ajouté au panier !");
+    } else {
+      const data = {
+        productId: params.productId,
+        variantAttribute: activeVariant.attributeName, // Exemple : "Couleur"
+        variantValue: activeVariant.attributeValue, // Exemple : "Blanc"
+        size: selectedSize, // Exemple : "M"
+        quantity: 1, // Ajouter un sélecteur de quantité si besoin
+        sku: activeVariant.sku,
+      };
+
+      console.log("Données envoyées au panier :", data);
+
+      // Appel Redux pour ajouter au panier
+      dispatch(addItemToCart(data));
+
+      alert("Produit ajouté au panier !");
+    }
   };
 
   useEffect(() => {
@@ -189,7 +207,7 @@ export default function ProductDetails() {
   return (
     <div className="bg-white container  mx-auto productTypographie">
       <div className="pt-6">
-        <nav aria-label="Breadcrumb">
+        <nav aria-label="Breadcrumb" className="mx-2">
           {loading && <p>Chargement...</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
           {!loading && !error && (
@@ -198,7 +216,7 @@ export default function ProductDetails() {
                 <li key={index}>
                   <Link
                     to={`/categories/${generatePath(index)}`}
-                    className="font-bold text-lime-950 opacity-70"
+                    className="font-bold text-sm text-lime-950 opacity-70"
                   >
                     {category}
                   </Link>
@@ -224,7 +242,9 @@ export default function ProductDetails() {
                 <div
                   key={index}
                   className={`overflow-hidden p-1 rounded-lg max-w-[4rem] max-h-[4rem] border-2 cursor-pointer
-                    ${mainImage === url ? "border-lime-500" : "border-gray-200"}`}
+                    ${
+                      mainImage === url ? "border-lime-500" : "border-gray-200"
+                    }`}
                   onClick={() => handleThumbnailClick(url)}
                 >
                   <img
@@ -240,16 +260,16 @@ export default function ProductDetails() {
           {/* Product info */}
           <div className="lg:col-span-3 mx-auto max-w-2xl px-4 pb-16 sm:px-6  lg:px-10 lg:pb-6">
             <div className=" lg:pr-8">
-              <h1 className="text-lg font-bold tracking-tight text-gray-900 sm:text-3xl mb-2">
-                <div className="flex flex-row items-center justify-between py-2 px-3">
-                  <h2 className="text-lg font-bold sm:text-3xl">
+              <h1 className="text-lg font-bold tracking-tight text-gray-900 sm:text-3xl mb-1">
+                <div className="flex flex-col gap-y-3 justify-between py-2 px-3">
+                  <h2 className="text-lg font-bold sm:text-4xl">
                     {products.product?.name}
                   </h2>
                   <p
                     style={{ fontSize: "25px" }}
                     className="font-bold  text-lime-700"
                   >
-                    {products.product?.price} CFA
+                    {products.product?.price} F CFA
                   </p>
                 </div>
               </h1>
@@ -263,21 +283,24 @@ export default function ProductDetails() {
                   className="flex flex-row items-center"
                 >
                   <p className="font-bold  opacity-80 text-lg mr-3">SKU :</p>
-                  <p className="font-bold">{products.product?.sku}</p>
+                  <p className="font-bold">{activeVariant?.sku}</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-row gap-1 w-full  rounded-md p-2">
-              <h2 className="font-bold text-lg  w-28">Taille :</h2>
-              <BasicSelect
-                name="Taille"
-                options={activeVariant?.sizes || []} // Récupère les tailles de la variante active
-                onSelect={(size) => setSelectedSize(size)} // Met à jour la taille sélectionnée
-              />
-            </div>
+            {/* Vérifier si la variante a des tailles */}
+            {activeVariant?.sizes && activeVariant?.sizes.length > 0 ? (
+              <div className="flex flex-row gap-1 w-full rounded-md p-2">
+                <h2 className="font-bold text-lg w-28">Taille :</h2>
+                <BasicSelect
+                  name="Taille"
+                  options={activeVariant.sizes} // Récupère les tailles de la variante active
+                  onSelect={(size) => setSelectedSize(size)} // Met à jour la taille sélectionnée
+                />
+              </div>
+            ) : null}
 
-            <div className="flex flex-row gap-3 w-full   rounded-md p-2 ">
+            <div className="flex flex-row gap-3 w-full rounded-md p-2">
               <ProductColors
                 product={products.product}
                 activeVariant={activeVariant}
@@ -357,61 +380,18 @@ export default function ProductDetails() {
                 </fieldset>
               </div>
 
-              {/* Sizes */}
-              <div className="mt-10 space-y-3">
-                {/* <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-gray-900">Size</h3>
+              <div className="flex flex-col mt-10 space-y-3 ">
+                <div>
+                  {activeVariant?.stock && activeVariant?.stock > 5 ? (
+                    <h3 className="text-green-700 font-bold">
+                      Produit en Stock : {activeVariant?.stock}
+                    </h3>
+                  ) : (
+                    <h3 className="text-red-500 font-bold">
+                      Stock Critique : {activeVariant?.stock}{" "}
+                    </h3>
+                  )}
                 </div>
-
-                <fieldset aria-label="Choose a size" className="mt-4">
-                  <RadioGroup
-                    value={selectedSize}
-                    onChange={setSelectedSize}
-                    className="grid grid-cols-3 gap-1 sm:grid-cols-3 lg:grid-cols-3"
-                  >
-                    {product.sizes.map((size) => (
-                      <Radio
-                        key={size.name}
-                        value={size}
-                        disabled={!size.inStock}
-                        className={classNames(
-                          size.inStock
-                            ? "cursor-pointer bg-white text-gray-900 shadow-sm"
-                            : "cursor-not-allowed bg-gray-50 text-gray-200",
-                          "group relative flex items-center justify-center rounded-md border  text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none data-[focus]:ring-2 data-[focus]:ring-indigo-500 sm:flex-1 py-3 px-3 sm:py-4 sm:px-4"
-                        )}
-                      >
-                        <span className="">{size.name}</span>
-                        {size.inStock ? (
-                          <span
-                            aria-hidden="true"
-                            className="pointer-events-none absolute -inset-px rounded-md border-2 border-transparent group-data-[focus]:border group-data-[checked]:border-indigo-500"
-                          />
-                        ) : (
-                          <span
-                            aria-hidden="true"
-                            className="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-200"
-                          >
-                            <svg
-                              stroke="currentColor"
-                              viewBox="0 0 100 100"
-                              preserveAspectRatio="none"
-                              className="absolute inset-0 h-full w-full stroke-2 text-gray-200"
-                            >
-                              <line
-                                x1={0}
-                                x2={100}
-                                y1={100}
-                                y2={0}
-                                vectorEffect="non-scaling-stroke"
-                              />
-                            </svg>
-                          </span>
-                        )}
-                      </Radio>
-                    ))}
-                  </RadioGroup>
-                </fieldset> */}
                 <Button
                   onClick={handleAddToCart}
                   variant="contained"

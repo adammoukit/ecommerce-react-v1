@@ -50,6 +50,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
+import SearchIcon from '@mui/icons-material/Search';
+
 const navigation = {
   categories: [
     {
@@ -665,10 +667,8 @@ export default function Navigation() {
                 />
 
                 {/* 3ème section dans le conteneur de la barre de recherche */}
-                <div className="h-full bg-yellow-600 hover:bg-yellow-400 rounded-tr-md rounded-br-md">
-                  <button className="h-full px-4 text-white font-bold">
-                    Go
-                  </button>
+                <div className="flex items-center justify-center px-2 h-full bg-yellow-600 hover:bg-yellow-400 rounded-tr-md rounded-br-md">
+                  <SearchIcon sx={{color:"black", fontSize:"2rem"}}/>
                 </div>
               </div>
 

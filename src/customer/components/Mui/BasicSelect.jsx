@@ -5,17 +5,18 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-const BasicSelect = ({ name, options = [], onSelect }) => {
+const BasicSelect = ({ name, options, onSelect }) => {
   const [selectedValue, setSelectedValue] = React.useState("");
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
     if (onSelect) onSelect(event.target.value);
+
   };
 
   return (
     <Box sx={{ minWidth: 400, width: "100%" }}>
-      <FormControl fullWidth>
+      <FormControl className="w-[35%]">
         <InputLabel id="basic-select-label">{name}</InputLabel>
         <Select
           labelId="basic-select-label"
@@ -27,7 +28,7 @@ const BasicSelect = ({ name, options = [], onSelect }) => {
           {options.length > 0 ? (
             options.map((option, index) => (
               // Assurez-vous d'afficher la propriété 'size' ici
-              <MenuItem key={index} value={option.size}>
+              <MenuItem key={index} value={option.size} >
                 {option.size}
               </MenuItem>
             ))

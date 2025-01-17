@@ -280,7 +280,7 @@ const MainCarousel = () => {
           }}
         >
           <SwiperSlide>
-            <div className="flex flex-col bg-white h-[25rem] p-2 gap-2 text-xl font-bold">
+            <div className="flex flex-col bg-white h-[25rem] p-2 gap-2 text-xl font-bold rounded-md">
               <h2>Nos catégories favorites</h2>
               <div className="p-4 h-full grid grid-cols-2 grid-rows-2 gap-4">
                 <div className="p-4 shadow flex flex-col items-center hover:shadow-lg cursor-pointer overflow-hidden">
@@ -325,7 +325,7 @@ const MainCarousel = () => {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="flex flex-col bg-white h-[25rem] p-2 gap-2 text-xl font-bold">
+            <div className="flex flex-col bg-white h-[25rem] p-2 gap-2 text-xl font-bold rounded-md">
               <h2>Entretenez votre maison</h2>
               <div className="h-full p-4 grid grid-cols-2 grid-rows-2 gap-4">
                 <div className="bg-white p-4 shadow  flex flex-col items-center hover:shadow-lg cursor-pointer">
@@ -372,7 +372,7 @@ const MainCarousel = () => {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="flex flex-col bg-white h-[25rem] p-2 gap-2 text-xl font-bold">
+            <div className="flex flex-col bg-white h-[25rem] p-2 gap-2 text-xl font-bold rounded-md">
               <h2>High-Tech & Accèssoires</h2>
               <div className="h-full p-4 grid grid-cols-2 grid-rows-2 gap-4">
                 <div className="bg-white p-4 shadow  flex flex-col items-center hover:shadow-lg cursor-pointer overflow-hidden">
@@ -417,7 +417,7 @@ const MainCarousel = () => {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="flex flex-col bg-white h-[25rem] p-2 gap-2 text-xl font-bold">
+            <div className="flex flex-col bg-white h-[25rem] p-2 gap-2 text-xl font-bold rounded-md">
               <h2>Sports et loisirs</h2>
               <div className="h-full p-4 grid grid-cols-2 grid-rows-2 gap-4">
                 <div className="bg-white p-4 shadow  flex flex-col items-center hover:shadow-lg cursor-pointer overflow-hidden">
