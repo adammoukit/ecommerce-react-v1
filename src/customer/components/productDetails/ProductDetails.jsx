@@ -77,7 +77,7 @@ function classNames(...classes) {
 }
 
 export default function ProductDetails() {
-  const [selectedSize, setSelectedSize] = useState();
+  // const [selectedSize, setSelectedSize] = useState();
   const [isCategoryIdFetched, setIsCategoryIdFetched] = useState(false);
   const params = useParams();
   const dispatch = useDispatch();
@@ -88,7 +88,10 @@ export default function ProductDetails() {
   );
 
   const [activeVariant, setActiveVariant] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   const [mainImage, setMainImage] = useState(null);
+  const [colorMedia, setColorMedia] = useState([]);
 
   // const [activeVariant, setActiveVariant] = useState(
   //   products.product?.hasVariants ? products.product.variants[0] : null
@@ -204,6 +207,96 @@ export default function ProductDetails() {
       .join("/")
       .toLowerCase();
 
+  // Mettre à jour l'image principale lors du changement de couleur/taille
+  useEffect(() => {
+    if (selectedColor && selectedSize) {
+      const variant = products.product?.variants?.find(
+        (v) => v.color === selectedColor && v.size === selectedSize
+      );
+      setMainImage(variant?.media?.[0]?.url);
+    } else if (selectedColor) {
+      const firstVariant = products.product?.variants?.find(
+        (v) => v.color === selectedColor
+      );
+      setMainImage(firstVariant?.media?.[0]?.url);
+    } else {
+      setMainImage(products.product?.media?.[0]?.url);
+    }
+  }, [selectedColor]);
+
+  // Initialiser la couleur sélectionnée
+  useEffect(() => {
+    if (products.product?.hasVariants) {
+      const firstVariant = products.product.variants[0];
+      setSelectedColor(firstVariant.color);
+      setSelectedSize(firstVariant.size);
+      setActiveVariant(firstVariant);
+      setMainImage(firstVariant?.media?.[0]?.url);
+      updateColorMedia(firstVariant.color);
+    }
+  }, [products.product]);
+
+  // Récupérer les tailles disponibles pour la couleur sélectionnée
+  const availableSizes =
+    products.product?.variants
+      ?.filter((v) => v.color === selectedColor)
+      ?.map((v) => ({ size: v.size, stock: v.stock })) || [];
+
+  // Met à jour les médias quand la couleur change
+  const updateColorMedia = (color) => {
+    const media =
+      products.product?.variants
+        ?.filter((v) => v.color === color)
+        ?.flatMap((v) => v.media)
+        ?.filter((v, i, a) => a.findIndex((t) => t.url === v.url) === i) || []; // Évite les doublons
+
+    setColorMedia(media);
+  };
+
+  // Gestion du changement de couleur
+  useEffect(() => {
+    if (selectedColor) {
+      updateColorMedia(selectedColor);
+      setSelectedSize(null);
+      const firstVariant = products.product.variants.find(
+        (v) => v.color === selectedColor
+      );
+      setMainImage(firstVariant?.media?.[0]?.url);
+    }
+  }, [selectedColor]);
+
+  // Galerie d'images
+  const ImageGallery = () => (
+    <div className="flex flex-col items-center gap-y-2 lg:col-span-2">
+      <div className="overflow-hidden rounded-lg w-[16rem] h-[18rem] p-2">
+        <img
+          alt={products.product?.name}
+          src={mainImage}
+          className="w-full h-full object-cover object-top rounded"
+        />
+      </div>
+
+      <div className="flex items-center p-3 flex-wrap gap-2 justify-start">
+        {colorMedia?.map((media, index) => (
+          <div
+            key={index}
+            className={`overflow-hidden p-1 rounded-lg w-16 h-16 border-2 cursor-pointer
+              ${
+                mainImage === media.url ? "border-lime-500" : "border-gray-200"
+              }`}
+            onClick={() => setMainImage(media.url)}
+          >
+            <img
+              alt={`Vignette ${index + 1}`}
+              src={media.url}
+              className="h-full w-full object-cover object-top"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="bg-white container  mx-auto productTypographie">
       <div className="pt-6">
@@ -228,37 +321,7 @@ export default function ProductDetails() {
 
         <section className="grid grid-cols-1 lg:grid-cols-6 gap-x-8 gap-y-10 px-4 pt-10">
           {/* Image gallery */}
-          <div className="flex flex-col items-center gap-y-2 lg:col-span-2">
-            <div className="overflow-hidden rounded-lg w-[16rem] h-[18rem] p-2">
-              <img
-                alt={products.product?.name}
-                src={mainImage}
-                style={{ width: "100%", height: "100%" }}
-                className="w-full h-full object-cover object-top rounded"
-              />
-            </div>
-            {/* Autres images en vignettes */}
-            <div className="flex items-center p-3 flex-wrap space-x-5 justify-start">
-              {activeVariant?.media?.map((url, index) => (
-                <div
-                  key={index}
-                  className={`overflow-hidden p-1 rounded-lg max-w-[4rem] max-h-[4rem] border-2 cursor-pointer
-                    ${
-                      mainImage === url?.url
-                        ? "border-lime-500"
-                        : "border-gray-200"
-                    }`}
-                  onClick={() => handleThumbnailClick(url?.url)}
-                >
-                  <img
-                    alt={`${product.name} thumbnail ${index + 1}`}
-                    src={url?.url || "https://via.placeholder.com/150"}
-                    className="h-full w-full object-cover object-top"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+          <ImageGallery />
 
           {/* Product info */}
           <div className="lg:col-span-3 mx-auto max-w-2xl px-4 pb-16 sm:px-6  lg:px-10 lg:pb-6">
@@ -298,24 +361,7 @@ export default function ProductDetails() {
               </div>
             </div>
             {/* Vérifier si la variante a des tailles */}
-            {/* {activeVariant?.sizes && activeVariant?.sizes.length > 0 ? (
-              <div className="flex flex-row gap-1 w-full rounded-md">
-                <h2 className="font-bold text-lg w-28">Taille :</h2>
-                <BasicSelect
-                  name="Taille"
-                  options={activeVariant.sizes} // Récupère les tailles de la variante active
-                  onSelect={(size) => setSelectedSize(size)} // Met à jour la taille sélectionnée
-                />
-              </div>
-            ) : null}
 
-            <div className="flex flex-row gap-3 w-full rounded-md ">
-              <ProductColors
-                product={products.product}
-                activeVariant={activeVariant}
-                onVariantChange={handleVariantChange}
-              />
-            </div> */}
             {/* // Dans la section des options de variantes, remplacez par ce code
             conditionnel : */}
             <div className="flex flex-col gap-3 w-full rounded-md">
@@ -324,8 +370,11 @@ export default function ProductDetails() {
                 products.product?.variantType === "COLOR_AND_SIZE") && (
                 <ProductColors
                   product={products.product}
-                  activeVariant={activeVariant}
-                  onVariantChange={handleVariantChange}
+                  selectedColor={selectedColor}
+                  onColorChange={(color) => {
+                    setSelectedColor(color);
+                    setSelectedSize(null); // Réinitialiser la taille
+                  }}
                 />
               )}
 
@@ -336,8 +385,7 @@ export default function ProductDetails() {
                   <h2 className="font-bold text-lg w-28">Taille :</h2>
                   <BasicSelect
                     name="taille"
-                    options={activeVariant?.sizes || []}
-                    variantStock={activeVariant?.stock || 0}
+                    options={availableSizes}
                     onSelect={(size) => setSelectedSize(size)}
                   />
                 </div>

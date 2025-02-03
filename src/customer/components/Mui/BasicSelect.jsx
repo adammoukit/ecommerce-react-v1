@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -22,85 +22,53 @@ const SizeButton = styled(Button)(({ theme, selected, instock }) => ({
   overflow: "hidden",
 }));
 
-const BasicSelect = ({ name, options, variantStock, onSelect }) => {
-  const [selectedSize, setSelectedSize] = React.useState("");
+// Dans BasicSelect.jsx
+const BasicSelect = ({ name, options, onSelect }) => {
+  const [selectedSize, setSelectedSize] = useState("");
 
   const handleSizeClick = (size) => {
-    if (variantStock > 0) {
+    const stock = options.find((opt) => opt.size === size)?.stock || 0;
+    if (stock > 0) {
       setSelectedSize(size);
       onSelect(size);
     }
   };
 
-  const getStockForSize = (size) => {
-    // À adapter selon votre logique métier si le stock est géré par taille
-    return variantStock; // Version simplifiée pour la structure actuelle
-  };
-
   return (
     <Box sx={{ minWidth: 400, width: "100%", mt: 2 }}>
-      <Chip 
-        label={`Tailles disponibles - Stock total : ${variantStock}`} 
-        variant="outlined" 
+      <Chip
+        label={`Tailles disponibles - Stock total : ${options.reduce(
+          (sum, opt) => sum + opt.stock,
+          0
+        )}`}
         sx={{ 
-          mb: 1, 
+          mb: 1,
           fontWeight: "bold",
-          backgroundColor: variantStock > 0 ? "#e8f5e9" : "#ffebee",
-          borderColor: variantStock > 0 ? "#c8e6c9" : "#ffcdd2"
-        }} 
+          backgroundColor: options.some(opt => opt.stock > 0) ? "#e8f5e9" : "#ffebee",
+          borderColor: options.some(opt => opt.stock > 0) ? "#c8e6c9" : "#ffcdd2"
+        }}
       />
       
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-        {options.map((size, index) => {
-          const inStock = getStockForSize(size) > 0;
-          const isLowStock = getStockForSize(size) <= 5;
+        {options.map((opt, index) => {
+          const inStock = opt.stock > 0;
+          const isLowStock = opt.stock <= 5;
 
           return (
-            <Tooltip 
-              key={index} 
-              title={inStock ? 
-                `${getStockForSize(size)} disponibles` : 
-                "Taille épuisée"}
+            <Tooltip
+              key={index}
+              title={inStock ? `${opt.stock} disponibles` : "Taille épuisée"}
               arrow
             >
               <SizeButton
                 variant="outlined"
-                selected={selectedSize === size}
+                selected={selectedSize === opt.size}
                 instock={inStock.toString()}
-                onClick={() => handleSizeClick(size)}
+                onClick={() => handleSizeClick(opt.size)}
                 disabled={!inStock}
               >
-                {size}
-                {isLowStock && inStock && (
-                  <Box
-                    component="span"
-                    sx={{
-                      position: "absolute",
-                      bottom: 0,
-                      right: 0,
-                      width: 0,
-                      height: 0,
-                      borderLeft: "12px solid transparent",
-                      borderBottom: "12px solid #ffd600",
-                      zIndex: 1
-                    }}
-                  />
-                )}
-                {!inStock && (
-                  <Box
-                    component="span"
-                    sx={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      width: "110%",
-                      height: 1,
-                      bgcolor: "rgba(255, 0, 0, 0.3)",
-                      transform: "translate(-50%, -50%) rotate(-15deg)",
-                      zIndex: 1
-                    }}
-                  />
-                )}
+                {opt.size}
+                {/* Indicateurs visuels */}
               </SizeButton>
             </Tooltip>
           );
