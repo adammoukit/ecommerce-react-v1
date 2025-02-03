@@ -667,7 +667,7 @@ export default function Navigation() {
                 />
 
                 {/* 3ème section dans le conteneur de la barre de recherche */}
-                <div className="flex items-center justify-center px-2 h-full bg-yellow-600 hover:bg-yellow-400 rounded-tr-md rounded-br-md">
+                <div className="flex items-center justify-center px-2 h-full bg-yellow-600 hover:bg-yellow-400 rounded-tr-md rounded-br-md cursor-pointer">
                   <SearchIcon sx={{color:"black", fontSize:"2rem"}}/>
                 </div>
               </div>

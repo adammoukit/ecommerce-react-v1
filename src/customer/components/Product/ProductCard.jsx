@@ -31,7 +31,7 @@ const ProductCard = ({ product }) => {
         <img
           onClick={() => navigate(`/product/${product.id}`)}
           className="h-full w-full object-cover rounded-lg"
-          src={product.mediaUrls?.[0] || "https://via.placeholder.com/150"} // Utilise la première URL ou une image par défaut
+          src={product.media?.[0]?.url || "https://via.placeholder.com/150"} // Utilise la première URL ou une image par défaut
           alt=""
         />
       </div>

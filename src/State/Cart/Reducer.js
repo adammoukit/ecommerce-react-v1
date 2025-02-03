@@ -46,14 +46,13 @@ export const cartReducer = (state = initialState, action) => {
         totalItem: action.payload.cartItems.length, // Met à jour le total d'articles en récupérant les données du serveur
       };
 
-      case REMOVE_CART_ITEM_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          cartItems: state.cartItems.filter((item) => item.id !== action.payload), // Filtre les articles pour supprimer celui avec l'ID correspondant
-          totalItem: state.cartItems.length - 1, // Met à jour le total d'articles
-        };
-      
+    case REMOVE_CART_ITEM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        cartItems: state.cartItems.filter((item) => item.id !== action.payload), // Filtre les articles pour supprimer celui avec l'ID correspondant
+        totalItem: state.cartItems.length - 1, // Met à jour le total d'articles
+      };
 
     case UPDATE_CART_ITEM_SUCCESS:
       return {

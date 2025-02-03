@@ -105,19 +105,19 @@ export default function ProductDetails() {
       const firstVariant = products.product.variants[0]; // Première variante
       setActiveVariant(firstVariant);
       setMainImage(
-        firstVariant?.mediaUrls?.[0] || "https://via.placeholder.com/150"
+        firstVariant?.media?.[0]?.url || "https://via.placeholder.com/150"
       );
       // setSelectedSize(firstVariant?.sizes?.[0]?.size || null); // Par défaut, la première taille
     } else if (products.product) {
       setMainImage(
-        products.product.mediaUrls?.[0] || "https://via.placeholder.com/150"
+        products.product.media?.[0]?.url || "https://via.placeholder.com/150"
       );
     }
   }, [products]);
 
   const handleVariantChange = (variant) => {
     setActiveVariant(variant); // Met à jour la variante active
-    setMainImage(variant.mediaUrls?.[0]); // Définit la première image de la variante comme l'image principale
+    setMainImage(variant.media?.[0]?.url); // Définit la première image de la variante comme l'image principale
   };
 
   const handleThumbnailClick = (url) => {
@@ -229,27 +229,30 @@ export default function ProductDetails() {
         <section className="grid grid-cols-1 lg:grid-cols-6 gap-x-8 gap-y-10 px-4 pt-10">
           {/* Image gallery */}
           <div className="flex flex-col items-center gap-y-2 lg:col-span-2">
-            <div className="overflow-hidden  rounded-lg w-[14rem] p-2 border-2">
+            <div className="overflow-hidden rounded-lg w-[16rem] h-[18rem] p-2">
               <img
                 alt={products.product?.name}
                 src={mainImage}
-                className="h-full w-full object-cover "
+                style={{ width: "100%", height: "100%" }}
+                className="w-full h-full object-cover object-top rounded"
               />
             </div>
             {/* Autres images en vignettes */}
             <div className="flex items-center p-3 flex-wrap space-x-5 justify-start">
-              {activeVariant?.mediaUrls?.map((url, index) => (
+              {activeVariant?.media?.map((url, index) => (
                 <div
                   key={index}
                   className={`overflow-hidden p-1 rounded-lg max-w-[4rem] max-h-[4rem] border-2 cursor-pointer
                     ${
-                      mainImage === url ? "border-lime-500" : "border-gray-200"
+                      mainImage === url?.url
+                        ? "border-lime-500"
+                        : "border-gray-200"
                     }`}
-                  onClick={() => handleThumbnailClick(url)}
+                  onClick={() => handleThumbnailClick(url?.url)}
                 >
                   <img
                     alt={`${product.name} thumbnail ${index + 1}`}
-                    src={url || "https://via.placeholder.com/150"}
+                    src={url?.url || "https://via.placeholder.com/150"}
                     className="h-full w-full object-cover object-top"
                   />
                 </div>
@@ -274,10 +277,11 @@ export default function ProductDetails() {
                 </div>
               </h1>
               <Divider />
-              <div className="flex flex-col items-start p-2 w-[400px] ">
-                <p className="text-md opacity-90">
-                  Category : {products.product?.categoryName}
-                </p>
+              <div className="flex flex-col items-start py-2 w-[400px] gap-y-2 my-2">
+                <div className="flex flex-row items-center gap-x-2 opacity-90">
+                  <h3 className="font-bold">Category :</h3>
+                  <p> {products.product?.categoryName}</p>
+                </div>
                 <div
                   style={{ fontSize: "11px" }}
                   className="flex flex-row items-center"
@@ -285,12 +289,17 @@ export default function ProductDetails() {
                   <p className="font-bold  opacity-80 text-lg mr-3">SKU :</p>
                   <p className="font-bold">{activeVariant?.sku}</p>
                 </div>
+                <div className="flex flex-row items-center gap-x-2 flex-wrap w-full">
+                  <h3 className="font-bold ">Déscription : </h3>
+                  <p className="text-sm opacity-75">
+                    {products.product?.description}
+                  </p>
+                </div>
               </div>
             </div>
-
             {/* Vérifier si la variante a des tailles */}
-            {activeVariant?.sizes && activeVariant?.sizes.length > 0 ? (
-              <div className="flex flex-row gap-1 w-full rounded-md p-2">
+            {/* {activeVariant?.sizes && activeVariant?.sizes.length > 0 ? (
+              <div className="flex flex-row gap-1 w-full rounded-md">
                 <h2 className="font-bold text-lg w-28">Taille :</h2>
                 <BasicSelect
                   name="Taille"
@@ -300,36 +309,62 @@ export default function ProductDetails() {
               </div>
             ) : null}
 
-            <div className="flex flex-row gap-3 w-full rounded-md p-2">
+            <div className="flex flex-row gap-3 w-full rounded-md ">
               <ProductColors
                 product={products.product}
                 activeVariant={activeVariant}
                 onVariantChange={handleVariantChange}
               />
-            </div>
+            </div> */}
+            {/* // Dans la section des options de variantes, remplacez par ce code
+            conditionnel : */}
+            <div className="flex flex-col gap-3 w-full rounded-md">
+              {/* Afficher les couleurs uniquement pour COLOR et COLOR_AND_SIZE */}
+              {(products.product?.variantType === "COLOR" ||
+                products.product?.variantType === "COLOR_AND_SIZE") && (
+                <ProductColors
+                  product={products.product}
+                  activeVariant={activeVariant}
+                  onVariantChange={handleVariantChange}
+                />
+              )}
 
+              {/* Afficher les tailles uniquement pour SIZE et COLOR_AND_SIZE */}
+              {(products.product?.variantType === "SIZE" ||
+                products.product?.variantType === "COLOR_AND_SIZE") && (
+                <div className="flex flex-row gap-1 w-full rounded-md items-start border">
+                  <h2 className="font-bold text-lg w-28">Taille :</h2>
+                  <BasicSelect
+                    name="taille"
+                    options={activeVariant?.sizes || []}
+                    variantStock={activeVariant?.stock || 0}
+                    onSelect={(size) => setSelectedSize(size)}
+                  />
+                </div>
+              )}
+            </div>
             {/* Options */}
-            <div className="mt-4 lg:row-span-3 lg:mt-0">
+            {/* <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
 
-              {/* Section des détails du produit */}
+             
               <div className="mt-6">
                 <h2 className="text-xl font-bold mb-3">Détails du produit</h2>
                 <ul className="list-disc pl-5 space-y-2">
-                  {products.product?.details &&
-                    Object.entries(products.product.details).map(
-                      ([key, value]) => (
-                        <li key={key} className="text-slate-950 text-sm">
-                          <span className="font-bold capitalize mr-3">
-                            {key}:
-                          </span>{" "}
-                          {value}
-                        </li>
-                      )
-                    )}
+                  {products.product?.productDetails?.attributes &&
+                    Object.entries(
+                      products.product.productDetails?.attributes
+                    ).map(([key, value]) => (
+                      <li key={key} className="text-slate-950 text-sm">
+                        <span className="font-bold capitalize mr-3">
+                          {key}:
+                        </span>{" "}
+                        {value}
+                      </li>
+                    ))}
                 </ul>
               </div>
-              {/* Reviews */}
+              
               <div className="mt-6">
                 <div className="flex items-center space-x-3">
                   <Rating name="read-only" value={4} readOnly />
@@ -340,14 +375,54 @@ export default function ProductDetails() {
                 </div>
               </div>
 
-              {/* 
-                  
-             */}
+             
+            </div> */}
+
+            <div className="mt-6">
+              {/* Affichage conditionnel des variantes disponibles */}
+              {products.product?.variantType !== "NONE" && (
+                <div className="mb-4">
+                  <h3 className="font-semibold text-lg">
+                    Options disponibles :
+                  </h3>
+                  {products.product?.variantType === "COLOR" && (
+                    <p>
+                      Couleurs :{" "}
+                      {products.product.variants.map((v) => v.color).join(", ")}
+                    </p>
+                  )}
+                  {products.product?.variantType === "SIZE" && (
+                    <p>Tailles : {activeVariant?.sizes?.join(", ")}</p>
+                  )}
+                  {products.product?.variantType === "COLOR_AND_SIZE" && (
+                    <div>
+                      <p>Couleur sélectionnée : {activeVariant?.color}</p>
+                      <p>
+                        Tailles disponibles : {activeVariant?.sizes?.join(", ")}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Détails techniques */}
+              <h2 className="text-xl font-bold mb-3">Détails du produit</h2>
+              <ul className="list-disc pl-5 space-y-2">
+                {products.product?.productDetails?.attributes &&
+                  Object.entries(
+                    products.product.productDetails.attributes
+                  ).map(([key, value]) => (
+                    <li key={key} className="text-slate-950 text-sm">
+                      <span className="font-bold capitalize mr-3">{key}:</span>
+                      {value}
+                    </li>
+                  ))}
+              </ul>
             </div>
           </div>
 
           {/* Cart fonctionalities */}
-          <div className="lg:col-span-1  max-w-2xl px-4  sm:px-6 lg:px-8 lg:pb-6 ">
+          <div className="lg:col-span-1 rounded ">
             <form className="mt-10">
               {/* Colors */}
               <div>
@@ -381,14 +456,30 @@ export default function ProductDetails() {
               </div>
 
               <div className="flex flex-col mt-10 space-y-3 ">
-                <div>
-                  {activeVariant?.stock && activeVariant?.stock > 5 ? (
-                    <h3 className="text-green-700 font-bold">
-                      Produit en Stock : {activeVariant?.stock}
+                <div className="mt-4">
+                  {products.product?.variantType === "NONE" ? (
+                    <h3
+                      className={
+                        products.product.stock > 5
+                          ? "text-green-700"
+                          : "text-red-500"
+                      }
+                    >
+                      {products.product.stock > 5
+                        ? `En stock (${products.product.stock} disponibles)`
+                        : `Stock critique (${products.product.stock} restants)`}
                     </h3>
                   ) : (
-                    <h3 className="text-red-500 font-bold">
-                      Stock Critique : {activeVariant?.stock}{" "}
+                    <h3
+                      className={
+                        activeVariant?.stock > 5
+                          ? "text-green-700"
+                          : "text-red-500"
+                      }
+                    >
+                      {activeVariant?.stock > 5
+                        ? `En stock pour cette variante (${activeVariant?.stock} disponibles)`
+                        : `Stock critique pour cette variante (${activeVariant?.stock} restants)`}
                     </h3>
                   )}
                 </div>
@@ -396,7 +487,7 @@ export default function ProductDetails() {
                   onClick={handleAddToCart}
                   variant="contained"
                   className="mt-4 bg-amber-700"
-                  sx={{ "bg-color": "orange" }}
+                  sx={{ bgcolor: "orange" }}
                 >
                   Ajouter
                 </Button>

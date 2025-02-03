@@ -5,13 +5,12 @@ const ProductColors = ({ product, activeVariant, onVariantChange }) => {
 
   return (
     <div className="flex flex-col gap-3 w-full rounded-md p-2">
-      
       {/* Affichage de l'attribut actif avec opacité */}
       <h2 className="font-bold text-lg">
         {activeVariant ? (
           <>
-            {activeVariant.attributeName} :{" "}
-            <span className="opacity-70">{activeVariant.attributeValue}</span>
+            Couleur :{" "}
+            <span className="opacity-70">{activeVariant.color}</span>
           </>
         ) : (
           "Aucune variante sélectionnée"
@@ -22,7 +21,7 @@ const ProductColors = ({ product, activeVariant, onVariantChange }) => {
         {variants.map((variant, index) => (
           <div
             key={index}
-            className={`flex items-center justify-center w-14 h-14 border rounded-xl cursor-pointer hover:shadow-lg ${
+            className={`flex items-center justify-center w-10 h-12 border rounded-lg cursor-pointer hover:shadow-lg ${
               activeVariant === variant ? "border-lime-500 shadow-md" : ""
             }`}
             style={{
@@ -30,14 +29,14 @@ const ProductColors = ({ product, activeVariant, onVariantChange }) => {
               overflow: "hidden",
               backgroundColor: "white",
             }}
-            title={variant.attributeValue}
+            title={variant.color}
             onClick={() => onVariantChange(variant)} // Change la variante active
           >
             <img
-              src={variant.mediaUrls[0]} // Première image de la variante
-              alt={variant.attributeValue}
+              src={variant.media?.[0]?.url} // Première image de la variante
+              alt={variant.media?.[0]?.fileName}
               className="w-full h-full object-cover object-top"
-              style={{ width: "35px", height: "35px" }} // Taille de la vignette
+              style={{ width: "100%", height: "100%" }} // Taille de la vignette
             />
           </div>
         ))}

@@ -24,6 +24,7 @@ import ProductsTable from "./Components/ProductsTable";
 import OrderTable from "./Components/OrderTable";
 import CustomerTable from "./Components/CustomerTable";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import ProductCreateForm from "./Components/Form/ProductCreateForm";
 
 const menu = [
   {
@@ -134,7 +135,7 @@ const Admin = () => {
             <Route path="/" element={<Dashboard />}></Route>
             <Route
               path="/product/create"
-              element={<CreateProductForm />}
+              element={<ProductCreateForm />}
             ></Route>
             <Route path="/products" element={<ProductsTable />}></Route>
             <Route path="/Orders" element={<OrderTable />}></Route>

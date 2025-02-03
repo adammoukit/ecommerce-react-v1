@@ -110,7 +110,7 @@ export default function ProductsTable() {
               <StyledTableCell>
                 <Avatar
                   alt="Image Produit"
-                  src={item.mediaUrls[0] || "https://via.placeholder.com/150"}
+                  src={item.media?.[0]?.url || "https://via.placeholder.com/150"}
                 />
               </StyledTableCell>
               <StyledTableCell align="right" scope="row">

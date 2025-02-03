@@ -40,7 +40,7 @@ import ProductCard from "./ProductCard";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { findProduct } from "../../../State/Product/Action";
+import { findProduct, getAllGlobalProducts } from "../../../State/Product/Action";
 import { Pagination } from "@mui/material";
 
 const sortOptions = [
@@ -190,6 +190,10 @@ export default function Product() {
     const query = searchParams.toString();
     navigate({ search: `?${query}` });
   };
+
+  useeffect(() => {
+    dispatch(getAllGlobalProducts())
+  },[])
 
   return (
     <div className="bg-white">
@@ -430,8 +434,8 @@ export default function Product() {
               <div className="lg:col-span-5 w-full">
                 <div className="flex flex-wrap w-full  justify-center sm:justify-start gap-1 bg-white py-1">
                   {products.products &&
-                    products.products?.content?.map((item) => (
-                      <ProductCard product={item} />
+                    products.globalProducts?.content?.map((item, key) => (
+                      <ProductCard key={key} product={item} />
                     ))}
                 </div>
               </div>

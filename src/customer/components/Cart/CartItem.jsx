@@ -35,7 +35,7 @@ const CartItem = ({ prod, loading }) => {
 
       {/* Product Image and Details */}
       <div className="flex flex-col sm:flex-row items-center lg:items-start ">
-        <div className="w-[3rem] h-[3rem] sm:w-[5rem] sm:h-[5rem] lg:w-[5rem] lg:h-[5rem] border-2 p-2 border-cyan-600 rounded-md shadow-orange-400">
+        <div className="w-[3rem] h-[3rem] sm:w-[5rem] sm:h-[5rem] lg:w-[5rem] lg:h-[5rem]  p-2  rounded-md shadow-orange-400">
           <img
             className="w-full h-full object-cover object-top rounded-md"
             src={prod.mediaUrls[0]}
@@ -69,7 +69,7 @@ const CartItem = ({ prod, loading }) => {
       </div>
 
       <div className="flex flex-col items-center lg:items-start space-y-2 lg:space-y-1">
-        <p className="text-xl font-bold opacity-90">
+        <p className="text-xl font-bold opacity-90 text-green-900 Cart-infos">
           PRIX{" : "} {prod.basePrice}
           {" F CFA"}{" "}
         </p>

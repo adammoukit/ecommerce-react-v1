@@ -28,18 +28,26 @@ api.interceptors.request.use(
   }
 );
 
-// // Ajouter un intercepteur de réponse pour gérer les erreurs globalement
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error.response) {
-//       // Gestion spécifique des erreurs 401 ou 403 (JWT expiré ou invalide)
-//       if (error.response.status === 401 || error.response.status === 403) {
-//         // Effectuer automatiquement le logout
-//         localStorage.clear(); // Supprimer le JWT et autres données
-//         window.location.href = "/login"; // Rediriger vers la page de connexion
-//       }
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+// Intercepteur pour GÉRER LES ERREURS GLOBALEMENT
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          // Utilisez un router navigate au lieu de window.location
+          window.location.href = "/login"; 
+          break;
+        case 403:
+          console.error("Accès refusé");
+          break;
+        case 500:
+          console.error("Erreur serveur");
+          break;
+        default:
+          console.error("Erreur inconnue");
+      }
+    }
+    return Promise.reject(error);
+  }
+);
