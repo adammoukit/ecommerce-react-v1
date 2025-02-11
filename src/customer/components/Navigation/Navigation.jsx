@@ -50,7 +50,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 
 const navigation = {
   categories: [
@@ -191,8 +191,7 @@ export default function Navigation() {
   const [openAuthModal, setOpenAuthModal] = useState(false);
 
   // Récupérez le total des articles depuis l'état du store Redux
-  const cartTotal = useSelector((state) => state.cart.totalItem);
-  const { cart } = useSelector((store) => store);
+  const cartTotal = useSelector((state) => state.cart?.totalItem || 0);
 
   const [visible, setVisible] = useState(false);
   const dropdownRef = useRef(null);
@@ -230,7 +229,7 @@ export default function Navigation() {
       dispatch(getCart());
       dispatch(getUserOrderCount());
     }
-  }, [user, dispatch, store_jwt]);
+  }, [user, dispatch, store_jwt, cartTotal]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -668,7 +667,7 @@ export default function Navigation() {
 
                 {/* 3ème section dans le conteneur de la barre de recherche */}
                 <div className="flex items-center justify-center px-2 h-full bg-yellow-600 hover:bg-yellow-400 rounded-tr-md rounded-br-md cursor-pointer">
-                  <SearchIcon sx={{color:"black", fontSize:"2rem"}}/>
+                  <SearchIcon sx={{ color: "black", fontSize: "2rem" }} />
                 </div>
               </div>
 
@@ -824,7 +823,7 @@ export default function Navigation() {
                   >
                     <Tooltip title="Voir le panier" arrow>
                       <IconButton aria-label="cart">
-                        <StyledBadge badgeContent={cartTotal} color="secondary">
+                        <StyledBadge badgeContent={cartTotal} color="secondary" className="badge-animation">
                           <ShoppingCartIcon />
                         </StyledBadge>
                       </IconButton>

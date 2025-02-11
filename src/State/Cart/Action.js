@@ -17,9 +17,9 @@ import {
 export const addItemToCart = (reqData) => async (dispatch) => {
   dispatch({ type: ADD_ITEM_TO_CART_REQUEST });
   try {
+    // Envoi correct dans le corps de la requête
     const { data } = await api.post("/api/cart/add-item", reqData);
     dispatch({ type: ADD_ITEM_TO_CART_SUCCESS, payload: data });
-    console.log("add item to cart", data);
   } catch (error) {
     dispatch({ type: ADD_ITEM_TO_CART_FAILURE, payload: error.message });
   }
@@ -28,7 +28,7 @@ export const addItemToCart = (reqData) => async (dispatch) => {
 export const removeCartItem = (cartItemId) => async (dispatch) => {
   dispatch({ type: REMOVE_CART_ITEM_REQUEST });
   try {
-    const { data } = await api.delete(`/api/cart_item/${cartItemId}/delete`);
+    const { data } = await api.delete(`/api/cart/items/${cartItemId}/delete`);
     dispatch({ type: REMOVE_CART_ITEM_SUCCESS, payload: cartItemId });
   } catch (error) {
     dispatch({ type: REMOVE_CART_ITEM_FAILURE, payload: error.message });

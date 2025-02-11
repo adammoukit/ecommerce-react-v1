@@ -4,3 +4,11 @@
   font-weight: 300;
   font-style: normal;
 }
+
+.badge-animation {
+  transition: transform 0.3s ease-in-out;
+}
+
+.badge-animation:hover {
+  transform: scale(1.1);
+}

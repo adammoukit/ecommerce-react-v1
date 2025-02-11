@@ -5,10 +5,29 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useDispatch } from "react-redux";
 import { removeCartItem, updateCartItem } from "../../../State/Cart/Action";
+import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
 
 const CartItem = ({ prod, loading }) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+
+  // Détermine le texte des variantes selon le type
+  const getVariantText = () => {
+    switch (prod.variantType) {
+      case "COLOR":
+        return `Couleur: ${prod.selectedColor}`;
+      case "SIZE":
+        return `Taille: ${prod.selectedSize}`;
+      case "COLOR_AND_SIZE":
+        return `Couleur: ${prod.selectedColor} | Taille: ${prod.selectedSize}`;
+      default:
+        return null;
+    }
+  };
+
+  // Détermine si on affiche le prix additionnel
+  const showAdditionalPrice =
+    prod.variantType !== "NONE" && prod.variant?.additionalPrice;
 
   const handleUpdateCartItem = async (num) => {
     const updatedQuantity = prod.quantity + num;
@@ -22,63 +41,66 @@ const CartItem = ({ prod, loading }) => {
   };
 
   const handleRemoveCartItem = async () => {
-    await dispatch(removeCartItem(prod.cartItemId));
+    await dispatch(removeCartItem(prod.id));
   };
 
   return (
     <div
-      className={`p-3 CiContainer rounded-lg flex flex-col sm:flex-row bg-slate-50 justify-between items-center sm:items-center lg:items-center space-y-4 lg:space-y-0 ${
+      className={`p-3 CiContainer rounded-lg flex flex-col sm:flex-row bg-white border mr-2 justify-between items-center sm:items-center lg:items-center space-y-4 lg:space-y-0 ${
         loading ? "" : ""
       }`}
     >
       {loading && <CircularProgress className="absolute z-10" />}
-
       {/* Product Image and Details */}
       <div className="flex flex-col sm:flex-row items-center lg:items-start ">
-        <div className="w-[3rem] h-[3rem] sm:w-[5rem] sm:h-[5rem] lg:w-[5rem] lg:h-[5rem]  p-2  rounded-md shadow-orange-400">
+        <div className="w-[3rem] h-[3rem] lg:w-[7rem] lg:h-[5rem] border rounded-md p-2 shadow-orange-400">
           <img
-            className="w-full h-full object-cover object-top rounded-md"
-            src={prod.mediaUrls[0]}
+            className="w-full h-full object-contain object-top rounded"
+            src={prod.imageUrl}
             alt="product image"
           />
         </div>
         <div className="ml-4 space-y-2 text-center lg:text-left CartItemTypographie">
-          <div className="font-bold  text-2xl">
+          <div className="font-bold  text-base">
             <p>{prod.productName}</p>
-            <p className="text-xs font-medium opacity-80">
+            <p className="text-xs opacity-80">
               <span>SKU:</span>
-              {prod.variant?.sku}
+              {prod.sku}
             </p>
           </div>
-          <div className="opacity-90 font-semibold flex space-x-1">
-            Taille: {prod.size?.name} |
-            <span>
-              {"  "}
-              {prod.variant?.attributeName}:{prod.variant?.attributeValue}
-            </span>
+          <div className="font-semibold text-sm flex space-x-1">
+            {prod.variantType === "NONE" ? (
+              <span>Produit standard</span>
+            ) : (
+              <>
+                {prod.variantType === "SIZE" && `Taille: ${prod.selectedSize}`}
+                {prod.variantType === "COLOR" &&
+                  `Couleur: ${prod.selectedColor}`}
+                {prod.variantType === "COLOR_AND_SIZE" &&
+                  `Couleur: ${prod.selectedColor} | Taille: ${prod.selectedSize}`}
+              </>
+            )}
           </div>
           <p className="opacity-80">Vendeur : Moukit Fashion Store</p>
-          {/* <div className="flex justify-center lg:justify-start text-xs space-x-3 mt-2 text-gray-900">
-            <div>
-              <p className="font-bold text-lg text-green-500">
-                <span>Quantity:</span> {prod.quantity}
-              </p>
-            </div>
-          </div> */}
         </div>
       </div>
+      {/* Modification de la section des prix */}
 
       <div className="flex flex-col items-center lg:items-start space-y-2 lg:space-y-1">
-        <p className="text-xl font-bold opacity-90 text-green-900 Cart-infos">
-          PRIX{" : "} {prod.basePrice}
-          {" F CFA"}{" "}
+        <p className="text-sm font-bold opacity-90 text-green-900 Cart-infos">
+          PRIX : {prod.unitPrice?.toFixed(2)} F CFA
         </p>
-        <p className="text-green-900 font-semibold">
-          Prix Additionel : {prod.variant?.additionalPrice}
-          {" F CFA"}
+
+        {prod.additionalPrice > 0 && (
+          <p className="text-green-900 text-sm font-semibold">
+            Supplément variante : +{prod.additionalPrice?.toFixed(2)} F CFA
+          </p>
+        )}
+
+        <p className="text-sm font-bold text-green-700">
+          Total : {prod.totalPrice?.toFixed(2)} F CFA
         </p>
       </div>
-
       {/* Quantity and Remove Button */}
       <div className="flex flex-col items-center lg:flex-row lg:items-center space-y-3 lg:space-y-0 lg:space-x-4">
         <div className="flex items-center space-x-2">
@@ -103,8 +125,8 @@ const CartItem = ({ prod, loading }) => {
           </IconButton>
         </div>
         <Button onClick={handleRemoveCartItem} disabled={isLoading}>
-          <span className="border border-red-300 px-3 py-1 rounded-md">
-            Remove
+          <span className=" rounded-md">
+            <CancelPresentationIcon className="text-red-500" />
           </span>
         </Button>
       </div>

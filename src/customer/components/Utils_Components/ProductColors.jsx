@@ -34,7 +34,7 @@ const ProductColors = ({ product, selectedColor, onColorChange }) => {
         {colorGroups?.map((colorGroup, index) => (
           <div
             key={index}
-            className={`flex items-center justify-center w-10 h-12 border rounded-lg cursor-pointer hover:shadow-lg overflow-hidden ${
+            className={`flex items-center justify-center w-10 h-10 border rounded-lg cursor-pointer hover:shadow-lg overflow-hidden ${
               selectedColor === colorGroup.color
                 ? "border-lime-500 shadow-md"
                 : "border-gray-200"

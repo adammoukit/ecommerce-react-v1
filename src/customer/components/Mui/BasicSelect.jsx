@@ -35,8 +35,8 @@ const BasicSelect = ({ name, options, onSelect }) => {
   };
 
   return (
-    <Box sx={{ minWidth: 400, width: "100%", mt: 2 }}>
-      <Chip
+    <Box sx={{ minWidth: 400, width: "100%", }}>
+      {/* <Chip
         label={`Tailles disponibles - Stock total : ${options.reduce(
           (sum, opt) => sum + opt.stock,
           0
@@ -47,9 +47,9 @@ const BasicSelect = ({ name, options, onSelect }) => {
           backgroundColor: options.some(opt => opt.stock > 0) ? "#e8f5e9" : "#ffebee",
           borderColor: options.some(opt => opt.stock > 0) ? "#c8e6c9" : "#ffcdd2"
         }}
-      />
+      /> */}
       
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", }}>
         {options.map((opt, index) => {
           const inStock = opt.stock > 0;
           const isLowStock = opt.stock <= 5;

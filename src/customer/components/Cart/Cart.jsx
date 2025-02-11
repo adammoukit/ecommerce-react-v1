@@ -30,10 +30,10 @@ const Cart = () => {
     return [...(cart.cart?.cartItems || [])].sort((a, b) => a.cartItemId - b.cartItemId);
   }, [cart.cart?.cartItems]);
   return (
-    <div className={`relative ${loading ? "" : ""} h-[100vh]`}>
+    <div className={`relative ${loading ? "" : ""} h-[100vh] p-4`} style={{backgroundColor:"#f2f3f4"}}>
       {/* Indicateur de chargement */}
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50">
+        <div  className="absolute inset-0 flex items-center justify-center bg-opacity-50">
           <CircularProgress />
         </div>
       )}
@@ -44,7 +44,7 @@ const Cart = () => {
             <CartItem key={item.id} prod={item} loading={loading}/>
           ))}
         </div>
-        <div className="Cart-infos  rounded-lg CiContainer p-2  h-[fit-content]">
+        <div className="Cart-infos  rounded-lg CiContainer bg-white p-2  h-[fit-content] ">
           <div className=" p-2 space-y-1">
             <div className="flex items-center justify-between bg-sky-300 px-2 py-1">
               <p className="text-lg font-bold  ">informations</p>

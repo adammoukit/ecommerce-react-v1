@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Radio, RadioGroup } from "@headlessui/react";
-import { Box, Button, Divider, Grid2, Rating, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Divider, Grid2, Rating, Typography } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import ProductReviewsCard from "./ProductReviewsCard";
 import { mens_kurta } from "../../../Data/mens/men_kurta";
@@ -10,7 +10,7 @@ import HomeSectionCard from "../HomeSectionCard/HomeSectionCard";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { findProductById } from "../../../State/Product/Action";
-import { addItemToCart } from "../../../State/Cart/Action";
+import { addItemToCart, getCart } from "../../../State/Cart/Action";
 import "./ProductDetails.css";
 import {
   getCategoryHierarchy,
@@ -130,49 +130,77 @@ export default function ProductDetails() {
   const navigate = useNavigate();
 
   const handleAddToCart = () => {
-    if (!activeVariant) {
-      alert("Veuillez sélectionner une variante (par exemple, une couleur).");
+    if (!products.product) return;
+
+    // Cas produit sans variante
+    if (products.product.variantType === "NONE") {
+      const cartData = {
+        productId: products.product.id,
+        quantity: 1,
+        variantId: null, // Doit être explicitement null
+      };
+
+      // Un seul appel dispatch
+      dispatch(addItemToCart(cartData))
+        .then(() => alert("Ajouté !"))
+        .catch((error) => alert(`Erreur: ${error}`));
+
       return;
     }
 
-    if (activeVariant.sizes && activeVariant.sizes.length > 0) {
-      if (!selectedSize) {
-        alert("Veuillez sélectionner une taille.");
-        return;
-      }
-
-      const data = {
-        productId: params.productId,
-        variantAttribute: activeVariant.attributeName, // Exemple : "Couleur"
-        variantValue: activeVariant.attributeValue, // Exemple : "Blanc"
-        size: selectedSize, // Exemple : "M"
-        quantity: 1, // Ajouter un sélecteur de quantité si besoin
-        sku: activeVariant.sku,
-      };
-
-      console.log("Données envoyées au panier :", data);
-
-      // Appel Redux pour ajouter au panier
-      dispatch(addItemToCart(data));
-
-      alert("Produit ajouté au panier !");
-    } else {
-      const data = {
-        productId: params.productId,
-        variantAttribute: activeVariant.attributeName, // Exemple : "Couleur"
-        variantValue: activeVariant.attributeValue, // Exemple : "Blanc"
-        size: selectedSize, // Exemple : "M"
-        quantity: 1, // Ajouter un sélecteur de quantité si besoin
-        sku: activeVariant.sku,
-      };
-
-      console.log("Données envoyées au panier :", data);
-
-      // Appel Redux pour ajouter au panier
-      dispatch(addItemToCart(data));
-
-      alert("Produit ajouté au panier !");
+    // Validation des variantes
+    let errorMessage;
+    switch (products.product.variantType) {
+      case "COLOR_AND_SIZE":
+        if (!selectedColor || !selectedSize)
+          errorMessage = "Sélectionnez une couleur et une taille";
+        break;
+      case "COLOR":
+        if (!selectedColor) errorMessage = "Sélectionnez une couleur";
+        break;
+      case "SIZE":
+        if (!selectedSize) errorMessage = "Sélectionnez une taille";
+        break;
     }
+
+    if (errorMessage) {
+      alert(errorMessage);
+      return;
+    }
+
+    // Trouver la variante exacte
+    const selectedVariant = products.product.variants.find((v) => {
+      switch (products.product.variantType) {
+        case "COLOR_AND_SIZE":
+          return v.color === selectedColor && v.size === selectedSize;
+        case "COLOR":
+          return v.color === selectedColor;
+        case "SIZE":
+          return v.size === selectedSize;
+        default:
+          return false;
+      }
+    });
+
+    if (!selectedVariant) {
+      alert("Combinaison indisponible");
+      return;
+    }
+
+    const cartData = {
+      productId: products.product.id,
+      quantity: 1,
+      variantId: selectedVariant?.id,
+    };
+
+    // dispatch(addItemToCart(cartData));
+
+    dispatch(addItemToCart(cartData))
+      .then(() => {
+        alert("Produit ajouté au panier  avec variant!");
+        return dispatch(getCart());
+      })
+      .catch((error) => alert(`Erreur: ${error.message}`));
   };
 
   useEffect(() => {
@@ -268,12 +296,16 @@ export default function ProductDetails() {
   // Galerie d'images
   const ImageGallery = () => (
     <div className="flex flex-col items-center gap-y-2 lg:col-span-2">
-      <div className="overflow-hidden rounded-lg w-[16rem] h-[18rem] p-2">
-        <img
-          alt={products.product?.name}
-          src={mainImage}
-          className="w-full h-full object-cover object-top rounded"
-        />
+      <div className="overflow-hidden  rounded-lg w-[16rem] h-[18rem] p-2">
+        {loading ? (
+          "Chargemment..."
+        ) : (
+          <img
+            alt={products.product?.name}
+            src={mainImage}
+            className="w-full h-full object-contain object-top rounded-lg"
+          />
+        )}
       </div>
 
       <div className="flex items-center p-3 flex-wrap gap-2 justify-start">
@@ -286,11 +318,15 @@ export default function ProductDetails() {
               }`}
             onClick={() => setMainImage(media.url)}
           >
-            <img
-              alt={`Vignette ${index + 1}`}
-              src={media.url}
-              className="h-full w-full object-cover object-top"
-            />
+            {loading ? (
+              <CircularProgress size="30px" />
+            ) : (
+              <img
+                alt={`Vignette ${index + 1}`}
+                src={media.url}
+                className="h-full w-full object-cover object-top"
+              />
+            )}
           </div>
         ))}
       </div>
@@ -328,7 +364,7 @@ export default function ProductDetails() {
             <div className=" lg:pr-8">
               <h1 className="text-lg font-bold tracking-tight text-gray-900 sm:text-3xl mb-1">
                 <div className="flex flex-col gap-y-3 justify-between py-2 px-3">
-                  <h2 className="text-lg font-bold sm:text-4xl">
+                  <h2 className="text-lg font-semibold sm:text-2xl">
                     {products.product?.name}
                   </h2>
                   <p
@@ -381,7 +417,7 @@ export default function ProductDetails() {
               {/* Afficher les tailles uniquement pour SIZE et COLOR_AND_SIZE */}
               {(products.product?.variantType === "SIZE" ||
                 products.product?.variantType === "COLOR_AND_SIZE") && (
-                <div className="flex flex-row gap-1 w-full rounded-md items-start border">
+                <div className="flex flex-row gap-1 w-full rounded-md items-start justify-start ">
                   <h2 className="font-bold text-lg w-28">Taille :</h2>
                   <BasicSelect
                     name="taille"
@@ -470,7 +506,7 @@ export default function ProductDetails() {
           </div>
 
           {/* Cart fonctionalities */}
-          <div className="lg:col-span-1 rounded ">
+          <div className="lg:col-span-1 rounded-2 border p-2">
             <form className="mt-10">
               {/* Colors */}
               <div>

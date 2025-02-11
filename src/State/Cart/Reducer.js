@@ -28,14 +28,14 @@ export const cartReducer = (state = initialState, action) => {
     case UPDATE_CART_ITEM_REQUEST:
       return { ...state, loading: true, error: null };
 
-    case ADD_ITEM_TO_CART_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        cartItems: [...state.cartItems, action.payload],
-        totalItem: state.cartItems.length + 1, // Met à jour le total d'articles
-        error: null,
-      };
+      case ADD_ITEM_TO_CART_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+          cart: action.payload,
+          cartItems: action.payload.items,
+          error: null
+        };
 
     case GET_CART_SUCCESS:
       return {
@@ -43,7 +43,7 @@ export const cartReducer = (state = initialState, action) => {
         loading: false,
         cart: action.payload,
         cartItems: action.payload.cartItems,
-        totalItem: action.payload.cartItems.length, // Met à jour le total d'articles en récupérant les données du serveur
+        totalItem: action.payload.totalItem, // Met à jour le total d'articles en récupérant les données du serveur
       };
 
     case REMOVE_CART_ITEM_SUCCESS:
