@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { createProduct } from "../../State/Product/Action";
-import { data } from "autoprefixer";
 import Paper from "@mui/material/Paper";
 
 const initialState = [

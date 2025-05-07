@@ -12,9 +12,7 @@ const HomePage = () => {
       <div className="py-40 mt-20 m-5 space-y-10  border-2">
         <SuuggetProduct />
         <HomeSectionCarousel data={mens_kurta} sectionName="MEN'S SHIRT" />
-        {/* <HomeSectionCarousel data={mens_kurta} sectionName="MEN'S SHOES" />
-        <HomeSectionCarousel data={mens_kurta} sectionName="MEN'S PANTS" />
-        <HomeSectionCarousel data={mens_kurta} sectionName="WOMEN'S DRESS" /> */}
+       
       </div>
     </div>
   );

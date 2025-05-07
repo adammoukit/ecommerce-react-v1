@@ -20,6 +20,7 @@
     "@stripe/react-stripe-js": "^2.8.1",
     "@stripe/stripe-js": "^4.9.0",
     "axios": "^1.7.7",
+    "caniuse-lite": "^1.0.30001712",
     "material-ui-popup-state": "^5.3.1",
     "react": "^18.3.1",
     "react-alice-carousel": "^2.9.1",

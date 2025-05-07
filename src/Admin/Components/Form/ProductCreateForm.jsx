@@ -15,18 +15,15 @@ import {
   TableHead,
   TableRow,
   IconButton,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import SelectAutoWidth from "../Mui_Components/SelectAutoWidth";
-import CategorySelector from "./CategorySelector";
-import CategorySelector2 from "./CategorySelector2";
 
-// const steps = [
-//   "Propriétés de base",
-//   "Gestion des variantes",
-//   "Gestion des medias",
-// ];
+import CategorySelector2 from "./CategorySelector2";
 
 const ProductCreateForm = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -38,6 +35,7 @@ const ProductCreateForm = () => {
     sku: "",
     stock: "",
     hasVariants: false,
+    variantType: "NONE",
     variants: [],
   });
 
@@ -48,10 +46,12 @@ const ProductCreateForm = () => {
 
   const handleVariantToggle = (e) => {
     const isChecked = e.target.checked;
+    const newVariantType = isChecked ? "COLOR" : "NONE";
 
     setProductData({
       ...productData,
       hasVariants: isChecked,
+      variantType: newVariantType,
     });
 
     if (isChecked) {
@@ -88,18 +88,30 @@ const ProductCreateForm = () => {
   };
 
   const addVariant = () => {
+    const baseVariant = {
+      stock: "",
+      additionalPrice: "",
+      sku: "",
+    };
+
+    let newVariant;
+    switch (productData.variantType) {
+      case "COLOR":
+        newVariant = { ...baseVariant, value: "" };
+        break;
+      case "SIZE":
+        newVariant = { ...baseVariant, value: "" };
+        break;
+      case "COLOR_AND_SIZE":
+        newVariant = { ...baseVariant, color: "", size: "" };
+        break;
+      default:
+        newVariant = baseVariant;
+    }
+
     setProductData({
       ...productData,
-      variants: [
-        ...productData.variants,
-        {
-          attributeName: "",
-          attributeValue: "",
-          stock: "",
-          additionalPrice: "",
-          sku: "",
-        },
-      ],
+      variants: [...productData.variants, newVariant],
     });
   };
 
@@ -143,16 +155,50 @@ const ProductCreateForm = () => {
           >
             Propriétés de base
           </Typography>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={productData.hasVariants}
-                onChange={handleVariantToggle}
-              />
-            }
-            label="Ce produit a des variantes ?"
-            sx={{ mt: 2, mb: 3}}
-          />
+
+          <div className="flex flex-col items-start ">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={productData.hasVariants}
+                  onChange={handleVariantToggle}
+                />
+              }
+              label="Ce produit a des variantes ?"
+              sx={{ mt: 2, mb: 3 }}
+            />
+            {productData.hasVariants && (
+              <FormControl component="fieldset" sx={{ mb: 3 }}>
+                <FormLabel component="legend">Type de variation</FormLabel>
+                <RadioGroup
+                  row
+                  value={productData.variantType}
+                  onChange={(e) =>
+                    setProductData({
+                      ...productData,
+                      variantType: e.target.value,
+                    })
+                  }
+                >
+                  <FormControlLabel
+                    value="COLOR"
+                    control={<Radio />}
+                    label="Couleur"
+                  />
+                  <FormControlLabel
+                    value="SIZE"
+                    control={<Radio />}
+                    label="Taille"
+                  />
+                  <FormControlLabel
+                    value="COLOR_AND_SIZE"
+                    control={<Radio />}
+                    label="Couleur + Taille"
+                  />
+                </RadioGroup>
+              </FormControl>
+            )}
+          </div>
           <TextField
             fullWidth
             label="Nom du produit"
@@ -232,9 +278,20 @@ const ProductCreateForm = () => {
               <Table sx={{ mt: 2 }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Attribut</TableCell>
-                    <TableCell>Valeur</TableCell>
-                    <TableCell>Stock</TableCell>
+                    {/* Colonne dynamique selon le type */}
+                    {productData.variantType === "COLOR_AND_SIZE" ? (
+                      <>
+                        <TableCell>Couleur</TableCell>
+                        <TableCell>Taille</TableCell>
+                      </>
+                    ) : (
+                      <TableCell>
+                        {productData.variantType === "COLOR"
+                          ? "Couleur"
+                          : "Taille"}
+                      </TableCell>
+                    )}
+                    <TableCell>Qte</TableCell>
                     <TableCell>Prix additionnel</TableCell>
                     <TableCell>SKU</TableCell>
                     <TableCell>Actions</TableCell>
@@ -243,30 +300,50 @@ const ProductCreateForm = () => {
                 <TableBody>
                   {productData.variants.map((variant, index) => (
                     <TableRow key={index}>
-                      <TableCell style={{ height: "10px" }}>
-                        <TextField
-                          value={variant.attributeName}
-                          onChange={(e) =>
-                            handleVariantChange(
-                              index,
-                              "attributeName",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          value={variant.attributeValue}
-                          onChange={(e) =>
-                            handleVariantChange(
-                              index,
-                              "attributeValue",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </TableCell>
+                      {/* Colonnes dynamiques */}
+                      {productData.variantType === "COLOR_AND_SIZE" ? (
+                        <>
+                          <TableCell>
+                            <TextField
+                              value={variant.color}
+                              onChange={(e) =>
+                                handleVariantChange(
+                                  index,
+                                  "color",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <TextField
+                              value={variant.size}
+                              onChange={(e) =>
+                                handleVariantChange(
+                                  index,
+                                  "size",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </TableCell>
+                        </>
+                      ) : (
+                        <TableCell>
+                          <TextField
+                            value={variant.value}
+                            onChange={(e) =>
+                              handleVariantChange(
+                                index,
+                                "value",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </TableCell>
+                      )}
+
+                      {/* Colonnes fixes */}
                       <TableCell>
                         <TextField
                           type="number"
@@ -274,6 +351,7 @@ const ProductCreateForm = () => {
                           onChange={(e) =>
                             handleVariantChange(index, "stock", e.target.value)
                           }
+                         
                         />
                       </TableCell>
                       <TableCell>
@@ -287,6 +365,7 @@ const ProductCreateForm = () => {
                               e.target.value
                             )
                           }
+                          
                         />
                       </TableCell>
                       <TableCell>
@@ -295,10 +374,14 @@ const ProductCreateForm = () => {
                           onChange={(e) =>
                             handleVariantChange(index, "sku", e.target.value)
                           }
+                         
                         />
                       </TableCell>
                       <TableCell>
-                        <IconButton onClick={() => removeVariant(index)}>
+                        <IconButton
+                          onClick={() => removeVariant(index)}
+                          color="error"
+                        >
                           <RemoveIcon />
                         </IconButton>
                       </TableCell>

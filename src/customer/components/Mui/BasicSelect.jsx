@@ -10,13 +10,23 @@ const SizeButton = styled(Button)(({ theme, selected, instock }) => ({
   margin: theme.spacing(0.5),
   border: `1px solid ${instock === "true" ? "#e0e0e0" : "#ffcccc"}`,
   fontWeight: selected ? "bold" : "normal",
-  backgroundColor: selected ? theme.palette.primary.main : 
-                instock === "true" ? "#ffffff" : "#fafafa",
-  color: selected ? "#fff" : 
-        instock === "true" ? theme.palette.text.primary : "#bdbdbd",
+  backgroundColor: selected
+    ? theme.palette.primary.main
+    : instock === "true"
+    ? "#ffffff"
+    : "#fafafa",
+  color: selected
+    ? "#fff"
+    : instock === "true"
+    ? theme.palette.text.primary
+    : "#bdbdbd",
   "&:hover": {
-    backgroundColor: instock === "true" ? 
-      (selected ? theme.palette.primary.dark : "#f5f5f5") : "#fafafa"
+    backgroundColor:
+      instock === "true"
+        ? selected
+          ? theme.palette.primary.dark
+          : "#f5f5f5"
+        : "#fafafa",
   },
   position: "relative",
   overflow: "hidden",
@@ -35,7 +45,7 @@ const BasicSelect = ({ name, options, onSelect }) => {
   };
 
   return (
-    <Box sx={{ minWidth: 400, width: "100%", }}>
+    <Box sx={{ minWidth: 400, width: "100%" }}>
       {/* <Chip
         label={`Tailles disponibles - Stock total : ${options.reduce(
           (sum, opt) => sum + opt.stock,
@@ -48,8 +58,8 @@ const BasicSelect = ({ name, options, onSelect }) => {
           borderColor: options.some(opt => opt.stock > 0) ? "#c8e6c9" : "#ffcdd2"
         }}
       /> */}
-      
-      <Box sx={{ display: "flex", flexWrap: "wrap", }}>
+
+      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {options.map((opt, index) => {
           const inStock = opt.stock > 0;
           const isLowStock = opt.stock <= 5;

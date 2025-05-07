@@ -64,7 +64,7 @@ const CategorySelector2 = ({ handleCategorySelection }) => {
             className="flex items-center justify-between p-2 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
             onClick={() => handleCategoryClick(category)}
           >
-            <span className="text-base opacity-80" style={{ fontSize: "13px" }}>
+            <span className="text-base opacity-80" style={{ fontSize: "15px" }}>
               {category.name}
             </span>
             {category.subcategories ? (
@@ -103,7 +103,7 @@ const CategorySelector2 = ({ handleCategorySelection }) => {
             <span key={breadcrumb.id} className="flex items-center">
               <span
                 style={{
-                  fontSize: "10px",
+                  fontSize: "13px",
                   fontWeight: "bold",
                   color: "black",
                   opacity: "0.7",
@@ -114,7 +114,7 @@ const CategorySelector2 = ({ handleCategorySelection }) => {
                 {breadcrumb.name}
               </span>
               {index < breadcrumbs.length - 1 && (
-                <span className="mx-1">/</span>
+                <span className="mx-1"> / </span>
               )}
             </span>
           ))}

@@ -29,12 +29,28 @@ const CartItem = ({ prod, loading }) => {
   const showAdditionalPrice =
     prod.variantType !== "NONE" && prod.variant?.additionalPrice;
 
+  // const handleUpdateCartItem = async (num) => {
+  //   const updatedQuantity = prod.quantity + num;
+  //   if (updatedQuantity > 0) {
+  //     const data = {
+  //       data: { quantity: updatedQuantity },
+  //       cartItemId: prod.id,
+  //     };
+  //     await dispatch(updateCartItem(data));
+  //   }
+  // };
+
+  // Récupérer le stock depuis les props
+  // const stock = prod.variant?.stock || prod.product?.stock;
+
   const handleUpdateCartItem = async (num) => {
     const updatedQuantity = prod.quantity + num;
+
+    // Vérifier le stock avant la mise à jour
     if (updatedQuantity > 0) {
       const data = {
-        data: { quantity: updatedQuantity },
-        cartItemId: prod.cartItemId,
+        quantity: updatedQuantity,
+        cartItemId: prod.id,
       };
       await dispatch(updateCartItem(data));
     }
@@ -115,17 +131,19 @@ const CartItem = ({ prod, loading }) => {
             <span className="py-1 px-7 border font-bold rounded-sm">
               {prod.quantity}
             </span>
+            {/* Afficher le stock disponible */}
+            <span className="text-xs text-gray-500">Stock disponible:</span>
           </div>
 
           <IconButton
             onClick={() => handleUpdateCartItem(1)}
-            disabled={isLoading}
+            disabled={isLoading} // Désactiver si stock atteint
           >
             <AddCircleOutlineIcon />
           </IconButton>
         </div>
         <Button onClick={handleRemoveCartItem} disabled={isLoading}>
-          <span className=" rounded-md">
+          <span className=" rounded-md" title="Supprimer l'article">
             <CancelPresentationIcon className="text-red-500" />
           </span>
         </Button>

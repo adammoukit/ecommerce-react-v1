@@ -35,12 +35,24 @@ export const removeCartItem = (cartItemId) => async (dispatch) => {
   }
 };
 
+// export const updateCartItem = (reqData) => async (dispatch) => {
+//   dispatch({ type: UPDATE_CART_ITEM_REQUEST });
+//   try {
+//     const { data } = await api.put(
+//       `/api/cart/items/${reqData.cartItemId}`,
+//       reqData.data
+//     );
+//     dispatch({ type: UPDATE_CART_ITEM_SUCCESS, payload: data });
+//   } catch (error) {
+//     dispatch({ type: UPDATE_CART_ITEM_FAILURE, payload: error.message });
+//   }
+// };
 export const updateCartItem = (reqData) => async (dispatch) => {
   dispatch({ type: UPDATE_CART_ITEM_REQUEST });
   try {
+    // Envoyer la quantité comme paramètre de requête dans l'URL
     const { data } = await api.put(
-      `/api/cart_item/${reqData.cartItemId}`,
-      reqData.data
+      `/api/cart/items/${reqData.cartItemId}?quantity=${reqData.quantity}`
     );
     dispatch({ type: UPDATE_CART_ITEM_SUCCESS, payload: data });
   } catch (error) {

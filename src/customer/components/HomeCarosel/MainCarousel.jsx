@@ -259,7 +259,7 @@ const MainCarousel = () => {
           spaceBetween={50} // Espace entre les slides
           slidesPerView={1} // Nombre de slides visibles à la fois
           pagination={{ clickable: true }} // Permet de cliquer sur les dots pour naviguer
-          loop // Permet le défilement infini
+          loop={false} // Permet le défilement infini
           breakpoints={{
             1024: {
               slidesPerView: 4, // 4 slides pour les grands écrans

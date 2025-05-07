@@ -27,21 +27,24 @@ const Cart = () => {
 
   // Trier uniquement lorsque cart.cart.cartItems change
   const sortedCartItems = useMemo(() => {
-    return [...(cart.cart?.cartItems || [])].sort((a, b) => a.cartItemId - b.cartItemId);
+    return [...(cart.cart?.cartItems || [])].sort((a, b) => a.id - b.id);
   }, [cart.cart?.cartItems]);
   return (
-    <div className={`relative ${loading ? "" : ""} h-[100vh] p-4`} style={{backgroundColor:"#f2f3f4"}}>
+    <div
+      className={`relative ${loading ? "" : ""} h-[100vh] p-4`}
+      style={{ backgroundColor: "#f2f3f4" }}
+    >
       {/* Indicateur de chargement */}
       {loading && (
-        <div  className="absolute inset-0 flex items-center justify-center bg-opacity-50">
+        <div className="absolute inset-0 flex items-center justify-center bg-opacity-50">
           <CircularProgress />
         </div>
       )}
 
-      <div className="lg:grid grid-cols-3 lg:px-6 gap-3 mt-5">
-        <div className="col-span-2 space-y-2 pb-4 h-[500px] overflow-y-scroll">
+      <div className="lg:grid grid-cols-4 lg:px-6 gap-3 mt-5">
+        <div className="col-span-3 space-y-2 pb-4 h-[500px] overflow-y-scroll">
           {sortedCartItems.map((item) => (
-            <CartItem key={item.id} prod={item} loading={loading}/>
+            <CartItem key={item.id} prod={item} loading={loading} />
           ))}
         </div>
         <div className="Cart-infos  rounded-lg CiContainer bg-white p-2  h-[fit-content] ">
