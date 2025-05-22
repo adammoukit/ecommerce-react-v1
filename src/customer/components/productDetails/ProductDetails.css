@@ -17,7 +17,7 @@
 
 .breadcrumb li::after {
   content: "›";
-  margin: 0 0.5rem;
+  
 }
 
 .breadcrumb li:last-child::after {
@@ -31,5 +31,5 @@
 
 .breadcrumb li a:hover {
   text-decoration: underline;
-  color: #FFC145;
+  color: #2c5ab0;
 }

@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Radio, RadioGroup } from "@headlessui/react";
-import { Box, Button, CircularProgress, Divider, Grid2, Rating, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  Grid2,
+  Rating,
+  Typography,
+} from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import ProductReviewsCard from "./ProductReviewsCard";
 import { mens_kurta } from "../../../Data/mens/men_kurta";
@@ -18,6 +25,7 @@ import {
 } from "../../../State/Admin/Category/Action";
 import BasicSelect from "../Mui/BasicSelect";
 import ProductColors from "../Utils_Components/ProductColors";
+import AliceCarousel from "react-alice-carousel";
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -93,15 +101,6 @@ export default function ProductDetails() {
   const [mainImage, setMainImage] = useState(null);
   const [colorMedia, setColorMedia] = useState([]);
 
-  // const [activeVariant, setActiveVariant] = useState(
-  //   products.product?.hasVariants ? products.product.variants[0] : null
-  // ); // Par défaut, première variante
-  // const [mainImage, setMainImage] = useState(
-  //   products.product?.hasVariants
-  //     ? products.product.variants[0]?.mediaUrls?.[0]
-  //     : products.product?.mediaUrls?.[0] || "https://via.placeholder.com/150"
-  // );
-
   // Quand les données des produits sont disponibles, définissez la première variante par défaut
   useEffect(() => {
     if (products.product && products.product.hasVariants) {
@@ -128,6 +127,17 @@ export default function ProductDetails() {
   };
 
   const navigate = useNavigate();
+
+  const [isSmUp, setIsSmUp] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmUp(window.innerWidth >= 640); // 640px = sm en Tailwind
+    };
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleAddToCart = () => {
     if (!products.product) return;
@@ -272,11 +282,16 @@ export default function ProductDetails() {
 
   // Met à jour les médias quand la couleur change
   const updateColorMedia = (color) => {
-    const media =
-      products.product?.variants
-        ?.filter((v) => v.color === color)
-        ?.flatMap((v) => v.media)
-        ?.filter((v, i, a) => a.findIndex((t) => t.url === v.url) === i) || []; // Évite les doublons
+    const mediaTable = products.product?.variants?.filter(
+      (v) => v.color === color
+    );
+
+    const media = mediaTable[0]?.media || []; // Prend la première variante de cette couleur
+
+    // products.product?.variants
+    //   ?.filter((v) => v.color === color)
+    //   ?.flatMap((v) => v.media)
+    //   ?.filter((v, i, a) => a.findIndex((t) => t.url === v.url) === i) || []; // Évite les doublons
 
     setColorMedia(media);
   };
@@ -293,18 +308,48 @@ export default function ProductDetails() {
     }
   }, [selectedColor]);
 
+
+   // Les fonctions de gestion de carousel des images du produit
+   const carouselRef = useRef(null);
+   const slideNext = () => carouselRef.current.slideNext();
+   const slidePrev = () => carouselRef.current.slidePrev();
+ 
+
   // Galerie d'images
   const ImageGallery = () => (
     <div className="flex flex-col items-center gap-y-2 lg:col-span-2">
-      <div className="overflow-hidden  rounded-lg w-[16rem] h-[18rem] p-2">
+      <div className="overflow-hidden relative  rounded-lg w-[16rem] h-[18rem] p-2">
         {loading ? (
           "Chargemment..."
         ) : (
-          <img
-            alt={products.product?.name}
-            src={mainImage}
-            className="w-full h-full object-contain object-top rounded-lg"
-          />
+          <>
+            <AliceCarousel
+              ref={carouselRef}
+              // mouseTracking
+              items={items}
+              disableButtonsControls
+              // autoPlay
+              autoPlayInterval={3000}
+              // infinite
+            />
+            <button
+              onClick={slidePrev}
+              className="absolute top-2/3 -left-5  bg-gray-800 text-white p-2 rounded-full"
+            >
+              &#9664;
+            </button>
+            <button
+              onClick={slideNext}
+              className="absolute top-2/3 -right-5   bg-gray-800 text-white p-2 rounded-full"
+            >
+              &#9654;
+            </button>
+            <img
+              alt={products.product?.name}
+              src={mainImage}
+              className="w-full h-full object-contain object-top rounded-lg"
+            />
+          </>
         )}
       </div>
 
@@ -312,7 +357,7 @@ export default function ProductDetails() {
         {colorMedia?.map((media, index) => (
           <div
             key={index}
-            className={`overflow-hidden p-1 rounded-lg w-16 h-16 border-2 cursor-pointer
+            className={`overflow-hidden p-1 rounded-lg w-14 h-14 border-2 cursor-pointer
               ${
                 mainImage === media.url ? "border-lime-500" : "border-gray-200"
               }`}
@@ -333,8 +378,13 @@ export default function ProductDetails() {
     </div>
   );
 
+ 
+  const items = activeVariant?.media?.map((media, index) => {
+    return media.url;
+  });
+
   return (
-    <div className="bg-white container  mx-auto productTypographie">
+    <div className="bg-white relative container mx-auto productTypographie">
       <div className="pt-6">
         <nav aria-label="Breadcrumb" className="mx-2">
           {loading && <p>Chargement...</p>}
@@ -368,8 +418,8 @@ export default function ProductDetails() {
                     {products.product?.name}
                   </h2>
                   <p
-                    style={{ fontSize: "25px" }}
-                    className="font-bold  text-lime-700"
+                    style={{ fontSize: "35px" }}
+                    className="font-bold  sm:text-right opacity-80 text-lime-700"
                   >
                     {products.product?.price} F CFA
                   </p>
@@ -385,83 +435,54 @@ export default function ProductDetails() {
                   style={{ fontSize: "11px" }}
                   className="flex flex-row items-center"
                 >
-                  <p className="font-bold  opacity-80 text-lg mr-3">SKU :</p>
+                  <p className="font-bold  opacity-95 text-lg mr-3">SKU :</p>
                   <p className="font-bold">{activeVariant?.sku}</p>
                 </div>
                 <div className="flex flex-row items-center gap-x-2 flex-wrap w-full">
-                  <h3 className="font-bold ">Déscription : </h3>
-                  <p className="text-sm opacity-75">
+                  <h3 className="font-bold text-lg ">Déscription : </h3>
+                  <p className="text-sm text-gray-950">
                     {products.product?.description}
                   </p>
                 </div>
               </div>
             </div>
             {/* Vérifier si la variante a des tailles */}
-
-            {/* // Dans la section des options de variantes, remplacez par ce code
-            conditionnel : */}
-            <div className="flex flex-col gap-3 w-full rounded-md">
-              {/* Afficher les couleurs uniquement pour COLOR et COLOR_AND_SIZE */}
-              {(products.product?.variantType === "COLOR" ||
-                products.product?.variantType === "COLOR_AND_SIZE") && (
-                <ProductColors
-                  product={products.product}
-                  selectedColor={selectedColor}
-                  onColorChange={(color) => {
-                    setSelectedColor(color);
-                    setSelectedSize(null); // Réinitialiser la taille
-                  }}
-                />
-              )}
-
-              {/* Afficher les tailles uniquement pour SIZE et COLOR_AND_SIZE */}
-              {(products.product?.variantType === "SIZE" ||
-                products.product?.variantType === "COLOR_AND_SIZE") && (
-                <div className="flex flex-row gap-1 w-full rounded-md items-start justify-start ">
-                  <h2 className="font-bold text-lg w-28">Taille :</h2>
-                  <BasicSelect
-                    name="taille"
-                    options={availableSizes}
-                    onSelect={(size) => setSelectedSize(size)}
+            <div className="flex flex-col space-y-3 sm:flex-row items-start sm:items-center space-x-5">
+              {/* // Dans la section des options de variantes, remplacez par ce code conditionnel : */}
+              <div className="flex flex-col gap-2 rounded-md">
+                {/* Afficher les couleurs uniquement pour COLOR et COLOR_AND_SIZE */}
+                {(products.product?.variantType === "COLOR" ||
+                  products.product?.variantType === "COLOR_AND_SIZE") && (
+                  <ProductColors
+                    product={products.product}
+                    selectedColor={selectedColor}
+                    onColorChange={(color) => {
+                      setSelectedColor(color);
+                      setSelectedSize(null); // Réinitialiser la taille
+                    }}
                   />
-                </div>
-              )}
+                )}
+              </div>
+              {(products.product?.variantType === "COLOR_AND_SIZE" ||
+                products.product?.variantType === "COLOR_AND_SIZE") &&
+                isSmUp && (
+                  <Divider orientation="vertical" variant="middle" flexItem />
+                )}
+
+              <div>
+                {/* Afficher les tailles uniquement pour SIZE et COLOR_AND_SIZE */}
+                {(products.product?.variantType === "SIZE" ||
+                  products.product?.variantType === "COLOR_AND_SIZE") && (
+                  <div className="flex rounded-md items-start justify-start">
+                    <BasicSelect
+                      name="taille"
+                      options={availableSizes}
+                      onSelect={(size) => setSelectedSize(size)}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-            {/* Options */}
-            {/* <div className="mt-4 lg:row-span-3 lg:mt-0">
-              <h2 className="sr-only">Product information</h2>
-
-             
-              <div className="mt-6">
-                <h2 className="text-xl font-bold mb-3">Détails du produit</h2>
-                <ul className="list-disc pl-5 space-y-2">
-                  {products.product?.productDetails?.attributes &&
-                    Object.entries(
-                      products.product.productDetails?.attributes
-                    ).map(([key, value]) => (
-                      <li key={key} className="text-slate-950 text-sm">
-                        <span className="font-bold capitalize mr-3">
-                          {key}:
-                        </span>{" "}
-                        {value}
-                      </li>
-                    ))}
-                </ul>
-              </div>
-              
-              <div className="mt-6">
-                <div className="flex items-center space-x-3">
-                  <Rating name="read-only" value={4} readOnly />
-                  <p className="opacity-50 text-sm">56640 notation</p>
-                  <p className="text-sm font-semibold text-indigo-300 hover:text-indigo-400 ml-3">
-                    3870 Commentaires
-                  </p>
-                </div>
-              </div>
-
-             
-            </div> */}
-
             <div className="mt-6">
               {/* Affichage conditionnel des variantes disponibles */}
               {products.product?.variantType !== "NONE" && (
@@ -507,40 +528,9 @@ export default function ProductDetails() {
 
           {/* Cart fonctionalities */}
           <div className="lg:col-span-1 rounded-2 border p-2">
-            <form className="mt-10">
-              {/* Colors */}
-              <div>
-                <fieldset aria-label="Choose a color" className="mt-4">
-                  {/* <RadioGroup
-                      value={selectedColor}
-                      onChange={setSelectedColor}
-                      className="flex items-center space-x-3"
-                    >
-                      {product.colors.map((color) => (
-                        <Radio
-                          key={color.name}
-                          value={color}
-                          aria-label={color.name}
-                          className={classNames(
-                            color.selectedClass,
-                            "relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none data-[checked]:ring-2 data-[focus]:data-[checked]:ring data-[focus]:data-[checked]:ring-offset-1"
-                          )}
-                        >
-                          <span
-                            aria-hidden="true"
-                            className={classNames(
-                              color.class,
-                              "h-8 w-8 rounded-full border border-black border-opacity-10"
-                            )}
-                          />
-                        </Radio>
-                      ))}
-                    </RadioGroup> */}
-                </fieldset>
-              </div>
-
+            <form className="">
               <div className="flex flex-col mt-10 space-y-3 ">
-                <div className="mt-4">
+                <div className="">
                   {products.product?.variantType === "NONE" ? (
                     <h3
                       className={

@@ -1,0 +1,25 @@
+/* Exemple de CSS minimal */
+.account-linking-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.handleLinkbutton {
+  display: block;
+  width: 100%;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  border-radius: 5px;
+
+}
+handleLinkbutton:hover {
+  background-color: #46519e;
+}
+.ClassicButton:hover{
+    color: #fff;
+}

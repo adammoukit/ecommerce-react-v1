@@ -40,7 +40,7 @@ export default function BackgroundLetterAvatars() {
   return (
     <Stack direction="row" spacing={2}>
       {/* Affiche l'avatar avec les initiales de l'utilisateur connecté */}
-      <Avatar {...stringAvatar(userFullName)} />
+      <Avatar sx={{ width: 24, height: 24 }} {...stringAvatar(userFullName)} />
     </Stack>
   );
 }

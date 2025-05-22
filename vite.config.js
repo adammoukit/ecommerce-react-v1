@@ -13,5 +13,6 @@ export default defineConfig({
       'source-map-js',
       'url'
     ]
-  }
+  },
+  assetsInclude: ['**/*.JPG'] // Ajoutez cette ligne
 })

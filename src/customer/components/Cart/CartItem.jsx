@@ -61,92 +61,98 @@ const CartItem = ({ prod, loading }) => {
   };
 
   return (
-    <div
-      className={`p-3 CiContainer rounded-lg flex flex-col sm:flex-row bg-white border mr-2 justify-between items-center sm:items-center lg:items-center space-y-4 lg:space-y-0 ${
-        loading ? "" : ""
-      }`}
-    >
-      {loading && <CircularProgress className="absolute z-10" />}
-      {/* Product Image and Details */}
-      <div className="flex flex-col sm:flex-row items-center lg:items-start ">
-        <div className="w-[3rem] h-[3rem] lg:w-[7rem] lg:h-[5rem] border rounded-md p-2 shadow-orange-400">
-          <img
-            className="w-full h-full object-contain object-top rounded"
-            src={prod.imageUrl}
-            alt="product image"
-          />
-        </div>
-        <div className="ml-4 space-y-2 text-center lg:text-left CartItemTypographie">
-          <div className="font-bold  text-base">
-            <p>{prod.productName}</p>
-            <p className="text-xs opacity-80">
-              <span>SKU:</span>
-              {prod.sku}
+    <div className="flex justify-center items-center">
+      <div className=" bg-orange-500 pl-2 rounded-2xl w-full">
+        {/* Barre latérale décorative */}
+       
+        
+        <div
+          className={`CiContainer rounded-lg grid grid-cols-[40%_30%_15%_15%] py-2 items-center bg-white border ${
+            loading ? "" : ""
+          }`}
+        >
+          {loading && <CircularProgress className="absolute z-10" />}
+          {/* Product Image and Details */}
+          <div className="flex flex-col sm:flex-row items-center lg:items-start ">
+            <div className="w-[3rem] h-[3rem] lg:w-[7rem] lg:h-[5rem] border rounded-md p-2 shadow-orange-400">
+              <img
+                className="w-full h-full object-contain object-top rounded"
+                src={prod.imageUrl}
+                alt="product image"
+              />
+            </div>
+            <div className="ml-4 space-y-2 text-center lg:text-left CartItemTypographie">
+              <div className="font-bold  text-base">
+                <p>{prod.productName}</p>
+                <p className="text-xs opacity-80">
+                  <span>SKU:</span>
+                  {prod.sku}
+                </p>
+              </div>
+              <div className="font-semibold text-sm flex space-x-1">
+                {prod.variantType === "NONE" ? (
+                  <span>Produit standard</span>
+                ) : (
+                  <>
+                    {prod.variantType === "SIZE" &&
+                      `Taille: ${prod.selectedSize}`}
+                    {prod.variantType === "COLOR" &&
+                      `Couleur: ${prod.selectedColor}`}
+                    {prod.variantType === "COLOR_AND_SIZE" &&
+                      `Couleur: ${prod.selectedColor} | Taille: ${prod.selectedSize}`}
+                  </>
+                )}
+              </div>
+              
+            </div>
+          </div>
+          {/* Modification de la section des prix */}
+
+          <div className="flex flex-col items-center  space-y-2 lg:space-y-1 text-center">
+            <p className="text-sm font-bold opacity-90 text-green-900 Cart-infos">
+              PRIX : {prod.unitPrice?.toFixed(2)} F CFA
+            </p>
+
+            {prod.additionalPrice > 0 && (
+              <p className="text-green-900 text-sm font-semibold">
+                Supplément variante : +{prod.additionalPrice?.toFixed(2)} F CFA
+              </p>
+            )}
+
+            <p className="text-sm font-bold text-green-700">
+              Total : {prod.totalPrice?.toFixed(2)} F CFA
             </p>
           </div>
-          <div className="font-semibold text-sm flex space-x-1">
-            {prod.variantType === "NONE" ? (
-              <span>Produit standard</span>
-            ) : (
-              <>
-                {prod.variantType === "SIZE" && `Taille: ${prod.selectedSize}`}
-                {prod.variantType === "COLOR" &&
-                  `Couleur: ${prod.selectedColor}`}
-                {prod.variantType === "COLOR_AND_SIZE" &&
-                  `Couleur: ${prod.selectedColor} | Taille: ${prod.selectedSize}`}
-              </>
-            )}
+          {/* Quantity and Remove Button */}
+          <div className="flex flex-col items-center lg:flex-row lg:items-center space-y-3 lg:space-y-0 lg:space-x-4">
+            <div className="flex items-center space-x-2">
+              <IconButton
+                onClick={() => handleUpdateCartItem(-1)}
+                disabled={prod.quantity <= 1 || isLoading}
+              >
+                <RemoveCircleOutlineIcon />
+              </IconButton>
+              <div className="flex flex-col space-y-2 items-center justify-center">
+                {/* <span className="font-bold opacity-60">Qte</span> */}
+                <span className="py-1 px-7 border font-bold rounded-sm">
+                  {prod.quantity}
+                </span>
+              </div>
+
+              <IconButton
+                onClick={() => handleUpdateCartItem(1)}
+                disabled={isLoading} // Désactiver si stock atteint
+              >
+                <AddCircleOutlineIcon />
+              </IconButton>
+            </div>
+            <Button onClick={handleRemoveCartItem} disabled={isLoading}>
+              <span className=" rounded-md" title="Supprimer l'article">
+                <CancelPresentationIcon className="text-red-500" />
+              </span>
+            </Button>
           </div>
-          <p className="opacity-80">Vendeur : Moukit Fashion Store</p>
         </div>
-      </div>
-      {/* Modification de la section des prix */}
-
-      <div className="flex flex-col items-center lg:items-start space-y-2 lg:space-y-1">
-        <p className="text-sm font-bold opacity-90 text-green-900 Cart-infos">
-          PRIX : {prod.unitPrice?.toFixed(2)} F CFA
-        </p>
-
-        {prod.additionalPrice > 0 && (
-          <p className="text-green-900 text-sm font-semibold">
-            Supplément variante : +{prod.additionalPrice?.toFixed(2)} F CFA
-          </p>
-        )}
-
-        <p className="text-sm font-bold text-green-700">
-          Total : {prod.totalPrice?.toFixed(2)} F CFA
-        </p>
-      </div>
-      {/* Quantity and Remove Button */}
-      <div className="flex flex-col items-center lg:flex-row lg:items-center space-y-3 lg:space-y-0 lg:space-x-4">
-        <div className="flex items-center space-x-2">
-          <IconButton
-            onClick={() => handleUpdateCartItem(-1)}
-            disabled={prod.quantity <= 1 || isLoading}
-          >
-            <RemoveCircleOutlineIcon />
-          </IconButton>
-          <div className="flex flex-col space-y-2 items-center justify-center">
-            <span className="font-bold opacity-60">Qte</span>
-            <span className="py-1 px-7 border font-bold rounded-sm">
-              {prod.quantity}
-            </span>
-            {/* Afficher le stock disponible */}
-            <span className="text-xs text-gray-500">Stock disponible:</span>
-          </div>
-
-          <IconButton
-            onClick={() => handleUpdateCartItem(1)}
-            disabled={isLoading} // Désactiver si stock atteint
-          >
-            <AddCircleOutlineIcon />
-          </IconButton>
-        </div>
-        <Button onClick={handleRemoveCartItem} disabled={isLoading}>
-          <span className=" rounded-md" title="Supprimer l'article">
-            <CancelPresentationIcon className="text-red-500" />
-          </span>
-        </Button>
       </div>
     </div>
   );

@@ -31,8 +31,8 @@ const Cart = () => {
   }, [cart.cart?.cartItems]);
   return (
     <div
-      className={`relative ${loading ? "" : ""} h-[100vh] p-4`}
-      style={{ backgroundColor: "#f2f3f4" }}
+      className={`relative ${loading ? "" : ""} h-[100vh]`}
+      style={{ backgroundColor: "" }}
     >
       {/* Indicateur de chargement */}
       {loading && (
@@ -43,6 +43,13 @@ const Cart = () => {
 
       <div className="lg:grid grid-cols-4 lg:px-6 gap-3 mt-5">
         <div className="col-span-3 space-y-2 pb-4 h-[500px] overflow-y-scroll">
+          {/* Ligne d'en-tête */}
+          <div className="hidden opacity-90 sm:grid grid-cols-[40%_30%_15%_15%] items-center bg-blue-600 text-white p-3 rounded-t-lg border-b">
+            <span className="font-bold text-md text-center">Produit</span>
+            <span className="font-bold text-md text-center">Prix</span>
+            <span className="font-bold text-md text-center">Quantité</span>
+            <span className="font-bold text-md text-center">Actions</span>
+          </div>
           {sortedCartItems.map((item) => (
             <CartItem key={item.id} prod={item} loading={loading} />
           ))}

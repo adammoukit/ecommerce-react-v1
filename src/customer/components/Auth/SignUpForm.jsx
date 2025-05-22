@@ -5,12 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, register } from "../../../State/Auth/Actions";
 import { store } from "../../../State/store";
+import GoogleAuthButton from "./GoogleAuthButton";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const {auth} = useSelector((store) => store);
+  const { auth } = useSelector((store) => store);
 
   useEffect(() => {
     if (jwt) {
@@ -32,7 +33,7 @@ const SignUpForm = () => {
     dispatch(register(userData));
 
     console.log("userData :", userData);
-    navigate("/store")
+    navigate("/store");
   };
 
   return (
@@ -102,14 +103,17 @@ const SignUpForm = () => {
         <hr />
       </div>
       <div>
-        <div className="flex items-center justify-center mt-5">
-          <p>Have you already an account? </p>
-          <button
-            onClick={() => navigate("/login")}
-            className="ml-3 text-blue-700 "
-          >
-            Login
-          </button>
+        <div className="flex flex-col  items-center justify-center mt-5">
+          <div>
+            <p>Have you already an account? </p>
+            <button
+              onClick={() => navigate("/login")}
+              className="ml-3 text-blue-700 "
+            >
+              Login
+            </button>
+          </div>
+          <GoogleAuthButton />
         </div>
       </div>
     </div>

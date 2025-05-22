@@ -8,7 +8,7 @@ import { styled } from "@mui/material/styles";
 const SizeButton = styled(Button)(({ theme, selected, instock }) => ({
   minWidth: 40,
   margin: theme.spacing(0.5),
-  border: `1px solid ${instock === "true" ? "#e0e0e0" : "#ffcccc"}`,
+  border: `2px solid ${instock === "true" ? "#e0e0e0" : "#ffcccc"}`,
   fontWeight: selected ? "bold" : "normal",
   backgroundColor: selected
     ? theme.palette.primary.main
@@ -45,19 +45,8 @@ const BasicSelect = ({ name, options, onSelect }) => {
   };
 
   return (
-    <Box sx={{ minWidth: 400, width: "100%" }}>
-      {/* <Chip
-        label={`Tailles disponibles - Stock total : ${options.reduce(
-          (sum, opt) => sum + opt.stock,
-          0
-        )}`}
-        sx={{ 
-          mb: 1,
-          fontWeight: "bold",
-          backgroundColor: options.some(opt => opt.stock > 0) ? "#e8f5e9" : "#ffebee",
-          borderColor: options.some(opt => opt.stock > 0) ? "#c8e6c9" : "#ffcdd2"
-        }}
-      /> */}
+    <Box sx={{ minWidth: 400 }}>
+    
 
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {options.map((opt, index) => {

@@ -6,14 +6,14 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import CustomerRouters from "./Routes/CustomerRouters";
 import AdminRoutes from "./Routes/AdminRoutes";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const location = useLocation(); // Obtenir l'URL actuelle
 
   // Vérifier si le chemin commence par "/admin"
   const isAdminPath = location.pathname.startsWith("/admin");
-
+  const isLoginPage = location.pathname === "/auth/login"; // Modification ici
   return (
     <Box
       sx={{
@@ -22,9 +22,12 @@ function App() {
         minHeight: "100vh", // Pour que le footer soit en bas
       }}
     >
-      
       {/* ToastContainer pour afficher les notifications */}
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer
+        style={{ marginTop: "30px" }}
+        position="top-right"
+        autoClose={3000}
+      />
       {/* Afficher Navigation seulement si ce n'est pas un chemin admin */}
       {!isAdminPath && <Navigation />}
 
@@ -36,7 +39,9 @@ function App() {
       </Box>
 
       {/* Afficher Footer seulement si ce n'est pas un chemin admin */}
-      {!isAdminPath && <Footer />}
+      {!isAdminPath && !isLoginPage && <Footer />}
+
+      
     </Box>
   );
 }

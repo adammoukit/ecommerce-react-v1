@@ -5,7 +5,6 @@ import { orange } from "@mui/material/colors";
 const Footer = () => {
   return (
     <div
-    
       style={{
         backgroundColor: "#14101FFF",
         color: "white",
@@ -27,8 +26,10 @@ const Footer = () => {
           </Typography>
           <div className="  gap-2">
             <h4>Se connecter à notre newsletter</h4>
-            <input type="email" placeholder="Entrer votre email ici" 
-            className="px-3 py-1 rounded-sm"
+            <input
+              type="email"
+              placeholder="Entrer votre email ici"
+              className="px-3 py-1 rounded-sm"
             />
           </div>
         </Grid2>
@@ -80,9 +81,11 @@ const Footer = () => {
             Instagram
           </Link>
         </Grid2>
-       
       </Grid2>
-      <h4 className="text-center my-3">&copy; Copyright 2024, tous droits réservé.Développé par <span style={{color: "orange"}}>ABDOU-MOUKIT ADAM</span></h4>
+      <h4 className="text-center my-3">
+        &copy; Copyright 2024, tous droits réservé.Développé par{" "}
+        <span style={{ color: "orange" }}>ABDOU-MOUKIT ADAM</span>
+      </h4>
     </div>
   );
 };

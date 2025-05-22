@@ -36,7 +36,7 @@ import AuthModal from "../Auth/AuthModal";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, logout } from "../../../State/Auth/Actions";
 import BackgroundLetterAvatars from "../Avatar/BackgroundLetterAvatars";
-import logo from "../../../assets/MOUKIT_LOGO1.png";
+import logo from "../../../assets/M_2.JPG";
 import { getCart } from "../../../State/Cart/Action";
 import "./Navigation.css";
 
@@ -51,6 +51,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import SearchIcon from "@mui/icons-material/Search";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const navigation = {
   categories: [
@@ -170,7 +171,9 @@ export default function Navigation() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   // Récupérer l'état de l'utilisateur connecté depuis le store
-  const user = useSelector((state) => state.auth.user);
+  const { user, isLogedOut, logoutMessage } = useSelector(
+    (state) => state.auth
+  );
   const { order } = useSelector((store) => store);
 
   const store_jwt = useSelector((state) => state.auth.loginResponse);
@@ -235,7 +238,15 @@ export default function Navigation() {
     dispatch(logout());
 
     navigate("/");
+    toast.error("Déconnexion réussie !!!!!!! 🎉");
   };
+
+  useEffect(() => {
+    if (isLogedOut) {
+      // toast.success(logoutMessage);
+      console.log("isLogedOut", isLogedOut);
+    }
+  }, [isLogedOut, dispatch]);
 
   useEffect(() => {
     dispatch(getUserOrderCount());
@@ -258,9 +269,9 @@ export default function Navigation() {
     if (user) {
       handleClose();
     }
-    if (location.pathname === "/login" || location.pathname === "/register") {
-      navigate(-1);
-    }
+    // if (location.pathname === "/login" || location.pathname === "/register") {
+    //   navigate(-1);
+    // }
   }, [user]);
 
   const handleCategoryClick = (category, section, item) => {
@@ -514,7 +525,7 @@ export default function Navigation() {
               <div className="ml-4 flex lg:ml-0">
                 <a href="/">
                   <span className="sr-only">Your Company</span>
-                  <img alt="Logo du site" src={logo} className="h-14 w-auto" />
+                  <img alt="Logo du site" src={logo} className="h-12 w-12" />
                 </a>
               </div>
 
@@ -667,12 +678,26 @@ export default function Navigation() {
 
                 {/* 3ème section dans le conteneur de la barre de recherche */}
                 <div className="flex items-center justify-center px-2 h-full bg-yellow-600 hover:bg-yellow-400 rounded-tr-md rounded-br-md cursor-pointer">
-                  <SearchIcon sx={{ color: "black", fontSize: "2rem" }} />
+                  <SearchIcon sx={{ color: "white", fontSize: "2rem" }} />
                 </div>
               </div>
 
-              {/* Login Avatar and shopping cart Icon */}
               <div className="ml-auto flex items-center ">
+                {!user && (
+                  <div>
+                    <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                      <span
+                        className=" font-bold mr-5 text-black hover:text-gray-800 underline cursor-pointer"
+                        style={{ fontSize: "15px" }}
+                        onClick={() => {
+                          navigate("/auth/login");
+                        }}
+                      >
+                        Se Connecter
+                      </span>
+                    </div>
+                  </div>
+                )}
                 <div
                   onClick={handleClick("bottom-end")}
                   className="ml-4 cursor-pointer relative"
@@ -680,129 +705,118 @@ export default function Navigation() {
                   {order?.orderCount > 0 && (
                     <span className="absolute rounded-full bg-red-700 px-1 py-1 top-0 border-2 z-50 right-0"></span>
                   )}
-                  {user ? (
-                    <BackgroundLetterAvatars />
-                  ) : (
-                    <div>
-                      <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                        <span
-                          className=" font-bold mr-5 text-black hover:text-gray-800 underline"
-                          style={{ fontSize: "18px" }}
-                        >
-                          Sign in
-                        </span>
-                        {/* <span
-                          aria-hidden="true"
-                          className="h-6 w-px bg-gray-200"
-                        />
-                        <a
-                          href="#"
-                          className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                        >
-                          Create account
-                        </a> */}
-                      </div>
-                    </div>
-                  )}
+                  {user && <BackgroundLetterAvatars />}
                 </div>
 
                 {/* profile */}
-                <Box>
-                  <Popper
-                    // Note: The following zIndex style is specifically for documentation purposes and may not be necessary in your application.
-                    sx={{ zIndex: 1200 }}
-                    open={zopen}
-                    anchorEl={anchorEl}
-                    placement={placement}
-                    transition
-                  >
-                    {({ TransitionProps }) => (
-                      <Fade {...TransitionProps} timeout={350}>
-                        <Paper>
-                          <div className="p-2">
-                            {/* Vérifiez si l'utilisateur est connecté */}
-                            {user ? (
-                              <>
-                                <div className="flex flex-col justify-center Navigation-typography mb-2">
-                                  <div className="p-2 bg-gray-300 text-white">
-                                    {user.roles.some(
-                                      (role) => role.name === "ROLE_ADMIN"
-                                    ) && (
+                {user && (
+                  <Box>
+                    <Popper
+                      // Note: The following zIndex style is specifically for documentation purposes and may not be necessary in your application.
+                      sx={{ zIndex: 1200 }}
+                      open={zopen}
+                      anchorEl={anchorEl}
+                      placement={placement}
+                      transition
+                    >
+                      {({ TransitionProps }) => (
+                        <Fade {...TransitionProps} timeout={350}>
+                          <Paper>
+                            <div className="p-2">
+                              {/* Vérifiez si l'utilisateur est connecté */}
+                              {
+                                <>
+                                  <div className="flex flex-col justify-center Navigation-typography mb-2">
+                                    <div className="p-2 bg-gray-300 text-white">
+                                      {user.roles.some(
+                                        (role) => role.name === "ROLE_ADMIN"
+                                      ) && (
+                                        <div>
+                                          <p className="text-lg font-bold text-orange-400">
+                                            ADMIN
+                                          </p>
+                                        </div>
+                                      )}
+                                      <div className="flex items-center justify-center ">
+                                        <p>{user.firstName} - </p>
+                                        <p> {user.lastName}</p>
+                                      </div>
                                       <div>
-                                        <p className="text-lg font-bold text-orange-400">
-                                          ADMIN
+                                        <p className="text-sm text-green-600 font-bold">
+                                          {user.email}
                                         </p>
                                       </div>
-                                    )}
-                                    <div className="flex items-center justify-center ">
-                                      <p>{user.firstName} - </p>
-                                      <p> {user.lastName}</p>
                                     </div>
+                                  </div>
+                                  <hr />
+                                  <div className="Navigation-typography flex flex-col justify-center  text-black">
                                     <div>
-                                      <p className="text-sm text-green-600 font-bold">
-                                        {user.email}
+                                      <p
+                                        className="text-sm font-semibold flex items-center justify-start opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                        onClick={() => {
+                                          navigate("/account/profile");
+                                          setZOpen(false);
+                                        }}
+                                      >
+                                        <PersonIcon />
+                                        <span className="ml-2">
+                                          Mon Profile
+                                        </span>
+                                      </p>
+                                      <p
+                                        className="text-sm relative flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                        onClick={() => {
+                                          navigate("/account/order");
+                                          setZOpen(false);
+                                        }}
+                                      >
+                                        <ShoppingCartIcon />
+                                        <span className="ml-2">
+                                          Mes Commandes
+                                        </span>
+                                        <span className="px-1 text-sm rounded-full bg-red-800 text-white absolute border-2 border-white -top-2 right-0">
+                                          {order?.orderCount}
+                                        </span>
+                                      </p>
+                                      <p
+                                        className="text-sm relative flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                        onClick={() => {
+                                          navigate("/account/order");
+                                          setZOpen(false);
+                                        }}
+                                      >
+                                        <FavoriteBorderIcon />
+                                        <span className="ml-2">
+                                          Mes Favoris
+                                        </span>
+                                        <span className="px-1 text-sm rounded-full bg-red-800 text-white absolute border-2 border-white -top-2 right-0">
+                                          {order?.orderCount}
+                                        </span>
+                                      </p>
+                                    </div>
+                                    <div className="mt-20 flex flex-col gap-2">
+                                      <Divider className="bg-black text-lg" />
+
+                                      <p
+                                        className="text-sm flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
+                                        onClick={handleLogout}
+                                      >
+                                        <LogoutIcon sx={{ color: "red" }} />
+                                        <span className="ml-2">
+                                          Déconnexion
+                                        </span>
                                       </p>
                                     </div>
                                   </div>
-                                </div>
-                                <hr />
-                                <div className="Navigation-typography flex flex-col justify-center  text-black">
-                                  <div>
-                                    <p
-                                      className="text-sm font-semibold flex items-center justify-start opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
-                                      onClick={() => {
-                                        navigate("/account/profile");
-                                        setZOpen(false);
-                                      }}
-                                    >
-                                      <PersonIcon />
-                                      <span className="ml-2">Mon Profile</span>
-                                    </p>
-                                    <p
-                                      className="text-sm relative flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
-                                      onClick={() => {
-                                        navigate("/account/order");
-                                        setZOpen(false);
-                                      }}
-                                    >
-                                      <ShoppingCartIcon />
-                                      <span className="ml-2">
-                                        Mes Commandes
-                                      </span>
-                                      <span className="px-1 text-sm rounded-full bg-red-800 text-white absolute border-2 border-white -top-2 right-0">
-                                        {order?.orderCount}
-                                      </span>
-                                    </p>
-                                  </div>
-                                  <div className="mt-20 flex flex-col gap-2">
-                                    <Divider className="bg-black text-lg" />
-
-                                    <p
-                                      className="text-sm flex items-center justify-start font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
-                                      onClick={handleLogout}
-                                    >
-                                      <LogoutIcon sx={{ color: "red" }} />
-                                      <span className="ml-2">Déconnexion</span>
-                                    </p>
-                                  </div>
-                                </div>
-                              </>
-                            ) : (
-                              <>
-                                <p
-                                  className="text-lg font-semibold opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
-                                  onClick={handleOpen}
-                                >
-                                  Login
-                                </p>
-                              </>
-                            )}
-                          </div>
-                        </Paper>
-                      </Fade>
-                    )}
-                  </Popper>
-                </Box>
+                                </>
+                              }
+                            </div>
+                          </Paper>
+                        </Fade>
+                      )}
+                    </Popper>
+                  </Box>
+                )}
 
                 {/* Search
                 <div className="flex lg:ml-6">
@@ -823,7 +837,11 @@ export default function Navigation() {
                   >
                     <Tooltip title="Voir le panier" arrow>
                       <IconButton aria-label="cart">
-                        <StyledBadge badgeContent={cartTotal} color="secondary" className="badge-animation">
+                        <StyledBadge
+                          badgeContent={user && cartTotal}
+                          color="secondary"
+                          className="badge-animation"
+                        >
                           <ShoppingCartIcon />
                         </StyledBadge>
                       </IconButton>
