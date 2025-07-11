@@ -20,7 +20,6 @@ import {
 import { getCart } from "../Cart/Action";
 import { getUserOrderCount } from "../Order/Action";
 
-
 export const register = (userData) => async (dispatch) => {
   dispatch({ type: REGISTER_REQUEST });
 
@@ -119,9 +118,10 @@ export const googleAuth = (token) => async (dispatch) => {
       },
     });
   } catch (error) {
+    console.log("Google Auth error:", error);
     dispatch({
       type: GOOGLE_AUTH_FAILURE,
-      payload: error.response?.data?.message || "Erreur Google",
+      payload: error.response?.data?.error ,
     });
     throw error; // Important pour la gestion d'erreur dans le composant
   }

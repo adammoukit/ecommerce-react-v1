@@ -57,25 +57,25 @@ const CategorySelector2 = ({ handleCategorySelection }) => {
     }
 
     return (
-      <ul className="space-y-2 text-sm">
+      <ul className=" text-sm">
         {currentCategories.map((category) => (
           <li
             key={category.id}
-            className="flex items-center justify-between p-2 bg-gray-100 rounded cursor-pointer hover:bg-gray-200"
+            className="flex items-center justify-between p-2 border-2 bg-gray-100  cursor-pointer hover:bg-gray-200"
             onClick={() => handleCategoryClick(category)}
           >
-            <span className="text-base opacity-80" style={{ fontSize: "15px" }}>
+            <span className="text-base font-bold text-gray-500" >
               {category.name}
             </span>
             {category.subcategories ? (
               <ArrowRightIcon className="text-gray-500 ml-2" />
             ) : (
               <Button
-                sx={{ backgroundColor: "#676B81FF", color: "white" }}
-                style={{ fontSize: "10px" }}
+                sx={{ backgroundColor: "#E09C09FF", color: "black", fontWeight: "bold" }}
+                style={{ fontSize: "13px" }}
                 onClick={() => handleCategorySelection(category.id)}
               >
-                Sélectionner
+                Choisir
               </Button>
             )}
           </li>
@@ -93,12 +93,12 @@ const CategorySelector2 = ({ handleCategorySelection }) => {
   }
 
   return (
-    <div className="p-5 border mt-2 text-sm">
-      <h2 className="text-lg font-bold mb-2">Catégorie du produit</h2>
+    <div className="p-5  mt-2 text-sm">
+      <h2 className="text-lg text-gray-500 font-bold mb-2">Catégorie du produit</h2>
 
       {/* Système de breadcrumbs */}
       {breadcrumbs.length > 0 && (
-        <div className="flex items-center space-x-2 mb-4 text-sm text-gray-600">
+        <div className="flex items-center space-x-2 mb-4 text-[14px] text-gray-500">
           {breadcrumbs.map((breadcrumb, index) => (
             <span key={breadcrumb.id} className="flex items-center">
               <span

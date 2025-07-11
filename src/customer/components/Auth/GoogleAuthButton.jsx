@@ -24,6 +24,7 @@ const GoogleAuthButton = () => {
   const handleSuccess = async (credentialResponse) => {
     try {
       const token = credentialResponse.credential;
+      console.log("Token Google reçu :", token);
 
       // Dispatch de l'action Redux
       const resultAction = await dispatch(googleAuth(token));

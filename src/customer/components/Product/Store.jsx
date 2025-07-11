@@ -137,7 +137,7 @@ const Store = () => {
   const hasGlobalProducts = globalProducts?.content?.length > 0;
 
   return (
-    <Grid container spacing={2} sx={{ padding: 2 }}>
+    <Grid container className="bg-slate-100" spacing={2} sx={{ padding: 2 }}>
       {/* Section des filtres/paramètres (4 colonnes) */}
       <Grid item xs={12} md={2}>
         <FilterSectionComponent
@@ -153,7 +153,130 @@ const Store = () => {
       {/* Section des produits (8 colonnes) */}
       <Grid item xs={12} md={10}>
         <p className="text-2xl font-bold opacity-70 mb-2">Les Categories en vogues en ce moments</p>
-        <div className="w-full space-x-3 flex justify-start items-center  rounded-md bg-slate-200">
+        <div className="w-full space-x-3 flex justify-start overflow-x-scroll items-center p-2  rounded-lg shadow bg-white">
+          <div className="flex flex-col border-2 cursor-pointer  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 border-4 border-orange-300 overflow-hidden">
+              <img
+                src={image}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+
+            <span className="font-bold opacity-70 text-sm">Electronique</span>
+          </div>
+          <div className="flex flex-col border-2  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
+              <img
+                src={Mode}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+            <span className="font-bold opacity-70 text-sm">Mode</span>
+          </div>
+          <div className="flex flex-col border-2  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
+              <img
+                src={sante}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+            <span className="font-bold opacity-70 text-sm">Santé</span>
+          </div>
+          <div className="flex flex-col border-2  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
+              <img
+                src={meuble}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+            <span className="font-bold opacity-70 text-sm">Meuble</span>
+          </div>
+          <div className="flex flex-col border-2 cursor-pointer  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 border-4 border-orange-300 overflow-hidden">
+              <img
+                src={image}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+
+            <span className="font-bold opacity-70 text-sm">Electronique</span>
+          </div>
+          <div className="flex flex-col border-2  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
+              <img
+                src={Mode}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+            <span className="font-bold opacity-70 text-sm">Mode</span>
+          </div>
+          <div className="flex flex-col border-2  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
+              <img
+                src={sante}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+            <span className="font-bold opacity-70 text-sm">Santé</span>
+          </div>
+          <div className="flex flex-col border-2  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
+              <img
+                src={meuble}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+            <span className="font-bold opacity-70 text-sm">Meuble</span>
+          </div>
+          <div className="flex flex-col border-2 cursor-pointer  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 border-4 border-orange-300 overflow-hidden">
+              <img
+                src={image}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+
+            <span className="font-bold opacity-70 text-sm">Electronique</span>
+          </div>
+          <div className="flex flex-col border-2  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
+              <img
+                src={Mode}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+            <span className="font-bold opacity-70 text-sm">Mode</span>
+          </div>
+          <div className="flex flex-col border-2  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
+              <img
+                src={sante}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+            <span className="font-bold opacity-70 text-sm">Santé</span>
+          </div>
+          <div className="flex flex-col border-2  rounded-md p-2 items-center">
+            <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
+              <img
+                src={meuble}
+                alt="Electronique"
+                className=" h-full w-full object-cover"
+              />
+            </div>
+            <span className="font-bold opacity-70 text-sm">Meuble</span>
+          </div>
           <div className="flex flex-col border-2 cursor-pointer  rounded-md p-2 items-center">
             <div className="rounded-full w-14 h-14 bg-blue-300 border-4 border-orange-300 overflow-hidden">
               <img
@@ -207,7 +330,7 @@ const Store = () => {
             />
           ))}
         </Stack>
-        <div className="flex flex-wrap w-full justify-center sm:justify-start gap-3 rounded-md bg-white py-2 px-4">
+        <div className="flex flex-wrap w-full justify-center sm:justify-start  border-2 bg-white py-2 px-4">
           {loading ? (
             // Affichage du skeleton si les données sont en cours de chargement
             Array.from({ length: 5 }).map((_, index) => (

@@ -1,4 +1,5 @@
 import {
+  CLEAR_PRODUCT_TYPE_SUGGESTIONS,
   CREATE_PRODUCT_FAILURE,
   CREATE_PRODUCT_REQUEST,
   CREATE_PRODUCT_SUCCESS,
@@ -17,6 +18,9 @@ import {
   GET_ALL_GLOBAL_PRODUCT_FAILURE,
   GET_ALL_GLOBAL_PRODUCT_REQUEST,
   GET_ALL_GLOBAL_PRODUCT_SUCCESS,
+  SEARCH_PRODUCT_TYPE_SUGGESTIONS_FAILURE,
+  SEARCH_PRODUCT_TYPE_SUGGESTIONS_REQUEST,
+  SEARCH_PRODUCT_TYPE_SUGGESTIONS_SUCCESS,
 } from "./ActionType";
 
 const initialState = {
@@ -27,6 +31,11 @@ const initialState = {
   error: null,
   globalProducts: [], // Nouveau champ pour stocker les produits globaux
   filteredProducts: [], // Champ pour stocker les produits filtrés
+  productTypeSuggestions: {
+    loading: false,
+    error: null,
+    data: [], // Contiendra les suggestions {productType, hierarchy}
+  },
 };
 
 export const customerProductReducer = (state = initialState, action) => {
@@ -112,6 +121,44 @@ export const customerProductReducer = (state = initialState, action) => {
     case FILTER_PRODUCTS_FAILURE: // Gestion des erreurs de filtre
       return { ...state, loading: false, error: action.payload };
 
+    case SEARCH_PRODUCT_TYPE_SUGGESTIONS_REQUEST:
+      return {
+        ...state,
+        productTypeSuggestions: {
+          ...state.productTypeSuggestions,
+          loading: true,
+          error: null,
+        },
+      };
+    case SEARCH_PRODUCT_TYPE_SUGGESTIONS_SUCCESS:
+      return {
+        ...state,
+        productTypeSuggestions: {
+          loading: false,
+          error: null,
+          data: action.payload,
+        },
+      };
+
+    case SEARCH_PRODUCT_TYPE_SUGGESTIONS_FAILURE:
+      return {
+        ...state,
+        productTypeSuggestions: {
+          ...state.productTypeSuggestions,
+          loading: false,
+          error: action.payload,
+          data: [],
+        },
+      };
+
+    case CLEAR_PRODUCT_TYPE_SUGGESTIONS:
+      return {
+        ...state,
+        productTypeSuggestions: {
+          ...state.productTypeSuggestions,
+          data: [],
+        },
+      };
     default:
       return state;
   }

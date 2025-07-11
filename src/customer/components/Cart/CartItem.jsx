@@ -6,6 +6,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useDispatch } from "react-redux";
 import { removeCartItem, updateCartItem } from "../../../State/Cart/Action";
 import CancelPresentationIcon from "@mui/icons-material/CancelPresentation";
+import { LoaderIcon } from "lucide-react";
 
 const CartItem = ({ prod, loading }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -73,13 +74,15 @@ const CartItem = ({ prod, loading }) => {
         >
           {loading && <CircularProgress className="absolute z-10" />}
           {/* Product Image and Details */}
-          <div className="flex flex-col sm:flex-row items-center lg:items-start ">
+          <div className="flex flex-col sm:flex-row items-center lg:items-start pl-2">
             <div className="w-[3rem] h-[3rem] lg:w-[7rem] lg:h-[5rem] border rounded-md p-2 shadow-orange-400">
-              <img
+              {isLoading ? <LoaderIcon className="animate-spin"/> : (
+                <img
                 className="w-full h-full object-contain object-top rounded"
                 src={prod.imageUrl}
                 alt="product image"
               />
+              )}
             </div>
             <div className="ml-4 space-y-2 text-center lg:text-left CartItemTypographie">
               <div className="font-bold  text-base">
@@ -140,13 +143,14 @@ const CartItem = ({ prod, loading }) => {
               </div>
 
               <IconButton
+              
                 onClick={() => handleUpdateCartItem(1)}
                 disabled={isLoading} // Désactiver si stock atteint
               >
                 <AddCircleOutlineIcon />
               </IconButton>
             </div>
-            <Button onClick={handleRemoveCartItem} disabled={isLoading}>
+            <Button className="text-center" onClick={handleRemoveCartItem} disabled={isLoading}>
               <span className=" rounded-md" title="Supprimer l'article">
                 <CancelPresentationIcon className="text-red-500" />
               </span>

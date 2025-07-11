@@ -687,7 +687,7 @@ export default function Navigation() {
                   <div>
                     <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                       <span
-                        className=" font-bold mr-5 text-black hover:text-gray-800 underline cursor-pointer"
+                        className=" font-bold mr-5 text-black hover:text-gray-800 px-4 py-1 rounded-2xl border-2 cursor-pointer hover:bg-slate-200"
                         style={{ fontSize: "15px" }}
                         onClick={() => {
                           navigate("/auth/login");
@@ -830,24 +830,26 @@ export default function Navigation() {
                 </div> */}
 
                 {/* Cart */}
-                <div className="ml-4 flow-root lg:ml-6">
-                  <div
-                    onClick={() => navigate("/cart")}
-                    className="group -m-2 flex items-center p-2 cursor-pointer"
-                  >
-                    <Tooltip title="Voir le panier" arrow>
-                      <IconButton aria-label="cart">
-                        <StyledBadge
-                          badgeContent={user && cartTotal}
-                          color="secondary"
-                          className="badge-animation"
-                        >
-                          <ShoppingCartIcon />
-                        </StyledBadge>
-                      </IconButton>
-                    </Tooltip>
+                {user && (
+                  <div className="ml-4 flow-root lg:ml-6">
+                    <div
+                      onClick={() => navigate("/cart")}
+                      className="group -m-2 flex items-center p-2 cursor-pointer"
+                    >
+                      <Tooltip title="Voir le panier" arrow>
+                        <IconButton aria-label="cart">
+                          <StyledBadge
+                            badgeContent={user && cartTotal}
+                            color="secondary"
+                            className="badge-animation"
+                          >
+                            <ShoppingCartIcon />
+                          </StyledBadge>
+                        </IconButton>
+                      </Tooltip>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

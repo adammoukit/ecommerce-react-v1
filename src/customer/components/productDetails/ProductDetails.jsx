@@ -26,6 +26,7 @@ import {
 import BasicSelect from "../Mui/BasicSelect";
 import ProductColors from "../Utils_Components/ProductColors";
 import AliceCarousel from "react-alice-carousel";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const product = {
   name: "Basic Tee 6-Pack",
@@ -120,10 +121,6 @@ export default function ProductDetails() {
   const handleVariantChange = (variant) => {
     setActiveVariant(variant); // Met à jour la variante active
     setMainImage(variant.media?.[0]?.url); // Définit la première image de la variante comme l'image principale
-  };
-
-  const handleThumbnailClick = (url) => {
-    setMainImage(url); // Permet de changer l'image principale via les vignettes
   };
 
   const navigate = useNavigate();
@@ -308,17 +305,63 @@ export default function ProductDetails() {
     }
   }, [selectedColor]);
 
+  // Les fonctions de gestion de carousel des images du produit
+  const carouselRef = useRef(null);
+  const slideNext = () => carouselRef.current.slideNext();
+  const slidePrev = () => carouselRef.current.slidePrev();
+  const [activeIndex, setActiveIndex] = useState(0);
 
-   // Les fonctions de gestion de carousel des images du produit
-   const carouselRef = useRef(null);
-   const slideNext = () => carouselRef.current.slideNext();
-   const slidePrev = () => carouselRef.current.slidePrev();
- 
+  // Génère les éléments du carrousel
+  const items = activeVariant?.media?.map((media, index) => (
+    <img
+      key={index}
+      src={media.url}
+      alt={`Slide ${index}`}
+      className="w-full h-full object-contain object-top"
+    />
+  ));
+
+  // Met à jour l'image principale et l'index quand on clique sur une vignette
+  const handleThumbnailClick = (index) => {
+    setActiveIndex(index);
+    setMainImage(activeVariant.media[index].url);
+  };
+
+  // Synchronise l'index quand le carrousel change de slide
+  const handleSlideChanged = (e) => {
+    setActiveIndex(e.item);
+    if (activeVariant?.media?.[e.item]) {
+      setMainImage(activeVariant.media[e.item].url);
+    }
+  };
+
+  useEffect(() => {
+    if (activeVariant) {
+      setMainImage(activeVariant.media?.[0]?.url);
+      setColorMedia(activeVariant.media || []);
+    }
+  }, [activeVariant]);
 
   // Galerie d'images
   const ImageGallery = () => (
-    <div className="flex flex-col items-center gap-y-2 lg:col-span-2">
-      <div className="overflow-hidden relative  rounded-lg w-[16rem] h-[18rem] p-2">
+    <div className="flex flex-col relative  items-center py-5 gap-y-2 lg:col-span-3 sm:col-span-1 shadow-sm rounded bg-white">
+      {activeIndex > 0 && (
+        <button
+          onClick={slidePrev}
+          className="absolute top-1/4 left-2 z-50  bg-gray-800 text-white p-2 rounded-full"
+        >
+          &#9664;
+        </button>
+      )}
+      {activeIndex < items?.length - 1 && (
+        <button
+          onClick={slideNext}
+          className="absolute top-1/4 right-2 z-50  bg-gray-800 text-white p-2 rounded-full"
+        >
+          &#9654;
+        </button>
+      )}
+      <div className="overflow-hidden   rounded-lg w-[16rem] h-[18rem]">
         {loading ? (
           "Chargemment..."
         ) : (
@@ -328,40 +371,34 @@ export default function ProductDetails() {
               // mouseTracking
               items={items}
               disableButtonsControls
+              activeIndex={activeIndex}
+              onSlideChanged={handleSlideChanged}
               // autoPlay
               autoPlayInterval={3000}
               // infinite
             />
-            <button
-              onClick={slidePrev}
-              className="absolute top-2/3 -left-5  bg-gray-800 text-white p-2 rounded-full"
-            >
-              &#9664;
-            </button>
-            <button
-              onClick={slideNext}
-              className="absolute top-2/3 -right-5   bg-gray-800 text-white p-2 rounded-full"
-            >
-              &#9654;
-            </button>
-            <img
-              alt={products.product?.name}
-              src={mainImage}
-              className="w-full h-full object-contain object-top rounded-lg"
-            />
+
+            <div className="rounded-lg">
+              <img
+                alt={products.product?.name}
+                src={mainImage}
+                className="w-full h-full object-contain object-top rounded-xl"
+              />
+            </div>
           </>
         )}
       </div>
 
       <div className="flex items-center p-3 flex-wrap gap-2 justify-start">
-        {colorMedia?.map((media, index) => (
+        {activeVariant?.media?.map((media, index) => (
           <div
             key={index}
             className={`overflow-hidden p-1 rounded-lg w-14 h-14 border-2 cursor-pointer
-              ${
-                mainImage === media.url ? "border-lime-500" : "border-gray-200"
-              }`}
-            onClick={() => setMainImage(media.url)}
+              ${activeIndex === index ? "border-lime-500" : "border-gray-200"}`}
+            onClick={() => {
+              handleThumbnailClick(index);
+              // carouselRef.current.slideTo(index);
+            }}
           >
             {loading ? (
               <CircularProgress size="30px" />
@@ -378,15 +415,10 @@ export default function ProductDetails() {
     </div>
   );
 
- 
-  const items = activeVariant?.media?.map((media, index) => {
-    return media.url;
-  });
-
   return (
-    <div className="bg-white relative container mx-auto productTypographie">
-      <div className="pt-6">
-        <nav aria-label="Breadcrumb" className="mx-2">
+    <div className="bg-slate-100 px-6 relative  productTypographie">
+      <div className="pt-3">
+        <nav aria-label="Breadcrumb" className="p-3 bg-white rounded  mx-auto ">
           {loading && <p>Chargement...</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
           {!loading && !error && (
@@ -395,7 +427,7 @@ export default function ProductDetails() {
                 <li key={index}>
                   <Link
                     to={`/categories/${generatePath(index)}`}
-                    className="font-bold text-sm text-lime-950 opacity-70"
+                    className="font-bold text-[10px] px-1 sm:text-sm  text-lime-950 opacity-70"
                   >
                     {category}
                   </Link>
@@ -405,86 +437,133 @@ export default function ProductDetails() {
           )}
         </nav>
 
-        <section className="grid grid-cols-1 lg:grid-cols-6 gap-x-8 gap-y-10 px-4 pt-10">
+        <section className="grid grid-cols-1 lg:grid-cols-8 sm:grid-cols-5 gap-x-8  lg:gap-x-3 gap-y-10  mt-2 ">
           {/* Image gallery */}
           <ImageGallery />
 
           {/* Product info */}
-          <div className="lg:col-span-3 mx-auto max-w-2xl px-4 pb-16 sm:px-6  lg:px-10 lg:pb-6">
-            <div className=" lg:pr-8">
-              <h1 className="text-lg font-bold tracking-tight text-gray-900 sm:text-3xl mb-1">
-                <div className="flex flex-col gap-y-3 justify-between py-2 px-3">
-                  <h2 className="text-lg font-semibold sm:text-2xl">
+          <div className="lg:col-span-4  mx-auto sm:col-span-2 px-4 pb-16 sm:px-6 bg-white py-2   lg:px-5 lg:pb-6 rounded shadow  ">
+            <div className=" ">
+              <h1 className="text-lg font-bold tracking-tight text-gray-500 sm:text-3xl mb-1">
+                <div className="flex flex-col gap-y-3 justify-between items-start py-2 px-3 rounded border-2 shadow-sm w-full">
+                  <h2 className="text-lg font-semibold sm:text-[27px] ">
                     {products.product?.name}
                   </h2>
                   <p
                     style={{ fontSize: "35px" }}
-                    className="font-bold  sm:text-right opacity-80 text-lime-700"
+                    className="font-bold opacity-80 text-black"
                   >
-                    {products.product?.price} F CFA
+                    <span className="">
+                      {products.product?.price}{" "}
+                      <span className="text-[20px]">F CFA</span>
+                    </span>
                   </p>
                 </div>
               </h1>
-              <Divider />
-              <div className="flex flex-col items-start py-2 w-[400px] gap-y-2 my-2">
-                <div className="flex flex-row items-center gap-x-2 opacity-90">
-                  <h3 className="font-bold">Category :</h3>
-                  <p> {products.product?.categoryName}</p>
-                </div>
-                <div
-                  style={{ fontSize: "11px" }}
-                  className="flex flex-row items-center"
-                >
-                  <p className="font-bold  opacity-95 text-lg mr-3">SKU :</p>
-                  <p className="font-bold">{activeVariant?.sku}</p>
+            </div>
+            <div className="rounded border-2 p-2 mt-4">
+              <div className="flex flex-col items-start p-2   gap-y-2 my-2">
+                <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mb-4 w-full">
+                  <div className="flex flex-row items-center gap-x-2">
+                    <h3 className="font-bold lg:text-[18px] opacity-65">
+                      Category :
+                    </h3>
+                    <p className="lg:text-[16px] font-bold text-black opacity-90">
+                      {" "}
+                      {products.product?.categoryName}
+                    </p>
+                  </div>
+                  <div
+                    style={{ fontSize: "11px" }}
+                    className="flex flex-row items-center"
+                  >
+                    <p className="font-bold  opacity-65 text-lg lg:text-[18px] mr-3">
+                      SKU :
+                    </p>
+                    <p className="font-bold text-black lg:text-[16px] opacity-90">
+                      {activeVariant?.sku}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex flex-row items-center gap-x-2 flex-wrap w-full">
-                  <h3 className="font-bold text-lg ">Déscription : </h3>
-                  <p className="text-sm text-gray-950">
+                  <h3 className="font-bold text-[17px] lg:text-[20px] opacity-65 underline">
+                    Déscription :{" "}
+                  </h3>
+                  <p className="text-[15px] lg:text-[16px] font-bold opacity-90 text-black w-full">
                     {products.product?.description}
                   </p>
                 </div>
               </div>
-            </div>
-            {/* Vérifier si la variante a des tailles */}
-            <div className="flex flex-col space-y-3 sm:flex-row items-start sm:items-center space-x-5">
-              {/* // Dans la section des options de variantes, remplacez par ce code conditionnel : */}
-              <div className="flex flex-col gap-2 rounded-md">
-                {/* Afficher les couleurs uniquement pour COLOR et COLOR_AND_SIZE */}
-                {(products.product?.variantType === "COLOR" ||
-                  products.product?.variantType === "COLOR_AND_SIZE") && (
-                  <ProductColors
-                    product={products.product}
-                    selectedColor={selectedColor}
-                    onColorChange={(color) => {
-                      setSelectedColor(color);
-                      setSelectedSize(null); // Réinitialiser la taille
-                    }}
-                  />
-                )}
+              {/* Vérifier si la variante a des tailles */}
+              <div className="flex flex-col space-y-3 sm:flex-row sm:items-start items-start  space-x-5">
+                {/* // Dans la section des options de variantes, remplacez par ce code conditionnel : */}
+                <div className="flex flex-col gap-2 rounded-md">
+                  {/* Afficher les couleurs uniquement pour COLOR et COLOR_AND_SIZE */}
+                  {(products.product?.variantType === "COLOR" ||
+                    products.product?.variantType === "COLOR_AND_SIZE") && (
+                    <ProductColors
+                      product={products.product}
+                      selectedColor={selectedColor}
+                      onColorChange={(color) => {
+                        // Trouver la première variante correspondant à la couleur sélectionnée
+                        const newVariant = products.product?.variants?.find(
+                          (v) => v.color === color
+                        );
+                        setSelectedColor(color);
+                        setActiveVariant(newVariant);
+                        setSelectedSize(null);
+
+                        // Réinitialiser l'index du carrousel
+                        setActiveIndex(0);
+                      }}
+                    />
+                  )}
+                </div>
+                {(products.product?.variantType === "COLOR_AND_SIZE" ||
+                  products.product?.variantType === "COLOR_AND_SIZE") &&
+                  isSmUp && (
+                    <Divider orientation="vertical" variant="middle" flexItem />
+                  )}
+
+                <div>
+                  {/* Afficher les tailles uniquement pour SIZE et COLOR_AND_SIZE */}
+                  {(products.product?.variantType === "SIZE" ||
+                    products.product?.variantType === "COLOR_AND_SIZE") && (
+                    <div className="flex rounded-md items-start justify-start">
+                      <BasicSelect
+                        name="taille"
+                        options={availableSizes}
+                        onSelect={(size) => setSelectedSize(size)}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
-              {(products.product?.variantType === "COLOR_AND_SIZE" ||
-                products.product?.variantType === "COLOR_AND_SIZE") &&
-                isSmUp && (
-                  <Divider orientation="vertical" variant="middle" flexItem />
-                )}
+            </div>
+            <div className="mt-6 flex w-full border-2 rounded flex-col lg:flex-row lg:justify-between lg:space-x-4 p-2 ">
+              {/* Affichage conditionnel des variantes disponibles */}
 
               <div>
-                {/* Afficher les tailles uniquement pour SIZE et COLOR_AND_SIZE */}
-                {(products.product?.variantType === "SIZE" ||
-                  products.product?.variantType === "COLOR_AND_SIZE") && (
-                  <div className="flex rounded-md items-start justify-start">
-                    <BasicSelect
-                      name="taille"
-                      options={availableSizes}
-                      onSelect={(size) => setSelectedSize(size)}
-                    />
-                  </div>
-                )}
+                {/* Détails techniques */}
+                <h2 className="text-xl font-bold mb-3 text-center underline">
+                  Détails du produit
+                </h2>
+                <ul className="list-disc pl-5 space-y-2">
+                  {products.product?.productDetails?.attributes &&
+                    Object.entries(
+                      products.product.productDetails.attributes
+                    ).map(([key, value]) => (
+                      <li key={key} className="text-slate-950 text-sm">
+                        <span className="font-bold capitalize mr-3">
+                          {key}:
+                        </span>
+                        {value}
+                      </li>
+                    ))}
+                </ul>
               </div>
-            </div>
-            <div className="mt-6">
-              {/* Affichage conditionnel des variantes disponibles */}
+
+              <Divider orientation="vertical" variant="middle" flexItem />
               {products.product?.variantType !== "NONE" && (
                 <div className="mb-4">
                   <h3 className="font-semibold text-lg">
@@ -509,25 +588,11 @@ export default function ProductDetails() {
                   )}
                 </div>
               )}
-
-              {/* Détails techniques */}
-              <h2 className="text-xl font-bold mb-3">Détails du produit</h2>
-              <ul className="list-disc pl-5 space-y-2">
-                {products.product?.productDetails?.attributes &&
-                  Object.entries(
-                    products.product.productDetails.attributes
-                  ).map(([key, value]) => (
-                    <li key={key} className="text-slate-950 text-sm">
-                      <span className="font-bold capitalize mr-3">{key}:</span>
-                      {value}
-                    </li>
-                  ))}
-              </ul>
             </div>
           </div>
 
           {/* Cart fonctionalities */}
-          <div className="lg:col-span-1 rounded-2 border p-2">
+          <div className="lg:col-span-1  bg-white rounded border p-2">
             <form className="">
               <div className="flex flex-col mt-10 space-y-3 ">
                 <div className="">
@@ -560,9 +625,10 @@ export default function ProductDetails() {
                 <Button
                   onClick={handleAddToCart}
                   variant="contained"
-                  className="mt-4 bg-amber-700"
+                  className={"mt-4  bg-amber-700"}
                   sx={{ bgcolor: "orange" }}
                 >
+                  <ShoppingCartIcon style={{ marginRight: "8px" }} />
                   Ajouter
                 </Button>
               </div>

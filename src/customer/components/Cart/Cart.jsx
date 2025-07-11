@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart } from "../../../State/Cart/Action";
 import "./Cart.css";
+import PaymentIcon from "@mui/icons-material/Payment";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const Cart = () => {
   }, [cart.cart?.cartItems]);
   return (
     <div
-      className={`relative ${loading ? "" : ""} h-[100vh]`}
+      className={`relative bg-slate-100 p-5 ${loading ? "" : ""} h-[100vh]`}
       style={{ backgroundColor: "" }}
     >
       {/* Indicateur de chargement */}
@@ -54,7 +55,7 @@ const Cart = () => {
             <CartItem key={item.id} prod={item} loading={loading} />
           ))}
         </div>
-        <div className="Cart-infos  rounded-lg CiContainer bg-white p-2  h-[fit-content] ">
+        <div className="Cart-infos  rounded shadow-sm CiContainer bg-white p-2  h-[fit-content] ">
           <div className=" p-2 space-y-1">
             <div className="flex items-center justify-between bg-sky-300 px-2 py-1">
               <p className="text-lg font-bold  ">informations</p>
@@ -74,7 +75,7 @@ const Cart = () => {
               <span className="text-green-700">Free</span>
             </div>
             <Divider sx={{ backgroundColor: "black", borderWidth: "1px" }} />
-            <div className="flex justify-between font-bold pt-2 text-black">
+            <div className="flex justify-between font-bold pt-2  text-black">
               <span className="text-lg ">Total</span>
               <span className="text-green-600">
                 {cart.cart?.totalPrice} CFA
@@ -84,9 +85,10 @@ const Cart = () => {
             <Button
               onClick={handleCheckout}
               variant="contained"
-              className="mt-4 w-full font-bold"
-              sx={{ bgcolor: "yellow", color: "black", fontWeight: 700 }}
+              className=" w-full   font-bold bg-"
+              sx={{ bgcolor: "orange",  color: "white", fontWeight: 700 }}
             >
+              <PaymentIcon style={{ marginRight: "10px" }} />
               Proceder
             </Button>
           </div>

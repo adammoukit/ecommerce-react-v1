@@ -17,6 +17,8 @@
 
 .breadcrumb li::after {
   content: "›";
+  font-size: 20px;
+  font-weight: 600;
   
 }
 
@@ -25,11 +27,11 @@
 }
 
 .breadcrumb li a {
-  text-decoration: none;
+  text-decoration: underline;
   color: black;
 }
 
 .breadcrumb li a:hover {
-  text-decoration: underline;
+  
   color: #2c5ab0;
 }

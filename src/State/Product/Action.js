@@ -19,6 +19,9 @@ import {
   GET_ALL_GLOBAL_PRODUCT_FAILURE,
   GET_ALL_GLOBAL_PRODUCT_REQUEST,
   GET_ALL_GLOBAL_PRODUCT_SUCCESS,
+  SEARCH_PRODUCT_TYPE_SUGGESTIONS_FAILURE,
+  SEARCH_PRODUCT_TYPE_SUGGESTIONS_REQUEST,
+  SEARCH_PRODUCT_TYPE_SUGGESTIONS_SUCCESS,
 } from "./ActionType";
 
 export const findProduct = (reqData) => async (dispatch) => {
@@ -121,4 +124,27 @@ export const filterProducts =
 
 export const clearFilteredProducts = () => (dispatch) => {
   dispatch({ type: "CLEAR_FILTER_PRODUCTS" });
+};
+
+// Action pour rechercher les suggestions
+export const searchProductTypeSuggestions = (query) => async (dispatch) => {
+  dispatch({ type: SEARCH_PRODUCT_TYPE_SUGGESTIONS_REQUEST });
+  
+  try {
+    const { data } = await api.get(`/api/admin/products/suggestions?query=${encodeURIComponent(query)}`);
+    dispatch({ 
+      type: SEARCH_PRODUCT_TYPE_SUGGESTIONS_SUCCESS, 
+      payload: data 
+    });
+  } catch (error) {
+    dispatch({ 
+      type: SEARCH_PRODUCT_TYPE_SUGGESTIONS_FAILURE, 
+      payload: error.message 
+    });
+  }
+};
+
+// Action pour vider les suggestions
+export const clearProductTypeSuggestions = () => (dispatch) => {
+  dispatch({ type: CLEAR_PRODUCT_TYPE_SUGGESTIONS });
 };

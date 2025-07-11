@@ -25,33 +25,24 @@ const ProductCard = ({ product }) => {
   const productSellToolTipValue = "228 ventes pour ce produit !";
 
   return (
-    <div className="productCard  w-[15rem] sm:w-[12rem] bg-white  transition-all cursor-pointer rounded-lg p-2">
-      <div className="h-[12rem] w-full">
+    <div className="productCard border-2 w-[15rem] sm:w-[185px] md:w-[171px] lg:w-[195px]  bg-white  transition-all cursor-pointer rounded p-2">
+      <div className="h-[13rem] w-full">
         <img
           onClick={() => navigate(`/product/${product.id}`)}
-          className="h-full w-full object-cover rounded-lg"
+          className="h-full w-full lg:w-[9rem] object-contain rounded-lg"
           src={product.media?.[0]?.url || "https://via.placeholder.com/150"} // Utilise la première URL ou une image par défaut
           alt=""
         />
       </div>
       <div className="textPart flex flex-col gap-2 mt-3 w-full  p-1 ">
-        {/* <div className="flex items-center w-full justify-between">
-          <h3 className="text-white font-bold text-xs px-2 py-1 rounded-sm bg-red-600">
-            -10%
-          </h3>
-          <span className="text-xs text-red-800">Offre à durrée limitée</span>
-        </div> */}
         <div>
-          <p className="text-sm lg:text-[14px]  line-clamp-2 font-bold ">{product.name} </p>
+          <p className="text-sm lg:text-[14px] text-gray-500 line-clamp-2 lg:line-clamp-3 font-bold ">{product.name} </p>
         </div>
-        <div className="flex space-x-2 justify-end items-center">
-          <h2 className="font-extrabold   text-lg text-green-700">
-            {" "}
-            {product.price} {" F CFA"}
+        <div className="flex space-x-2 justify-start items-center">
+          <h2 className="font-extrabold text-[23px] text-black">
+           
+            {product.price}  <span className="text-[13px]">F CFA</span>
           </h2>
-          {/* <h3 className="line-through font-bold text-sm opacity-80">
-            {product.price} CFA
-          </h3> */}
         </div>
       </div>
       
@@ -59,7 +50,7 @@ const ProductCard = ({ product }) => {
       <div className="flex items-center justify-end"></div>
       <div className="p-1 flex justify-center items-center">
         <button className="w-full bg-yellow-300 p-1 rounded-2xl hover:bg-yellow-500">
-          <Typography>Voir le produit</Typography>
+          <Typography style={{fontSize:"12px"}}>Voir le produit</Typography>
         </button>
         <IconButton
           color={liked ? "error" : "default"} // Couleur rouge si aimé

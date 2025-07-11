@@ -29,7 +29,7 @@ import ProductCreateForm from "./Components/Form/ProductCreateForm";
 const menu = [
   {
     name: "Dashboard",
-    path: "/admin",
+    path: "/administration",
     icon: <DashboardIcon sx={{ color: "orange" }} />,
   },
   { name: "Produits", path: "/admin/products", icon: <StoreIcon /> },
@@ -131,7 +131,7 @@ const Admin = () => {
         >
           {/* <Toolbar /> */}
           {/* Ajoutez ici votre contenu principal */}
-          <Routes>
+          {/* <Routes>
             <Route path="/" element={<Dashboard />}></Route>
             <Route
               path="/product/create"
@@ -140,7 +140,7 @@ const Admin = () => {
             <Route path="/products" element={<ProductsTable />}></Route>
             <Route path="/Orders" element={<OrderTable />}></Route>
             <Route path="/customer" element={<CustomerTable />}></Route>
-          </Routes>
+          </Routes> */}
         </Box>
       </Box>
     </div>

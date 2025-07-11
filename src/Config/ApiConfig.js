@@ -36,7 +36,7 @@ api.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // Utilisez un router navigate au lieu de window.location
-          // window.location.href = "/login"; 
+          // window.location.href = "/login";
           break;
         case 403:
           console.error("Accès refusé");

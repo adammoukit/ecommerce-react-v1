@@ -40,8 +40,6 @@ function App() {
 
       {/* Afficher Footer seulement si ce n'est pas un chemin admin */}
       {!isAdminPath && !isLoginPage && <Footer />}
-
-      
     </Box>
   );
 }

@@ -351,7 +351,6 @@ const ProductCreateForm = () => {
                           onChange={(e) =>
                             handleVariantChange(index, "stock", e.target.value)
                           }
-                         
                         />
                       </TableCell>
                       <TableCell>
@@ -365,7 +364,6 @@ const ProductCreateForm = () => {
                               e.target.value
                             )
                           }
-                          
                         />
                       </TableCell>
                       <TableCell>
@@ -374,7 +372,6 @@ const ProductCreateForm = () => {
                           onChange={(e) =>
                             handleVariantChange(index, "sku", e.target.value)
                           }
-                         
                         />
                       </TableCell>
                       <TableCell>

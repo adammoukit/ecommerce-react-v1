@@ -1,5 +1,5 @@
 .productCard .textPart {
-  transition: transform 0.3s ease-out;
+  transition: transform 0.5s ease-out;
 }
 
 .productCard:hover .textPart {
