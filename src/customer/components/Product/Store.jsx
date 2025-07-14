@@ -15,7 +15,7 @@ import Stack from "@mui/material/Stack";
 import image from "./Assets/electronique.jpeg";
 import meuble from "./Assets/meuble.jpg";
 import Mode from "./Assets/Mode.jpeg";
-import sante from "./Assets/santé.jpg";
+import sante from "./Assets/MOUKIT_LOGO1.png";
 const Store = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -152,7 +152,9 @@ const Store = () => {
 
       {/* Section des produits (8 colonnes) */}
       <Grid item xs={12} md={10}>
-        <p className="text-2xl font-bold opacity-70 mb-2">Les Categories en vogues en ce moments</p>
+        <p className="text-2xl font-bold opacity-70 mb-2">
+          Les Categories en vogues en ce moments
+        </p>
         <div className="w-full space-x-3 flex justify-start overflow-x-scroll items-center p-2  rounded-lg shadow bg-white">
           <div className="flex flex-col border-2 cursor-pointer  rounded-md p-2 items-center">
             <div className="rounded-full w-14 h-14 bg-blue-300 border-4 border-orange-300 overflow-hidden">
