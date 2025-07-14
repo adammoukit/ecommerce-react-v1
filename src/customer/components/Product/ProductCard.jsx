@@ -36,21 +36,21 @@ const ProductCard = ({ product }) => {
       </div>
       <div className="textPart flex flex-col gap-2 mt-3 w-full  p-1 ">
         <div>
-          <p className="text-sm lg:text-[14px] text-gray-500 line-clamp-2 lg:line-clamp-3 font-bold ">{product.name} </p>
+          <p className="text-sm lg:text-[14px] text-gray-500 line-clamp-2 lg:line-clamp-3 font-bold ">
+            {product.name}{" "}
+          </p>
         </div>
         <div className="flex space-x-2 justify-start items-center">
           <h2 className="font-extrabold text-[23px] text-black">
-           
-            {product.price}  <span className="text-[13px]">F CFA</span>
+            {product.price} <span className="text-[13px]">F CFA</span>
           </h2>
         </div>
       </div>
-      
 
       <div className="flex items-center justify-end"></div>
       <div className="p-1 flex justify-center items-center">
         <button className="w-full bg-yellow-300 p-1 rounded-2xl hover:bg-yellow-500">
-          <Typography style={{fontSize:"12px"}}>Voir le produit</Typography>
+          <Typography style={{ fontSize: "12px" }}>Voir le produit</Typography>
         </button>
         <IconButton
           color={liked ? "error" : "default"} // Couleur rouge si aimé

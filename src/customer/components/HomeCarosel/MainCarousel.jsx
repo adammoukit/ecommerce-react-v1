@@ -39,17 +39,18 @@ const MainCarousel = () => {
         />
         <div className="absolute bottom-0 left-0 w-full h-1/4 bg-gradient-to-t from-slate-600 to-transparent"></div>
         <div className="absolute top-0 left-0 h-full w-full bg-black opacity-50"></div>
-        <div className="absolute top-10 sm:top-16 md:top-15 left-4 sm:left-8 md:left-20 text-white text-start home-infos">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-orange-600">
-            BIENVENUE
-          </h1>
-          <h2
-            className={`text-xl sm:text-2xl md:text-3xl font-bold ${
-              text.length === fullText.length ? "" : "typing-text"
-            }`}
-          >
-            {text}
-          </h2>
+        <div className="absolute top-24 sm:top-28  text-white   home-infos  w-full h-full flex flex-col justify-top items-center">
+          
+          {/* Modification ici : Conteneur flex pour centrer le bouton */}
+          <div className="flex justify-center">
+            {" "}
+            {/* Changement à justify-center pour centrer */}
+            <button className="px-4 py-2 bg-orange-500 text-white font-bold rounded-lg cursor-pointer hover:bg-orange-600 transition-colors">
+              <Link className="text-lg" to="/store">
+                Voir Les Produits
+              </Link>
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -81,7 +82,6 @@ const MainCarousel = () => {
       >
         &#9654;
       </button>
-      
 
       <div className="absolute bottom-[-15rem] left-0 w-full bg-opacity-90 p-4 mb-20">
         <Swiper

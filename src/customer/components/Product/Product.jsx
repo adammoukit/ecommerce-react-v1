@@ -40,7 +40,10 @@ import ProductCard from "./ProductCard";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { findProduct, getAllGlobalProducts } from "../../../State/Product/Action";
+import {
+  findProduct,
+  getAllGlobalProducts,
+} from "../../../State/Product/Action";
 import { Pagination } from "@mui/material";
 
 const sortOptions = [
@@ -192,8 +195,8 @@ export default function Product() {
   };
 
   useeffect(() => {
-    dispatch(getAllGlobalProducts())
-  },[])
+    dispatch(getAllGlobalProducts());
+  }, []);
 
   return (
     <div className="bg-white">
