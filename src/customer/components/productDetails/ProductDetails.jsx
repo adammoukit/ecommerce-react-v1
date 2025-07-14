@@ -546,7 +546,7 @@ export default function ProductDetails() {
               <div>
                 {/* Détails techniques */}
                 <h2 className="text-xl font-bold mb-3 text-center underline">
-                  Détails du produit
+                  Détails du produit (Mis a jour ce matin)
                 </h2>
                 <ul className="list-disc pl-5 space-y-2">
                   {products.product?.productDetails?.attributes &&
