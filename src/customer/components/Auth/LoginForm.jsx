@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import GoogleAuthButton from "./GoogleAuthButton";
 import ReportIcon from "@mui/icons-material/Report";
 import logo from "../../../assets/M_2.JPG";
+import { Italic } from "lucide-react";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -19,19 +20,18 @@ const LoginForm = () => {
 
   useEffect(() => {
     let timeoutId;
-    
+
     if (error) {
       setShowClassicError(true);
       timeoutId = setTimeout(() => {
         setShowClassicError(false);
-       
       }, 5000); // 5 secondes
     }
-  
+
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [error]); 
+  }, [error]);
 
   useEffect(() => {
     // Si jwt est présent, cela signifie que la connexion a réussi
@@ -142,9 +142,9 @@ const LoginForm = () => {
                 onClick={() => {
                   navigate("/signup");
                 }}
-                className="ml-3 text-blue-700 "
+                className={`ml-3 text-blue-700 ${isLoading ? "italic" : ""}`}
               >
-                Signup
+                {isLoading ? "Loading..." : "Sign Up"}
               </button>
             </div>
           </div>

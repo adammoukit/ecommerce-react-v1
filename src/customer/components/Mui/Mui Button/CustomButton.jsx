@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { purple } from "@mui/material/colors";
+import { useSelector } from "react-redux";
 
 const BootstrapButton = styled(Button)({
   boxShadow: "none",
@@ -48,10 +49,41 @@ const ColorButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+// Style pour le texte de chargement
+const LoadingText = styled("div")({
+  fontStyle: "italic",
+  color: "#666",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "8px",
+  width: "100%",
+  padding: "6px 12px",
+  fontSize: "16px",
+});
+
 export default function CustomButton({ name }) {
+  const { loginResponse, isLoggedIn, isLoading, error } = useSelector(
+    (state) => state.auth
+  );
+
   return (
     <Stack spacing={2} direction="row">
-      <ColorButton className="w-full" type="submit" variant="contained">{name}</ColorButton>
+      {isLoading ? (
+        <LoadingText>
+          <CircularProgress size={16} /> {/* Indicateur visuel optionnel */}
+          Loading...
+        </LoadingText>
+      ) : (
+        <ColorButton
+          className="w-full"
+          type="submit"
+          variant="contained"
+          disabled={isLoading} // Désactive le bouton pendant le chargement
+        >
+          {name}
+        </ColorButton>
+      )}
     </Stack>
   );
 }
