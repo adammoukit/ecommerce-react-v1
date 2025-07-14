@@ -15,7 +15,7 @@ import Stack from "@mui/material/Stack";
 import image from "./Assets/electronique.jpeg";
 import meuble from "./Assets/meuble.jpg";
 import Mode from "./Assets/Mode.jpeg";
-import sante from "./Assets/";
+
 const Store = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
