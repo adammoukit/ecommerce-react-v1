@@ -15,7 +15,7 @@ import Stack from "@mui/material/Stack";
 import image from "./Assets/electronique.jpeg";
 import meuble from "./Assets/meuble.jpg";
 import Mode from "./Assets/Mode.jpeg";
-import sante from "./Assets/MOUKIT_LOGO1.png";
+import sante from "./Assets/";
 const Store = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -179,11 +179,11 @@ const Store = () => {
           </div>
           <div className="flex flex-col border-2  rounded-md p-2 items-center">
             <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
-              <img
+              {/* <img
                 src={sante}
                 alt="Electronique"
                 className=" h-full w-full object-cover"
-              />
+              /> */}
             </div>
             <span className="font-bold opacity-70 text-sm">Santé</span>
           </div>
@@ -220,11 +220,11 @@ const Store = () => {
           </div>
           <div className="flex flex-col border-2  rounded-md p-2 items-center">
             <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
-              <img
+              {/* <img
                 src={sante}
                 alt="Electronique"
                 className=" h-full w-full object-cover"
-              />
+              /> */}
             </div>
             <span className="font-bold opacity-70 text-sm">Santé</span>
           </div>
@@ -261,11 +261,11 @@ const Store = () => {
           </div>
           <div className="flex flex-col border-2  rounded-md p-2 items-center">
             <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
-              <img
+              {/* <img
                 src={sante}
                 alt="Electronique"
                 className=" h-full w-full object-cover"
-              />
+              /> */}
             </div>
             <span className="font-bold opacity-70 text-sm">Santé</span>
           </div>
@@ -301,13 +301,13 @@ const Store = () => {
             <span className="font-bold opacity-70 text-sm">Mode</span>
           </div>
           <div className="flex flex-col border-2  rounded-md p-2 items-center">
-            <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
+            {/* <div className="rounded-full w-14 h-14 bg-blue-300 overflow-hidden border-4 border-orange-300">
               <img
                 src={sante}
                 alt="Electronique"
                 className=" h-full w-full object-cover"
               />
-            </div>
+            </div> */}
             <span className="font-bold opacity-70 text-sm">Santé</span>
           </div>
           <div className="flex flex-col border-2  rounded-md p-2 items-center">
