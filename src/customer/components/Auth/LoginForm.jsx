@@ -140,7 +140,7 @@ const LoginForm = () => {
               <p>Don't have account? </p>
               <button
                 onClick={() => {
-                  navigate("/signup");
+                  navigate("/auth/signup");
                 }}
                 className={`ml-3 text-blue-700 ${isLoading ? "italic" : ""}`}
               >

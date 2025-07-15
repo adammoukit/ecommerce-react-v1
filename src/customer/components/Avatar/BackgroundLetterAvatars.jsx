@@ -21,26 +21,55 @@ function stringToColor(string) {
   return color;
 }
 
-function stringAvatar(name) {
+function stringAvatar(name, size) {
   const names = name.split(" ");
+  const initials = names.length >= 2 ? `${names[0][0]}${names[1][0]}` : name[0];
+
+  // Déterminer la taille en fonction de la prop
+  const sizes = {
+    small: { width: 28, height: 28, fontSize: "0.75rem" },
+    medium: { width: 36, height: 36, fontSize: "1rem" },
+    large: { width: 48, height: 48, fontSize: "1.25rem" },
+  };
+
+  const sizeConfig = sizes[size] || sizes.medium;
+
   return {
     sx: {
       bgcolor: stringToColor(name),
+      width: sizeConfig.width,
+      height: sizeConfig.height,
+      fontSize: sizeConfig.fontSize,
     },
-    children: `${names[0][0]}${names[1][0]}`, // Première lettre de firstName et lastName
+    children: initials,
   };
 }
 
-export default function BackgroundLetterAvatars({ size = 'medium' }) {
-  // Utilisez useSelector pour récupérer l'utilisateur connecté depuis votre état global (Redux, etc.)
-  const user = useSelector((state) => state.auth.user); // Assurez-vous que 'user' contient 'firstName' et 'lastName'
+export default function BackgroundLetterAvatars({ size = "medium" }) {
+  const user = useSelector((state) => state.auth.user);
 
-  const userFullName = user ? `${user.firstName} ${user.lastName}` : "inconnu";
+  // Gérer les cas où l'utilisateur n'est pas connecté
+  if (!user) {
+    return (
+      <Stack direction="row" spacing={2}>
+        <Avatar
+          sx={{
+            bgcolor: "#e0e0e0",
+            width: size === "small" ? 28 : 36,
+            height: size === "small" ? 28 : 36,
+          }}
+        >
+          ?
+        </Avatar>
+      </Stack>
+    );
+  }
+
+  const userFullName = `${user.firstName} ${user.lastName}`;
 
   return (
     <Stack direction="row" spacing={2}>
-      {/* Affiche l'avatar avec les initiales de l'utilisateur connecté */}
-      <Avatar sx={{ width: 24, height: 24 }} {...stringAvatar(userFullName)} />
+      <Avatar {...stringAvatar(userFullName, size)} />
     </Stack>
   );
 }

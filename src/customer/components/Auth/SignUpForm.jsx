@@ -107,7 +107,7 @@ const SignUpForm = () => {
           <div>
             <p>Have you already an account? </p>
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/auth/login")}
               className="ml-3 text-blue-700 "
             >
               Login
