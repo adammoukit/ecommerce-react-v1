@@ -225,6 +225,8 @@ export default function ProductDetails() {
 
     // Lancer la récupération de l'ID de la catégorie
     fetchData();
+    // Scroll vers le haut de la page
+    window.scrollTo(0, 0);
   }, [params.productId, dispatch]);
 
   useEffect(() => {

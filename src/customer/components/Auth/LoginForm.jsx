@@ -8,57 +8,37 @@ import { toast } from "react-toastify";
 import GoogleAuthButton from "./GoogleAuthButton";
 import ReportIcon from "@mui/icons-material/Report";
 import logo from "../../../assets/M_2.JPG";
-import { Italic } from "lucide-react";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [showClassicError, setShowClassicError] = useState(false); // Accès à l'état auth
-  const { loginResponse, isLoggedIn, isLoading, error } = useSelector(
-    (state) => state.auth
-  );
+  const [showClassicError, setShowClassicError] = useState(false);
+  const { isLoggedIn, isLoading, error } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    let timeoutId;
-
     if (error) {
       setShowClassicError(true);
-      timeoutId = setTimeout(() => {
-        setShowClassicError(false);
-      }, 5000); // 5 secondes
+      const timeoutId = setTimeout(() => setShowClassicError(false), 5000);
+      return () => clearTimeout(timeoutId);
     }
-
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
   }, [error]);
 
   useEffect(() => {
-    // Si jwt est présent, cela signifie que la connexion a réussi
     if (isLoggedIn) {
-      // Rafraîchir la page
       navigate("/");
-      console.log("jwt :", loginResponse);
-      // toast.success(loginResponse);
       toast.success("Connexion réussie ! 🎉");
-      // Vous pouvez aussi utiliser navigate pour rediriger vers une autre page :
-      // navigate("/dashboard");
     }
   }, [isLoggedIn, navigate]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-
     const userData = {
       email: data.get("email"),
       password: data.get("password"),
     };
-
     dispatch(login(userData));
   };
-
-  // ici le styled component pour le divider
 
   const Root = styled("div")(({ theme }) => ({
     width: "100%",
@@ -70,36 +50,38 @@ const LoginForm = () => {
   }));
 
   return (
-    <div className="flex flex-col items-center justify-center p-10 bg-slate-200">
-      <div className="mb-4">
-        <img
-          src={logo}
-          alt="Logo du site"
-          className="h-20 w-20 rounded-full  border-2 border-orange-300 shadow-lg "
-        />
-      </div>
-      <div className="max-w-lg mx-auto p-4 w-[30%] rounded-md bg-slate-100 space-y-5">
-        <h2 className="text-2xl mb-4 text-center underline font-bold opacity-70">
-          Connexion
-        </h2>
-        {showClassicError && (
-          <div className="flex items-center justify-center bg-red-400 text-black p-2 rounded-md">
-            <span>{error}</span>
-          </div>
-        )}
-        <div class name="flex  flex-col border p-2 items-center mb-8">
-          <GoogleAuthButton />
-          {/* <h2 className="text-2xl mb-2 text-center">LOGIN</h2> */}
-          <hr className="mb-4" />
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-slate-100">
+      <div className="w-full max-w-md">
+        <div className="flex justify-center mb-6">
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-16 w-16 md:h-20 md:w-20 rounded-full border-2 border-orange-300 shadow-lg"
+          />
         </div>
-        <Root>
-          <Divider>
-            <Chip label="OU" size="small" />
-          </Divider>
-        </Root>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Champ Email */}
-          <div>
+        
+        <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 space-y-4">
+          <h2 className="text-xl md:text-2xl font-bold text-center text-gray-700">
+            Connexion
+          </h2>
+          
+          {showClassicError && (
+            <div className="flex items-center justify-center bg-red-100 text-red-700 p-3 rounded-lg text-sm">
+              <span>{error}</span>
+            </div>
+          )}
+
+          <div className="py-2">
+            <GoogleAuthButton />
+          </div>
+          
+          <Root>
+            <Divider>
+              <Chip label="OU" size="small" className="text-gray-500" />
+            </Divider>
+          </Root>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
             <TextField
               required
               id="email"
@@ -107,48 +89,49 @@ const LoginForm = () => {
               label="Email"
               fullWidth
               autoComplete="email"
+              variant="outlined"
+              size="small"
+              className="mb-3"
             />
-          </div>
-
-          {/* Champ Password */}
-          <div>
+            
             <TextField
               required
               id="password"
               name="password"
-              label="Password"
+              label="Mot de passe"
               type="password"
               fullWidth
-              autoComplete="new-password"
+              autoComplete="current-password"
+              variant="outlined"
+              size="small"
             />
-            <div className="flex items-center mt-2 space-x-1">
-              <span>
-                <ReportIcon sx={{ color: "orange" }} />
-              </span>
-              <span className="text-sm text-gray-500">
-                Les mots de passe doivent au moins avoir 6 caractères.
+            
+            <div className="flex items-start mt-1 space-x-1">
+              <ReportIcon sx={{ color: "orange", fontSize: 16 }} />
+              <span className="text-xs text-gray-500">
+                Les mots de passe doivent avoir au moins 6 caractères
               </span>
             </div>
-          </div>
-
-          {/* Bouton de soumission */}
-          <div className=" border">
-            <CustomButton name="Login" />
-          </div>
-          <div>
-            <div className="flex items-center justify-center mt-5">
-              <p>Don't have account? </p>
+            
+            <div className="pt-4">
+              <CustomButton 
+                name={isLoading ? "Chargement..." : "Se connecter"} 
+                disabled={isLoading}
+                fullWidth
+              />
+            </div>
+            
+            <div className="flex justify-center pt-2">
               <button
-                onClick={() => {
-                  navigate("/auth/signup");
-                }}
-                className={`ml-3 text-blue-700 ${isLoading ? "italic" : ""}`}
+                type="button"
+                onClick={() => navigate("/auth/signup")}
+                className={`text-blue-600 hover:text-blue-800 text-sm font-medium ${isLoading ? "italic" : ""}`}
               >
-                {isLoading ? "Loading..." : "Sign Up"}
+                Pas de compte ? Créez-en un
               </button>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
