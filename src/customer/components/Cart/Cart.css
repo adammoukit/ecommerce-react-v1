@@ -4,8 +4,212 @@
   font-weight: 300;
   font-style: normal;
 }
-/* .CiContainer {
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
+/* Cart.css */
+
+/* Conteneur principal */
+.cart-container {
   position: relative;
-} */
+  padding: 1rem;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Overlay de chargement */
+.cart-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Grille principale */
+.cart-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .cart-grid {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 1.5rem;
+    padding: 0 1.5rem;
+    margin-top: 1.25rem;
+  }
+}
+
+/* Section des articles */
+.cart-items-section {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* En-tête desktop */
+.cart-header-desktop {
+  display: none;
+  background-color: #3b82f6;
+  color: white;
+  padding: 1rem;
+  font-weight: 600;
+  grid-template-columns: 40% 30% 15% 15%;
+}
+
+@media (min-width: 1024px) {
+  .cart-header-desktop {
+    display: grid;
+  }
+}
+
+/* Liste des articles */
+.cart-items-list {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+@media (min-width: 1024px) {
+  .cart-items-list {
+    max-height: 65vh;
+  }
+}
+
+/* Récapitulatif desktop */
+.cart-summary-desktop {
+  display: none;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  height: fit-content;
+  position: sticky;
+  top: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .cart-summary-desktop {
+    display: block;
+  }
+}
+
+/* Style commun pour les sections de récapitulatif */
+.summary-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.5rem;
+}
+
+.summary-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.discount {
+  color: #ef4444; /* Rouge pour les réductions */
+}
+
+.free-shipping {
+  color: #22c55e; /* Vert pour la livraison gratuite */
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.total-price {
+  color: #22c55e; /* Vert pour le total */
+}
+
+.summary-divider {
+  background-color: #e5e7eb;
+  margin: 0.5rem 0;
+}
+
+/* Bouton de commande */
+.checkout-btn {
+  font-weight: 700 !important;
+  text-transform: none !important;
+  font-size: 1rem !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.checkout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Panier vide */
+.empty-cart-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  gap: 1rem;
+}
+
+.empty-cart-message p {
+  font-size: 1.2rem;
+  color: #64748b;
+}
+
+/* ===== VERSION MOBILE ===== */
+
+/* Bouton de commande mobile */
+.mobile-checkout-button {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem 1rem;
+  background: white;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+/* Récapitulatif mobile */
+.mobile-cart-summary {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.mobile-cart-summary .summary-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.mobile-cart-summary .summary-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+}

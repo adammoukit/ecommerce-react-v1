@@ -62,26 +62,101 @@ const CartItem = ({ prod, loading }) => {
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <div className=" bg-orange-500 pl-2 rounded-2xl w-full">
-        {/* Barre latérale décorative */}
-       
-        
+    <div className="cart-item-container">
+      {/* Barre latérale décorative */}
+
+      {loading && <CircularProgress className="absolute z-10" />}
+      {/* Version mobile (empilée) */}
+      <div className="md:hidden mobile-cart-item">
+        <div className="mobile-header">
+          <div className="mobile-image-container">
+            {isLoading ? (
+              <LoaderIcon className="animate-spin" />
+            ) : (
+              <img src={prod.imageUrl} alt="product image" />
+            )}
+          </div>
+          <div className="mobile-product-info">
+            <h3 className="product-name">{prod.productName}</h3>
+            <p className="sku">SKU: {prod.sku}</p>
+            {prod.variantType !== "NONE" && (
+              <p className="variant">{getVariantText()}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="mobile-price-section">
+          <div className="price-line">
+            <span>Prix unitaire:</span>
+            <span className="price-value">
+              {prod.unitPrice?.toFixed(2)} F CFA
+            </span>
+          </div>
+
+          {showAdditionalPrice && (
+            <div className="price-line">
+              <span>Supplément:</span>
+              <span className="price-value">
+                +{prod.additionalPrice?.toFixed(2)} F CFA
+              </span>
+            </div>
+          )}
+
+          <div className="price-line total">
+            <span>Total:</span>
+            <span className="price-value">
+              {prod.totalPrice?.toFixed(2)} F CFA
+            </span>
+          </div>
+        </div>
+
+        <div className="mobile-actions">
+          <div className="quantity-controls">
+            <IconButton
+              onClick={() => handleUpdateCartItem(-1)}
+              disabled={prod.quantity <= 1 || isLoading}
+              size="small"
+            >
+              <RemoveCircleOutlineIcon fontSize="small" />
+            </IconButton>
+            <div className="quantity-display">{prod.quantity}</div>
+            <IconButton
+              onClick={() => handleUpdateCartItem(1)}
+              disabled={isLoading}
+              size="small"
+            >
+              <AddCircleOutlineIcon fontSize="small" />
+            </IconButton>
+          </div>
+
+          <Button
+            onClick={handleRemoveCartItem}
+            disabled={isLoading}
+            className="remove-btn"
+          >
+            <CancelPresentationIcon fontSize="small" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Version desktop (cachée en mobile) */}
+      <div className="hidden md:block">
         <div
           className={`CiContainer rounded-lg grid grid-cols-[40%_30%_15%_15%] py-2 items-center bg-white border ${
             loading ? "" : ""
           }`}
         >
-          {loading && <CircularProgress className="absolute z-10" />}
           {/* Product Image and Details */}
           <div className="flex flex-col sm:flex-row items-center lg:items-start pl-2">
             <div className="w-[3rem] h-[3rem] lg:w-[7rem] lg:h-[5rem] border rounded-md p-2 shadow-orange-400">
-              {isLoading ? <LoaderIcon className="animate-spin"/> : (
+              {isLoading ? (
+                <LoaderIcon className="animate-spin" />
+              ) : (
                 <img
-                className="w-full h-full object-contain object-top rounded"
-                src={prod.imageUrl}
-                alt="product image"
-              />
+                  className="w-full h-full object-contain object-top rounded"
+                  src={prod.imageUrl}
+                  alt="product image"
+                />
               )}
             </div>
             <div className="ml-4 space-y-2 text-center lg:text-left CartItemTypographie">
@@ -106,7 +181,6 @@ const CartItem = ({ prod, loading }) => {
                   </>
                 )}
               </div>
-              
             </div>
           </div>
           {/* Modification de la section des prix */}
@@ -143,14 +217,17 @@ const CartItem = ({ prod, loading }) => {
               </div>
 
               <IconButton
-              
                 onClick={() => handleUpdateCartItem(1)}
                 disabled={isLoading} // Désactiver si stock atteint
               >
                 <AddCircleOutlineIcon />
               </IconButton>
             </div>
-            <Button className="text-center" onClick={handleRemoveCartItem} disabled={isLoading}>
+            <Button
+              className="text-center"
+              onClick={handleRemoveCartItem}
+              disabled={isLoading}
+            >
               <span className=" rounded-md" title="Supprimer l'article">
                 <CancelPresentationIcon className="text-red-500" />
               </span>
