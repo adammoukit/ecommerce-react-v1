@@ -147,6 +147,8 @@ export default function ProductDetails() {
         variantId: null, // Doit être explicitement null
       };
 
+      console.log("les donnees du panier ", cartData);
+
       // Un seul appel dispatch
       dispatch(addItemToCart(cartData))
         .then(() => alert("Ajouté !"))
