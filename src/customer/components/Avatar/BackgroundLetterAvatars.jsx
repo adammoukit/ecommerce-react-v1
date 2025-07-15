@@ -31,7 +31,7 @@ function stringAvatar(name) {
   };
 }
 
-export default function BackgroundLetterAvatars() {
+export default function BackgroundLetterAvatars({ size = 'medium' }) {
   // Utilisez useSelector pour récupérer l'utilisateur connecté depuis votre état global (Redux, etc.)
   const user = useSelector((state) => state.auth.user); // Assurez-vous que 'user' contient 'firstName' et 'lastName'
 

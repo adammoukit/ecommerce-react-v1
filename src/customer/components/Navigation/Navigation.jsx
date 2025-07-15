@@ -199,6 +199,8 @@ export default function Navigation() {
   const [visible, setVisible] = useState(false);
   const dropdownRef = useRef(null);
 
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
+
   // Fonction pour détecter les clics en dehors
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -500,17 +502,18 @@ export default function Navigation() {
 
       {/* large screen navBar */}
 
-      <header className="relative  bg-white">
-        <p className="flex h-10  items-center justify-center bg-blue-400 px-4 text-sm font-bol text-black sm:px-6 lg:px-8">
+      <header className="relative bg-white">
+        <p className="flex h-10 items-center justify-center bg-blue-400 px-4 text-sm font-bold text-black sm:px-6 lg:px-8">
           Site développé par MOUKIT ADAM
         </p>
 
         <nav
           aria-label="Top"
-          className="mx-auto  max-w-7xl px-4 sm:px-6 lg:px-8"
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
         >
           <div className="border-b border-gray-200">
             <div className="flex h-16 items-center">
+              {/* Menu mobile */}
               <button
                 type="button"
                 onClick={() => setOpen(true)}
@@ -521,15 +524,70 @@ export default function Navigation() {
                 <Bars3Icon aria-hidden="true" className="h-6 w-6" />
               </button>
 
-              {/* Logo */}
-              <div className="ml-4 flex lg:ml-0">
+              {/* Logo - Centré sur mobile */}
+              <div className="ml-4 flex lg:ml-0 mx-auto lg:mx-0">
                 <a href="/">
                   <span className="sr-only">Your Company</span>
-                  <img alt="Logo du site" src={logo} className="h-12 w-12" />
+                  <img
+                    alt="Logo du site"
+                    src={logo}
+                    className="h-10 w-10 md:h-12 md:w-12"
+                  />
                 </a>
               </div>
 
-              {/* Flyout menus */}
+              {/* Partie droite (mobile) */}
+              <div className="ml-auto flex items-center lg:hidden space-x-2">
+                {/* Bouton de connexion visible sur mobile si non connecté */}
+                {!user && (
+                  <button
+                    className="font-bold text-black hover:text-gray-800 px-3 py-1 rounded-2xl border-2 cursor-pointer hover:bg-slate-200 text-sm"
+                    onClick={() => navigate("/auth/login")}
+                  >
+                    Connexion
+                  </button>
+                )}
+                {/* Icône recherche mobile */}
+                <button
+                  onClick={() => setShowMobileSearch(!showMobileSearch)}
+                  className="p-2 text-gray-600 hover:text-gray-900"
+                >
+                  <SearchIcon sx={{ fontSize: "1.5rem" }} />
+                </button>
+
+                {/* Panier mobile */}
+                {user && (
+                  <div className="flow-root">
+                    <div
+                      onClick={() => navigate("/cart")}
+                      className="group -m-2 flex items-center p-2 cursor-pointer"
+                    >
+                      <IconButton aria-label="cart">
+                        <StyledBadge
+                          badgeContent={user && cartTotal}
+                          color="secondary"
+                          className="badge-animation"
+                        >
+                          <ShoppingCartIcon />
+                        </StyledBadge>
+                      </IconButton>
+                    </div>
+                  </div>
+                )}
+
+                {/* Profil mobile */}
+                <div
+                  onClick={handleClick("bottom-end")}
+                  className="cursor-pointer relative"
+                >
+                  {order?.orderCount > 0 && (
+                    <span className="absolute rounded-full bg-red-700 px-1 py-1 top-0 border-2 z-50 right-0"></span>
+                  )}
+                  {user && <BackgroundLetterAvatars size="small" />}
+                </div>
+              </div>
+
+              {/* Flyout menus (Desktop) */}
               <PopoverGroup className="hidden lg:ml-8 lg:block lg:self-stretch">
                 <div className="flex h-full space-x-8">
                   {navigation.categories.map((category) => (
@@ -544,7 +602,6 @@ export default function Navigation() {
                         transition
                         className="absolute inset-x-0 top-full text-sm text-gray-500 transition data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-150 data-[enter]:ease-out data-[leave]:ease-in"
                       >
-                        {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
                         <div
                           aria-hidden="true"
                           className="absolute inset-0 top-1/2 bg-white shadow"
@@ -636,14 +693,14 @@ export default function Navigation() {
                 </div>
               </PopoverGroup>
 
-              {/* La barre recherche Searching Bar */}
-              <div className="flex items-center flex-grow relative h-[60%] mx-5 rounded-md ">
+              {/* La barre recherche (Desktop) */}
+              <div className="hidden lg:flex items-center flex-grow relative h-[60%] mx-5 rounded-md ">
                 {/* 1ère section dans le conteneur de la barre de recherche */}
                 <div
                   onClick={() => setVisible(!visible)}
-                  className="flex rounded-tl-md rounded-bl-md items-center font-bold text-lg justify-center cursor-pointer text-black px-2 bg-slate-200 h-full"
+                  className="flex rounded-tl-md rounded-bl-md items-center font-bold text-sm md:text-base justify-center cursor-pointer text-black px-2 bg-slate-200 h-full"
                 >
-                  <p>All </p>
+                  <p>Tous</p>
                   <span>
                     <ArrowDropDownIcon />
                   </span>
@@ -653,7 +710,7 @@ export default function Navigation() {
                 {visible && (
                   <ul
                     ref={dropdownRef}
-                    className="absolute bg-slate-300  left-0 z-50 p-2 w-56 h-80 overflow-y-scroll flex flex-col top-10 shadow-lg rounded-md"
+                    className="absolute bg-slate-300 left-0 z-50 p-2 w-56 h-80 overflow-y-scroll flex flex-col top-10 shadow-lg rounded-md"
                   >
                     {searchCategoryList.map((item) => (
                       <li
@@ -671,24 +728,24 @@ export default function Navigation() {
                 <input
                   type="text"
                   placeholder="Rechercher votre produit ici"
-                  className="px-2 h-full flex-grow outline-none bg-slate-200 border border-transparent focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                  className="px-2 h-full flex-grow outline-none bg-slate-200 border border-transparent focus:border-blue-500 focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                 />
 
                 {/* 3ème section dans le conteneur de la barre de recherche */}
                 <div className="flex items-center justify-center px-2 h-full bg-yellow-600 hover:bg-yellow-400 rounded-tr-md rounded-br-md cursor-pointer">
-                  <SearchIcon sx={{ color: "white", fontSize: "2rem" }} />
+                  <SearchIcon sx={{ color: "white", fontSize: "1.8rem" }} />
                 </div>
               </div>
 
-              <div className="ml-auto flex items-center ">
+              {/* Partie droite (Desktop) */}
+              <div className="hidden lg:flex ml-auto items-center ">
                 {!user && (
                   <div>
                     <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                       <span
-                        className=" font-bold mr-5 text-black hover:text-gray-800 px-4 py-1 rounded-2xl border-2 cursor-pointer hover:bg-slate-200"
-                        style={{ fontSize: "15px" }}
+                        className="font-bold mr-5 text-black hover:text-gray-800 px-4 py-1 rounded-2xl border-2 cursor-pointer hover:bg-slate-200 text-sm md:text-base"
                         onClick={() => {
                           navigate("/auth/login");
                         }}
@@ -712,7 +769,6 @@ export default function Navigation() {
                 {user && (
                   <Box>
                     <Popper
-                      // Note: The following zIndex style is specifically for documentation purposes and may not be necessary in your application.
                       sx={{ zIndex: 1200 }}
                       open={zopen}
                       anchorEl={anchorEl}
@@ -723,7 +779,6 @@ export default function Navigation() {
                         <Fade {...TransitionProps} timeout={350}>
                           <Paper>
                             <div className="p-2">
-                              {/* Vérifiez si l'utilisateur est connecté */}
                               {
                                 <>
                                   <div className="flex flex-col justify-center Navigation-typography mb-2">
@@ -749,7 +804,7 @@ export default function Navigation() {
                                     </div>
                                   </div>
                                   <hr />
-                                  <div className="Navigation-typography flex flex-col justify-center  text-black">
+                                  <div className="Navigation-typography flex flex-col justify-center text-black">
                                     <div>
                                       <p
                                         className="text-sm font-semibold flex items-center justify-start opacity-80 cursor-pointer hover:bg-gray-300 px-5 py-1"
@@ -818,17 +873,6 @@ export default function Navigation() {
                   </Box>
                 )}
 
-                {/* Search
-                <div className="flex lg:ml-6">
-                  <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
-                    <span className="sr-only">Search</span>
-                    <MagnifyingGlassIcon
-                      aria-hidden="true"
-                      className="h-6 w-6"
-                    />
-                  </a>
-                </div> */}
-
                 {/* Cart */}
                 {user && (
                   <div className="ml-4 flow-root lg:ml-6">
@@ -852,10 +896,56 @@ export default function Navigation() {
                 )}
               </div>
             </div>
+
+            {/* Barre de recherche mobile (apparaît en dessous) */}
+            {showMobileSearch && (
+              <div className="lg:hidden py-3 border-t border-gray-200">
+                <div className="flex items-center w-full relative h-12 rounded-md">
+                  <div
+                    onClick={() => setVisible(!visible)}
+                    className="flex rounded-tl-md rounded-bl-md items-center font-bold text-sm justify-center cursor-pointer text-black px-2 bg-slate-200 h-full"
+                  >
+                    <p>Tous</p>
+                    <span>
+                      <ArrowDropDownIcon />
+                    </span>
+                  </div>
+
+                  {/* Liste des catégories mobile */}
+                  {visible && (
+                    <ul
+                      ref={dropdownRef}
+                      className="absolute bg-slate-300 left-0 z-50 p-2 w-full max-h-60 overflow-y-auto flex flex-col top-12 shadow-lg rounded-md"
+                    >
+                      {searchCategoryList.map((item) => (
+                        <li
+                          key={item.id}
+                          className="py-2 px-3 hover:bg-slate-400 rounded-md cursor-pointer"
+                          onClick={() => handleSearchCategory(item.name)}
+                        >
+                          {item.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <input
+                    type="text"
+                    placeholder="Rechercher..."
+                    className="px-2 h-full flex-grow bg-slate-200 text-base"
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                  />
+
+                  <div className="flex items-center justify-center px-2 h-full bg-yellow-600 hover:bg-yellow-400 rounded-tr-md rounded-br-md cursor-pointer">
+                    <SearchIcon sx={{ color: "white", fontSize: "1.8rem" }} />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </nav>
       </header>
-
       <AuthModal handleClose={handleClose} open={openAuthModal} />
     </div>
   );
