@@ -348,7 +348,7 @@ export default function ProductDetails() {
 
   // Galerie d'images
   const ImageGallery = () => (
-    <div className="flex flex-col relative  items-center py-5 gap-y-2 lg:col-span-3 sm:col-span-1 shadow-sm rounded bg-white">
+    <div className="flex flex-col relative items-center py-3 sm:py-5 gap-y-2 shadow-sm rounded bg-white">
       {activeIndex > 0 && (
         <button
           onClick={slidePrev}
@@ -365,7 +365,7 @@ export default function ProductDetails() {
           &#9654;
         </button>
       )}
-      <div className="overflow-hidden   rounded-lg w-[16rem] h-[18rem]">
+      <div className="overflow-hidden rounded-lg w-full max-w-[16rem] h-[14rem] sm:h-[18rem]">
         {loading ? (
           "Chargemment..."
         ) : (
@@ -393,16 +393,16 @@ export default function ProductDetails() {
         )}
       </div>
 
-      <div className="flex items-center p-3 flex-wrap gap-2 justify-start">
+      <div className="flex items-center p-1 sm:p-3 flex-wrap gap-1 sm:gap-2 justify-center">
+        {" "}
+        {/* Padding/gap réduits mobile */}
         {activeVariant?.media?.map((media, index) => (
           <div
             key={index}
-            className={`overflow-hidden p-1 rounded-lg w-14 h-14 border-2 cursor-pointer
-              ${activeIndex === index ? "border-lime-500" : "border-gray-200"}`}
-            onClick={() => {
-              handleThumbnailClick(index);
-              // carouselRef.current.slideTo(index);
-            }}
+            className={`overflow-hidden p-0.5 sm:p-1 rounded-lg w-10 h-10 sm:w-14 sm:h-14 border-2 cursor-pointer
+            ${
+              activeIndex === index ? "border-lime-500" : "border-gray-200"
+            }`} /* Taille réduite mobile */
           >
             {loading ? (
               <CircularProgress size="30px" />
@@ -420,21 +420,27 @@ export default function ProductDetails() {
   );
 
   return (
-    <div className="bg-slate-100 px-6 relative  productTypographie">
+    <div className="bg-slate-100 px-3 sm:px-6 relative productTypographie">
       <div className="pt-3">
-        <nav aria-label="Breadcrumb" className="p-3 bg-white rounded  mx-auto ">
+        <nav
+          aria-label="Breadcrumb"
+          className="p-2 sm:p-3 bg-white rounded mx-auto"
+        >
           {loading && <p>Chargement...</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
           {!loading && !error && (
             <ul className="breadcrumb">
               {categories.map((category, index) => (
-                <li key={index}>
+                <li key={index} className="flex items-center">
                   <Link
                     to={`/categories/${generatePath(index)}`}
-                    className="font-bold text-[10px] px-1 sm:text-sm  text-lime-950 opacity-70"
+                    className="font-bold text-xs sm:text-sm text-lime-950 opacity-70 whitespace-nowrap"
                   >
                     {category}
                   </Link>
+                  {index < categories.length - 1 && (
+                    <span className="mx-1 sm:mx-2 text-lg font-bold">›</span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -443,23 +449,27 @@ export default function ProductDetails() {
 
         <section className="grid grid-cols-1 lg:grid-cols-8 sm:grid-cols-5 gap-x-8  lg:gap-x-3 gap-y-10  mt-2 ">
           {/* Image gallery */}
-          <ImageGallery />
-
+          <div className="lg:col-span-3 md:col-span-2">
+            {" "}
+            {/* Responsive colonnes */}
+            <ImageGallery />
+          </div>
           {/* Product info */}
-          <div className="lg:col-span-4  mx-auto sm:col-span-2 px-4 pb-16 sm:px-6 bg-white py-2   lg:px-5 lg:pb-6 rounded shadow  ">
+          <div className="lg:col-span-4 md:col-span-3 mx-auto px-2 sm:px-4 pb-8 sm:pb-16 bg-white py-2 lg:px-5 rounded shadow">
             <div className=" ">
               <h1 className="text-lg font-bold tracking-tight text-gray-500 sm:text-3xl mb-1">
-                <div className="flex flex-col gap-y-3 justify-between items-start py-2 px-3 rounded border-2 shadow-sm w-full">
-                  <h2 className="text-lg font-semibold sm:text-[27px] ">
+                <div className="flex flex-col gap-y-3 justify-between items-start py-2 px-2 sm:px-3 rounded border-2 shadow-sm w-full">
+                  <h2 className="text-base font-semibold sm:text-[27px]">
                     {products.product?.name}
                   </h2>
                   <p
-                    style={{ fontSize: "35px" }}
-                    className="font-bold opacity-80 text-black"
+                    style={{ fontSize: "28px" }} /* Taille réduite sur mobile */
+                    className="font-bold opacity-80 text-black sm:text-[35px]" /* Responsive font size */
                   >
                     <span className="">
                       {products.product?.price}{" "}
-                      <span className="text-[20px]">F CFA</span>
+                      <span className="text-[16px] sm:text-[20px]">F CFA</span>{" "}
+                      {/* Taille texte réduite mobile */}
                     </span>
                   </p>
                 </div>
@@ -567,7 +577,13 @@ export default function ProductDetails() {
                 </ul>
               </div>
 
-              <Divider orientation="vertical" variant="middle" flexItem />
+              {/* Supprimer Divider sur mobile */}
+              <Divider
+                className="hidden lg:block"
+                orientation="vertical"
+                variant="middle"
+                flexItem
+              />
               {products.product?.variantType !== "NONE" && (
                 <div className="mb-4">
                   <h3 className="font-semibold text-lg">
@@ -596,16 +612,16 @@ export default function ProductDetails() {
           </div>
 
           {/* Cart fonctionalities */}
-          <div className="lg:col-span-1  bg-white rounded border p-2">
+          <div className="lg:col-span-1 md:col-span-5 bg-white rounded border p-2 sticky bottom-0 z-10 md:static">
             <form className="">
-              <div className="flex flex-col mt-10 space-y-3 ">
+              <div className="flex flex-col mt-4 md:mt-10 space-y-3">
                 <div className="">
                   {products.product?.variantType === "NONE" ? (
                     <h3
                       className={
                         products.product.stock > 5
-                          ? "text-green-700"
-                          : "text-red-500"
+                          ? "text-green-700 text-sm sm:text-base"
+                          : "text-red-500 text-sm sm:text-base"
                       }
                     >
                       {products.product.stock > 5
@@ -616,73 +632,28 @@ export default function ProductDetails() {
                     <h3
                       className={
                         activeVariant?.stock > 5
-                          ? "text-green-700"
-                          : "text-red-500"
+                          ? "text-green-700 text-sm sm:text-base"
+                          : "text-red-500 text-sm sm:text-base"
                       }
                     >
                       {activeVariant?.stock > 5
-                        ? `En stock pour cette variante (${activeVariant?.stock} disponibles)`
-                        : `Stock critique pour cette variante (${activeVariant?.stock} restants)`}
+                        ? `En stock (${activeVariant?.stock} disponibles)`
+                        : `Stock critique (${activeVariant?.stock} restants)`}
                     </h3>
                   )}
                 </div>
                 <Button
                   onClick={handleAddToCart}
                   variant="contained"
-                  className={"mt-4  bg-amber-700"}
+                  className="mt-2 bg-amber-700"
                   sx={{ bgcolor: "orange" }}
+                  fullWidth // Important pour mobile
                 >
                   <ShoppingCartIcon style={{ marginRight: "8px" }} />
                   Ajouter
                 </Button>
               </div>
             </form>
-          </div>
-        </section>
-        {/* Commentaires et notations */}
-        <section>
-          <h1 className="text-lg font-semibold pb-4">
-            Dèrnières commentaires et notations
-          </h1>
-          <div className="border p-5 mb-3">
-            <Grid2 container spacing={7} justifyContent="space-between">
-              {/* Première colonne contenant les avis sur le produit */}
-              <Grid2 item xs={7}>
-                <div className="border-spacing-y-4">
-                  <ProductReviewsCard />
-                </div>
-              </Grid2>
-
-              {/* Deuxième colonne contenant la notation et les évaluations du produit */}
-              <Grid2 item xs={5}>
-                <h1 className="text-lg font-semibold pb-1">Product rating</h1>
-                <div className="flex items-center space-x-4">
-                  <Rating value={3.5} readOnly precision={0.5} />
-                  <p className="opacity-60">56460 ratings</p>
-                </div>
-                {/* <Box>
-                    <Grid2 container  alignContent="center" gap={2}>
-                        <Grid2 item xs={2}>
-                            <p>Exelente</p>
-                        </Grid2>
-                        <Grid2 item xs={7}>
-                            <LinearProgress variant="determinate" color="success" value={40} />
-                        </Grid2>
-                    </Grid2>
-                </Box> */}
-              </Grid2>
-            </Grid2>
-          </div>
-        </section>
-
-        {/* Produits similaires */}
-        <section className="pt-4 px-2 flex flex-col justify-center">
-          <h1 className="text-lg font-semibold">Les Produits Similaires</h1>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5 justify-center">
-            {mens_kurta.map((item) => (
-              <HomeSectionCard product={item} />
-            ))}
           </div>
         </section>
       </div>
