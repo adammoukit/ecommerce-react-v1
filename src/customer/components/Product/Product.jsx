@@ -435,7 +435,7 @@ export default function Product() {
 
               {/* Product grid */}
               <div className="lg:col-span-5 w-full">
-                <div className="flex flex-wrap w-full  justify-center sm:justify-start gap-1 bg-white py-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 py-1">
                   {products.products &&
                     products.globalProducts?.content?.map((item, key) => (
                       <ProductCard key={key} product={item} />

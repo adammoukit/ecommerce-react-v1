@@ -25,39 +25,53 @@ const ProductCard = ({ product }) => {
   const productSellToolTipValue = "228 ventes pour ce produit !";
 
   return (
-    <div className="productCard border-2 w-[15rem] sm:w-[185px] md:w-[171px] lg:w-[195px]  bg-white  transition-all cursor-pointer rounded p-2">
-      <div className="h-[13rem] w-full">
+    <div className="productCard border-2 w-full sm:w-[15rem] md:w-[171px] lg:w-[195px] bg-white transition-all cursor-pointer rounded p-2 flex flex-row sm:flex-col">
+      {/* Conteneur d'image (100% width pour sm et +) */}
+      <div className="w-[40%] sm:w-full h-[10rem] sm:h-auto">
         <img
           onClick={() => navigate(`/product/${product.id}`)}
-          className="h-full w-full lg:w-[9rem] object-contain rounded-lg"
-          src={product.media?.[0]?.url || "https://via.placeholder.com/150"} // Utilise la première URL ou une image par défaut
+          className="h-full w-full object-contain rounded-lg"
+          src={product.media?.[0]?.url || "https://via.placeholder.com/150"}
           alt=""
         />
       </div>
-      <div className="textPart flex flex-col gap-2 mt-3 w-full  p-1 ">
-        <div>
-          <p className="text-sm lg:text-[14px] text-gray-500 line-clamp-2 lg:line-clamp-3 font-bold ">
-            {product.name}{" "}
-          </p>
-        </div>
-        <div className="flex space-x-2 justify-start items-center">
-          <h2 className="font-extrabold text-[23px] text-black">
-            {product.price} <span className="text-[13px]">F CFA</span>
-          </h2>
-        </div>
-      </div>
 
-      <div className="flex items-center justify-end"></div>
-      <div className="p-1 flex justify-center items-center">
-        <button className="w-full bg-yellow-300 p-1 rounded-2xl hover:bg-yellow-500">
-          <Typography style={{ fontSize: "12px" }}>Voir le produit</Typography>
-        </button>
-        <IconButton
-          color={liked ? "error" : "default"} // Couleur rouge si aimé
-          onClick={handleLike}
-        >
-          {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-        </IconButton>
+      {/* Conteneur des détails (100% width pour sm et +) */}
+      <div className="w-[60%] sm:w-full flex flex-col justify-between p-1 sm:pl-3">
+        <div>
+          {/* Nom avec ellipsis */}
+          <p className="text-sm lg:text-[14px] text-gray-500 font-bold line-clamp-2 sm:line-clamp-none">
+            {product.name}
+          </p>
+
+          {/* Prix */}
+          <div className="mt-1">
+            <h2 className="font-extrabold text-[18px] sm:text-[23px] text-black">
+              {product.price} <span className="text-[12px]">F CFA</span>
+            </h2>
+          </div>
+        </div>
+
+        {/* Boutons */}
+        <div className="mt-2 flex flex-col sm:flex-row items-center gap-1">
+          <button className="w-full bg-yellow-300 py-1 rounded-2xl hover:bg-yellow-500">
+            {/* Correction responsive du texte */}
+            <Typography className="text-[10px] sm:text-[12px]">
+              Voir le produit
+            </Typography>
+          </button>
+          <IconButton
+            color={liked ? "error" : "default"}
+            onClick={handleLike}
+            size="small"
+          >
+            {liked ? (
+              <FavoriteIcon fontSize="small" />
+            ) : (
+              <FavoriteBorderIcon fontSize="small" />
+            )}
+          </IconButton>
+        </div>
       </div>
     </div>
   );
