@@ -65,7 +65,6 @@ const CartItem = ({ prod, loading }) => {
     <div className="cart-item-container">
       {/* Barre latérale décorative */}
 
-      {loading && <CircularProgress className="absolute z-10" />}
       {/* Version mobile (empilée) */}
       <div className="md:hidden mobile-cart-item">
         <div className="mobile-header">
@@ -97,7 +96,7 @@ const CartItem = ({ prod, loading }) => {
             <div className="price-line">
               <span>Supplément:</span>
               <span className="price-value">
-                +{prod.additionalPrice?.toFixed(2)} F CFA
+                +{prod.additionalPrice?.toFixed(2)} XOF
               </span>
             </div>
           )}
@@ -105,7 +104,7 @@ const CartItem = ({ prod, loading }) => {
           <div className="price-line total">
             <span>Total:</span>
             <span className="price-value">
-              {prod.totalPrice?.toFixed(2)} F CFA
+              {prod.totalPrice?.toFixed(2)} XOF
             </span>
           </div>
         </div>
